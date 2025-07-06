@@ -173,7 +173,13 @@ async function fetchGitHubRepos() {
 // Fetch GitHub profile data
 async function fetchGitHubProfile() {
     try {
-        const response = await fetch(`${GITHUB_API_BASE}/users/${GITHUB_USERNAME}`);
+        const response = await fetch(`${GITHUB_API_BASE}/users/${GITHUB_USERNAME}`, {
+            mode: 'cors',
+            headers: {
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+        
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -188,6 +194,10 @@ async function fetchGitHubProfile() {
                 profileImg.src = profile.avatar_url;
                 profileImg.alt = profile.name || profile.login;
                 profileImg.classList.remove('loading-avatar');
+            };
+            newImg.onerror = function() {
+                // If GitHub profile image fails, use a fallback
+                setFallbackProfile();
             };
             newImg.src = profile.avatar_url;
         }
@@ -218,6 +228,8 @@ async function fetchGitHubProfile() {
         }
     } catch (error) {
         console.error('Error fetching GitHub profile:', error);
+        // Use fallback profile when API fails
+        setFallbackProfile();
         const profileCard = document.getElementById('github-profile');
         if (profileCard) {
             profileCard.innerHTML = `
@@ -227,6 +239,46 @@ async function fetchGitHubProfile() {
                 </p>
             `;
         }
+    }
+}
+
+// Fallback profile function
+function setFallbackProfile() {
+    console.log('Setting fallback profile');
+    
+    // Set fallback profile picture
+    const profileImg = document.querySelector('.profile-pic img');
+    if (profileImg) {
+        // Use a fallback avatar (this should be a local image or a reliable CDN)
+        profileImg.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjNjM2NkYxIiByeD0iMTAwIi8+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjgwIiByPSIzMCIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTYwIDEzMGMwLTIyIDEyLTQwIDQwLTQwczQwIDE4IDQwIDQwdjUwSDYwdi01MHoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=';
+        profileImg.alt = 'Erdi Profile Picture';
+        profileImg.classList.remove('loading-avatar');
+    }
+    
+    // Set fallback profile card
+    const profileCard = document.getElementById('github-profile');
+    if (profileCard) {
+        profileCard.innerHTML = `
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjNjM2NkYxIiByeD0iNDAiLz4KPGNpcmNsZSBjeD0iNDAiIGN5PSIzMiIgcj0iMTIiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0yNCA1MmMwLTkgNy0xNiAxNi0xNnMxNiA3IDE2IDE2djIwSDI0VjUyeiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==" alt="Erdi" class="github-avatar">
+            <div class="github-info">
+                <h4 class="github-name">Erdi</h4>
+                <p class="github-bio">Frontend Developer & Student from Germany</p>
+                <div class="github-stats">
+                    <div class="github-stat">
+                        <span class="github-stat-number">10+</span>
+                        <span class="github-stat-label">Repositories</span>
+                    </div>
+                    <div class="github-stat">
+                        <span class="github-stat-number">5</span>
+                        <span class="github-stat-label">Followers</span>
+                    </div>
+                    <div class="github-stat">
+                        <span class="github-stat-number">3</span>
+                        <span class="github-stat-label">Following</span>
+                    </div>
+                </div>
+            </div>
+        `;
     }
 }
 
@@ -335,10 +387,10 @@ function cycleHelloText() {
 
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize GitHub data loading
-    fetchGitHubProfile();
-    fetchGitHubRepos();
-    fetchGitHubLanguages();
+    console.log('DOM loaded, initializing website');
+    
+    // Always display manual languages immediately (no API dependency)
+    displayManualLanguages();
     
     // Initialize hello text cycling
     console.log('Initializing hello text cycling');
@@ -348,6 +400,31 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize scroll animations
     initScrollAnimations();
+    
+    // Try to load GitHub data with timeout fallbacks
+    const githubTimeout = 5000; // 5 second timeout
+    
+    // Attempt to fetch GitHub profile with timeout
+    Promise.race([
+        fetchGitHubProfile(),
+        new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('GitHub API timeout')), githubTimeout)
+        )
+    ]).catch(error => {
+        console.log('GitHub profile fetch failed or timed out, using fallback:', error.message);
+        setFallbackProfile();
+    });
+    
+    // Attempt to fetch GitHub repos with timeout
+    Promise.race([
+        fetchGitHubRepos(),
+        new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('GitHub API timeout')), githubTimeout)
+        )
+    ]).catch(error => {
+        console.log('GitHub repos fetch failed or timed out:', error.message);
+        // Fallback repos are handled within the fetchGitHubRepos function
+    });
     
     // Add smooth scrolling to all anchor links
     const anchors = document.querySelectorAll('a[href^="#"]');
