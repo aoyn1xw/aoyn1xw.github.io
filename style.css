@@ -1113,6 +1113,292 @@ footer {
     margin-top: 40px;
 }
 
+/* GitHub Contribution Graph */
+.contribution-section {
+    margin-top: 40px;
+}
+
+.contribution-graph {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 30px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+}
+
+.contribution-graph:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.contribution-calendar {
+    min-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    width: 100%;
+}
+
+.contribution-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.contribution-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.contribution-stats {
+    display: flex;
+    gap: 20px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.contribution-stat {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.contribution-count {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.calendar-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.calendar-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.calendar-months {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 4px;
+    margin-left: 20px;
+    margin-bottom: 8px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    min-width: 600px;
+}
+
+.calendar-month {
+    text-align: center;
+}
+
+.calendar-main {
+    display: flex;
+    gap: 8px;
+    align-items: start;
+    min-width: 600px;
+}
+
+.calendar-days {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.calendar-day-label {
+    height: 12px;
+    line-height: 12px;
+    text-align: right;
+    padding-right: 8px;
+}
+
+.calendar-weeks {
+    display: grid;
+    grid-template-rows: repeat(7, 12px);
+    gap: 2px;
+    grid-auto-flow: column;
+    grid-auto-columns: 12px;
+}
+
+.calendar-day {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    border: 1px solid var(--border);
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.calendar-day:hover {
+    border-color: var(--primary);
+    transform: scale(1.2);
+    z-index: 10;
+}
+
+.calendar-day[data-level="0"] {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.calendar-day[data-level="1"] {
+    background: rgba(99, 102, 241, 0.3);
+}
+
+.calendar-day[data-level="2"] {
+    background: rgba(99, 102, 241, 0.5);
+}
+
+.calendar-day[data-level="3"] {
+    background: rgba(99, 102, 241, 0.7);
+}
+
+.calendar-day[data-level="4"] {
+    background: rgba(99, 102, 241, 0.9);
+}
+
+.calendar-legend {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.legend-text {
+    margin-right: 8px;
+}
+
+.legend-levels {
+    display: flex;
+    gap: 2px;
+}
+
+.legend-level {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    border: 1px solid var(--border);
+}
+
+.legend-level[data-level="0"] { background: rgba(255, 255, 255, 0.05); }
+.legend-level[data-level="1"] { background: rgba(99, 102, 241, 0.3); }
+.legend-level[data-level="2"] { background: rgba(99, 102, 241, 0.5); }
+.legend-level[data-level="3"] { background: rgba(99, 102, 241, 0.7); }
+.legend-level[data-level="4"] { background: rgba(99, 102, 241, 0.9); }
+
+.contribution-tooltip {
+    position: absolute;
+    background: var(--dark);
+    color: var(--text);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    border: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.contribution-tooltip.show {
+    opacity: 1;
+    transform: translateY(-8px);
+}
+
+.contribution-fallback {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 40px 20px;
+}
+
+.contribution-error-icon {
+    font-size: 2rem;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.contribution-fallback-text {
+    margin-bottom: 16px;
+}
+
+.contribution-fallback-text p {
+    margin-bottom: 12px;
+}
+
+.contribution-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s ease;
+}
+
+.contribution-link:hover {
+    border-bottom-color: var(--primary);
+}
+
+/* Mobile fallback adjustments */
+@media (max-width: 768px) {
+    .contribution-fallback {
+        padding: 30px 16px;
+    }
+    
+    .contribution-error-icon {
+        font-size: 1.5rem;
+    }
+    
+    .contribution-fallback-text {
+        font-size: 0.9rem;
+    }
+}
+
+/* Medium screens (tablets) */
+@media (max-width: 1024px) and (min-width: 769px) {
+    .contribution-graph { 
+        padding: 24px; 
+    }
+    .contribution-calendar { 
+        min-width: 600px; 
+    }
+    .calendar-day, .legend-level { 
+        width: 11px; 
+        height: 11px; 
+    }
+    .calendar-weeks { 
+        grid-template-rows: repeat(7, 11px); 
+        grid-auto-columns: 11px; 
+    }
+}
+
 @media (max-width: 768px) {
     .container { padding: 20px; }
     header { padding: 60px 0 40px; }
@@ -1129,6 +1415,88 @@ footer {
     .subsection-title { font-size: 1.5rem; }
     .github-profile-card { flex-direction: column; text-align: center; }
     body { cursor: auto; } /* Show normal cursor on mobile */
+    
+    /* Simplified contribution graph for mobile */
+    .contribution-graph { 
+        padding: 16px; 
+        margin: 0 -10px;
+        border-radius: 12px;
+    }
+    
+    .contribution-calendar { 
+        min-width: 100%;
+    }
+    
+    .contribution-header { 
+        flex-direction: column; 
+        align-items: flex-start; 
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+    
+    .contribution-title {
+        font-size: 1.1rem;
+    }
+    
+    .contribution-stats { 
+        gap: 12px; 
+        flex-wrap: wrap;
+        width: 100%;
+    }
+    
+    .contribution-stat {
+        font-size: 0.8rem;
+        min-width: 140px;
+    }
+    
+    .calendar-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 8px;
+    }
+    
+    .calendar-months { 
+        font-size: 0.65rem; 
+        margin-left: 16px;
+        min-width: 500px;
+        grid-template-columns: repeat(12, 35px);
+    }
+    
+    .calendar-main {
+        min-width: 500px;
+        gap: 6px;
+    }
+    
+    .calendar-days { 
+        font-size: 0.65rem; 
+    }
+    
+    .calendar-day-label {
+        height: 10px;
+        line-height: 10px;
+        padding-right: 6px;
+        font-size: 0.6rem;
+        width: 16px;
+    }
+    
+    .calendar-day, .legend-level { 
+        width: 10px; 
+        height: 10px; 
+        border-radius: 2px;
+    }
+    
+    .calendar-weeks { 
+        grid-template-rows: repeat(7, 10px); 
+        grid-auto-columns: 10px; 
+        gap: 2px;
+    }
+    
+    .calendar-legend {
+        font-size: 0.7rem;
+        margin-top: 12px;
+        justify-content: center;
+        gap: 6px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1140,4 +1508,66 @@ footer {
     .repo-card { padding: 20px; }
     .repo-header { flex-direction: column; align-items: flex-start; gap: 8px; }
     .github-stats { justify-content: center; }
+    
+    /* Even more compact for small phones */
+    .contribution-graph { 
+        padding: 12px; 
+        margin: 0 -10px;
+    }
+    
+    .contribution-title {
+        font-size: 1rem;
+    }
+    
+    .contribution-stats { 
+        flex-direction: column; 
+        gap: 8px; 
+    }
+    
+    .contribution-stat {
+        font-size: 0.75rem;
+        width: 100%;
+    }
+    
+    .calendar-months {
+        font-size: 0.6rem;
+        margin-left: 12px;
+        grid-template-columns: repeat(12, 28px);
+        min-width: 400px;
+    }
+    
+    .calendar-main {
+        min-width: 400px;
+        gap: 4px;
+    }
+    
+    .calendar-day-label {
+        height: 8px;
+        line-height: 8px;
+        padding-right: 4px;
+        font-size: 0.55rem;
+        width: 12px;
+    }
+    
+    .calendar-day, .legend-level { 
+        width: 8px; 
+        height: 8px; 
+    }
+    
+    .calendar-weeks { 
+        grid-template-rows: repeat(7, 8px); 
+        grid-auto-columns: 8px; 
+        gap: 1px;
+    }
+    
+    .calendar-legend {
+        font-size: 0.65rem;
+        gap: 4px;
+    }
+    
+    .contribution-tooltip {
+        font-size: 0.65rem;
+        padding: 4px 8px;
+        max-width: 160px;
+    }
 }
