@@ -1571,3 +1571,14 @@ footer {
         max-width: 160px;
     }
 }
+
+/* Ensure visible caret and pointer everywhere */
+input, textarea, [contenteditable] {
+    caret-color: auto !important;
+    cursor: text !important;
+    color: var(--text, #222) !important;
+    background: var(--card-bg, #fff) !important;
+}
+body, * {
+    cursor: auto !important;
+}
