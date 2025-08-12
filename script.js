@@ -71,7 +71,7 @@ function displayManualLanguages() {
         const color = languageColors[lang.name] || '#858585';
         
         return `
-            <div class="language-item" style="animation-delay: ${index * 0.1}s;">
+            <div class="language-item fade-in" style="animation-delay: ${index * 0.1}s;">
                 <div class="language-icon">${icon}</div>
                 <div class="language-info">
                     <span class="language-name">${lang.name}</span>
@@ -87,7 +87,7 @@ function displayManualLanguages() {
         `;
     }).join('');
     
-    languagesGrid.innerHTML = languagesHTML;
+    languagesGrid.innerHTML = languagesHTML + languagesHTML; // duplicate for seamless loop
     
     // Trigger progress animations
     setTimeout(() => {
@@ -96,7 +96,7 @@ function displayManualLanguages() {
             setTimeout(() => {
                 const targetWidth = bar.getAttribute('data-percentage');
                 bar.style.width = `${targetWidth}%`;
-            }, index * 200);
+            }, (index % manualLanguages.length) * 200); // keep timing consistent despite duplication
         });
     }, 300);
 }
