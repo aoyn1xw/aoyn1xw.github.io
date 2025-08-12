@@ -18,6 +18,12 @@
     --shadow-dark: rgba(0, 0, 0, 0.9);
     --shadow-darker: rgba(0, 0, 0, 0.95);
     --gradient-dark: linear-gradient(135deg, var(--darkest) 0%, var(--darker) 30%, var(--dark) 70%, #0f172a 100%);
+    --glass-bg: linear-gradient(145deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+    --glass-border: rgba(255,255,255,0.08);
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 22px;
+    --ease-spring: cubic-bezier(.4,0,.2,1);
 }
 
 * {
@@ -207,6 +213,10 @@ header {
     padding: 80px 0 60px;
     position: relative;
     animation: fadeInDown 1s ease-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
 }
 
 @keyframes fadeInDown {
@@ -245,6 +255,98 @@ header h1 {
     text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     filter: drop-shadow(0 2px 4px rgba(99, 102, 241, 0.4));
 }
+
+/* Theme Toggle */
+.theme-toggle {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    cursor: pointer;
+    color: var(--text);
+    box-shadow: 0 4px 20px -4px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,0.03);
+    transition: background .4s var(--ease-spring), transform .3s var(--ease-spring);
+}
+.theme-toggle:hover { transform: translateY(-4px) rotate(-8deg); }
+.theme-toggle:active { transform: scale(.9); }
+.theme-toggle .theme-icon { transition: transform .6s var(--ease-spring); display: block; }
+.theme-toggle[data-mode="light"] .theme-icon { transform: rotate(180deg); }
+
+/* Modernized cards */
+.language-item,
+.repo-card,
+.stat-card,
+.github-profile-card,
+.contribution-graph,
+.contribution-fallback {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(22px) saturate(160%);
+    -webkit-backdrop-filter: blur(22px) saturate(160%);
+}
+
+.language-item {
+    border-radius: var(--radius-md);
+    background: linear-gradient(160deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 60%), var(--card-bg);
+    position: relative;
+}
+.language-item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(120deg, rgba(99,102,241,.4), rgba(6,182,212,.2));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    opacity: 0;
+    transition: opacity .6s var(--ease-spring);
+    pointer-events: none;
+}
+.language-item:hover::after { opacity: 1; }
+
+.progress-bar { background: rgba(255,255,255,0.08); }
+.progress-fill { background: linear-gradient(90deg, var(--primary), var(--accent)); filter: drop-shadow(0 0 6px rgba(99,102,241,.4)); }
+
+/* Subtle gradient text accents */
+.highlight {
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+            background-clip: text;
+    color: transparent;
+}
+
+/* Light mode adjustments */
+body.light {
+    --text: #1c2434;
+    --text-secondary: #4b5563;
+    --text-tertiary: #6b7280;
+    --background: #f5f7fb;
+    --card-bg: rgba(255,255,255,0.75);
+    --card-bg-hover: rgba(255,255,255,0.95);
+    --border: rgba(0,0,0,0.08);
+    --border-hover: rgba(0,0,0,0.18);
+    --shadow-dark: rgba(0,0,0,0.15);
+    --shadow-darker: rgba(0,0,0,0.25);
+    --gradient-dark: linear-gradient(135deg,#ffffff 0%,#f1f5f9 60%,#e2e8f0 100%);
+    --glass-bg: linear-gradient(145deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
+    --glass-border: rgba(0,0,0,0.08);
+}
+body.light header h1 { filter: drop-shadow(0 4px 10px rgba(99,102,241,0.25)); }
+body.light .theme-toggle { box-shadow: 0 4px 14px -4px rgba(0,0,0,.25); }
+body.light .language-item { background: linear-gradient(160deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 70%); }
 
 @keyframes textGlow {
     from {

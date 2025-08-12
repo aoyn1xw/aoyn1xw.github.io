@@ -796,4 +796,30 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { threshold: 0.5 });
 
     statNumbers.forEach(stat => statsObserver.observe(stat));
+
+    // Theme toggle
+    const toggle = document.getElementById('theme-toggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const stored = localStorage.getItem('theme-mode');
+    const applyMode = (mode) => {
+        document.body.classList.toggle('light', mode === 'light');
+        if (toggle) {
+            toggle.setAttribute('data-mode', mode);
+            toggle.setAttribute('aria-pressed', mode === 'light');
+            const icon = toggle.querySelector('.theme-icon');
+            if (icon) {
+                icon.textContent = mode === 'light' ? icon.getAttribute('data-light') : icon.getAttribute('data-dark');
+            }
+        }
+    };
+    const initial = stored || (prefersDark ? 'dark' : 'light');
+    applyMode(initial);
+    if (toggle) {
+        toggle.addEventListener('click', () => {
+            const current = toggle.getAttribute('data-mode') === 'light' ? 'light' : 'dark';
+            const next = current === 'light' ? 'dark' : 'light';
+            applyMode(next);
+            localStorage.setItem('theme-mode', next);
+        });
+    }
 });
