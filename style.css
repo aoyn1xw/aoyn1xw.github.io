@@ -33,8 +33,13 @@ body {
     overflow-x: hidden;
     line-height: 1.7;
     min-height: 100vh;
-    cursor: none;
+    /* Removed cursor: none; (was causing invisible mouse) */
     position: relative;
+}
+
+/* Optional: add this class to body if you ever intentionally want to hide the cursor */
+.hide-cursor {
+    cursor: none !important;
 }
 
 body::before {
