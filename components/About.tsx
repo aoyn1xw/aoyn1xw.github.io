@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Code2, Coffee, Music, Camera, Heart, Loader2 } from 'lucide-react';
 import { useGitHubLanguages, useGitHubUser } from '../hooks/useGitHub';
 

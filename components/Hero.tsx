@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Github, Instagram, Mail, ArrowDown, Sparkles } from 'lucide-react';
 import { Button } from './ui/button';
 import { useGitHubUser } from '../hooks/useGitHub';

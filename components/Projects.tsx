@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { ExternalLink, Github, Star, Calendar, GitFork, Loader2 } from 'lucide-react';
 import { useGitHubRepositories } from '../hooks/useGitHub';
 

@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Mail, Github, Instagram, MessageCircle, Send, Coffee } from 'lucide-react';
 
 export function Contact() {
