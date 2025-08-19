@@ -6,7 +6,8 @@ export default defineConfig({
   plugins: [react()],
   // Simple setup—remove path alias relying on Node globals to avoid type issues in Netlify build
   build: {
-    outDir: 'dist',
+  // Netlify will publish the "build" directory (see netlify.toml)
+  outDir: 'build',
     sourcemap: false,
     rollupOptions: {
       output: {

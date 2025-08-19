@@ -120,9 +120,16 @@ The portfolio automatically fetches data from GitHub using the public API. To cu
    npm run deploy
    ```
 
-### Vercel/Netlify
+### Netlify
 
-Simply connect your GitHub repository to Vercel or Netlify for automatic deployments.
+1. Build command: `npm run build`
+2. Publish directory: `build`
+3. (Optional) Add a `netlify.toml` (already included) to lock config.
+4. If styles ever appear missing after config changes, trigger a Clear cache and deploy in Netlify UI.
+
+### Vercel
+
+Use `npm run build` (Vite will create `build/`) and set output directory to `build`.
 
 ## 📝 License
 
