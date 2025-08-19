@@ -26,6 +26,15 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  /* Limit included files to application source; exclude build tooling config */
+  "include": [
+    "src",
+    "components",
+    "hooks",
+    "services",
+    "styles",
+    "App.tsx",
+    "main.tsx"
+  ],
+  "exclude": ["vite.config.ts"]
 }
