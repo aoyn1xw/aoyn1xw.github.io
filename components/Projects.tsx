@@ -3,7 +3,7 @@ import { ExternalLink, Github, Star, Calendar, GitFork, Loader2 } from 'lucide-r
 import { useGitHubRepositories } from '../hooks/useGitHub';
 
 export function Projects() {
-  const { repositories, loading, error } = useGitHubRepositories();
+  const { repositories, loading } = useGitHubRepositories();
 
   // Fallback projects if GitHub API fails
   const fallbackProjects = [

@@ -4,7 +4,7 @@ import { useGitHubLanguages, useGitHubUser } from '../hooks/useGitHub';
 
 export function About() {
   const { languages, loading: languagesLoading } = useGitHubLanguages();
-  const { user, loading: userLoading } = useGitHubUser();
+  const { user } = useGitHubUser();
   
   const fallbackTechnologies = [
     'JavaScript', 'TypeScript', 'React', 'Next.js', 

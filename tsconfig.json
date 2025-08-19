@@ -29,7 +29,16 @@
   /* Limit included files to application source; exclude build tooling config */
   "include": [
     "src",
-    "components",
+    "types",
+    "components/*.tsx",
+    "components/About.tsx",
+    "components/Contact.tsx",
+    "components/Hero.tsx",
+    "components/Navigation.tsx",
+    "components/Projects.tsx",
+    "components/Skills.tsx",
+    "components/ui/button.tsx",
+    "components/ui/utils.ts",
     "hooks",
     "services",
     "styles",
