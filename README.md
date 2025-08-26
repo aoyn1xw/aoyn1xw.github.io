@@ -1,5 +1,5 @@
 # My about me page 
-this is a portfolio about me to understand Front end development and to practice it 
+This in my website that im working on it since i started coding :D
 
 the website: https://ayon1xw.me/
 
