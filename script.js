@@ -1,3 +1,46 @@
+// Cache configuration
+const CACHE_KEY_PREFIX = 'aoyn1xw_github_';
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+// Cache utility functions
+function getCachedData(key) {
+    try {
+        const cached = localStorage.getItem(CACHE_KEY_PREFIX + key);
+        if (cached) {
+            const data = JSON.parse(cached);
+            if (Date.now() - data.timestamp < CACHE_DURATION) {
+                console.log('Using cached data for:', key);
+                return data.value;
+            }
+            // Remove expired cache
+            localStorage.removeItem(CACHE_KEY_PREFIX + key);
+        }
+    } catch (error) {
+        console.warn('Cache read error:', error);
+    }
+    return null;
+}
+
+function setCachedData(key, value) {
+    try {
+        const data = {
+            value: value,
+            timestamp: Date.now()
+        };
+        localStorage.setItem(CACHE_KEY_PREFIX + key, JSON.stringify(data));
+    } catch (error) {
+        console.warn('Cache write error:', error);
+        // Clear old cache if storage is full
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith(CACHE_KEY_PREFIX)) {
+                localStorage.removeItem(key);
+                break;
+            }
+        }
+    }
+}
+
 // GitHub API configuration
 const GITHUB_USERNAME = 'aoyn1xw';
 const GITHUB_API_BASE = 'https://api.github.com';
@@ -123,6 +166,13 @@ async function fetchGitHubLanguages() {
 
 // Fetch GitHub repositories
 async function fetchGitHubRepos() {
+    // Check cache first
+    const cached = getCachedData('repos');
+    if (cached) {
+        updateReposUI(cached);
+        return;
+    }
+
     try {
         const response = await fetch(`${GITHUB_API_BASE}/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=6`);
         if (!response.ok) {
@@ -130,30 +180,10 @@ async function fetchGitHubRepos() {
         }
         const repos = await response.json();
 
-        const reposGrid = document.getElementById('github-repos');
-        if (!reposGrid) return;
-
-        reposGrid.innerHTML = repos.map((repo, index) => `
-            <div class="repo-card" style="animation-delay: ${index * 0.1}s;">
-                <div class="repo-header">
-                    <h4 class="repo-name">${repo.name}</h4>
-                    <span class="repo-visibility">${repo.private ? 'Private' : 'Public'}</span>
-                </div>
-                <p class="repo-description">${repo.description || 'No description available'}</p>
-                <div class="repo-stats">
-                    <span class="repo-language">
-                        <span class="language-dot" style="background-color: ${languageColors[repo.language] || '#858585'}"></span>
-                        ${repo.language || 'Unknown'}
-                    </span>
-                    <span class="repo-stars">⭐ ${repo.stargazers_count}</span>
-                    <span class="repo-forks">🍴 ${repo.forks_count}</span>
-                </div>
-                <div class="repo-footer">
-                    <span class="repo-updated">Updated ${new Date(repo.updated_at).toLocaleDateString()}</span>
-                    <a href="${repo.html_url}" target="_blank" class="repo-link">View →</a>
-                </div>
-            </div>
-        `).join('');
+        // Cache the response
+        setCachedData('repos', repos);
+        
+        updateReposUI(repos);
     } catch (error) {
         console.error('Error fetching GitHub repos:', error);
         const reposGrid = document.getElementById('github-repos');
@@ -170,8 +200,42 @@ async function fetchGitHubRepos() {
     }
 }
 
+function updateReposUI(repos) {
+    const reposGrid = document.getElementById('github-repos');
+    if (!reposGrid) return;
+
+    reposGrid.innerHTML = repos.map((repo, index) => `
+        <div class="repo-card" style="animation-delay: ${index * 0.1}s;">
+            <div class="repo-header">
+                <h4 class="repo-name">${repo.name}</h4>
+                <span class="repo-visibility">${repo.private ? 'Private' : 'Public'}</span>
+            </div>
+            <p class="repo-description">${repo.description || 'No description available'}</p>
+            <div class="repo-stats">
+                <span class="repo-language">
+                    <span class="language-dot" style="background-color: ${languageColors[repo.language] || '#858585'}"></span>
+                    ${repo.language || 'Unknown'}
+                </span>
+                <span class="repo-stars">⭐ ${repo.stargazers_count}</span>
+                <span class="repo-forks">🍴 ${repo.forks_count}</span>
+            </div>
+            <div class="repo-footer">
+                <span class="repo-updated">Updated ${new Date(repo.updated_at).toLocaleDateString()}</span>
+                <a href="${repo.html_url}" target="_blank" class="repo-link">View →</a>
+            </div>
+        </div>
+    `).join('');
+}
+
 // Fetch GitHub profile data
 async function fetchGitHubProfile() {
+    // Check cache first
+    const cached = getCachedData('profile');
+    if (cached) {
+        updateProfileUI(cached);
+        return;
+    }
+
     try {
         const response = await fetch(`${GITHUB_API_BASE}/users/${GITHUB_USERNAME}`, {
             mode: 'cors',
@@ -185,47 +249,10 @@ async function fetchGitHubProfile() {
         }
         const profile = await response.json();
         
-        // Update profile picture
-        const profileImg = document.querySelector('.profile-pic img');
-        if (profileImg && profile.avatar_url) {
-            // Create a new image to preload
-            const newImg = new Image();
-            newImg.onload = function() {
-                profileImg.src = profile.avatar_url;
-                profileImg.alt = profile.name || profile.login;
-                profileImg.classList.remove('loading-avatar');
-            };
-            newImg.onerror = function() {
-                // If GitHub profile image fails, use a fallback
-                setFallbackProfile();
-            };
-            newImg.src = profile.avatar_url;
-        }
+        // Cache the response
+        setCachedData('profile', profile);
         
-        const profileCard = document.getElementById('github-profile');
-        if (profileCard) {
-            profileCard.innerHTML = `
-                <img src="${profile.avatar_url}" alt="${profile.name || profile.login}" class="github-avatar">
-                <div class="github-info">
-                    <h4 class="github-name">${profile.name || profile.login}</h4>
-                    <p class="github-bio">${profile.bio || 'Frontend Developer & Student'}</p>
-                    <div class="github-stats">
-                        <div class="github-stat">
-                            <span class="github-stat-number">${profile.public_repos}</span>
-                            <span class="github-stat-label">Repositories</span>
-                        </div>
-                        <div class="github-stat">
-                            <span class="github-stat-number">${profile.followers}</span>
-                            <span class="github-stat-label">Followers</span>
-                        </div>
-                        <div class="github-stat">
-                            <span class="github-stat-number">${profile.following}</span>
-                            <span class="github-stat-label">Following</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
+        updateProfileUI(profile);
     } catch (error) {
         console.error('Error fetching GitHub profile:', error);
         // Use fallback profile when API fails
@@ -239,6 +266,50 @@ async function fetchGitHubProfile() {
                 </p>
             `;
         }
+    }
+}
+
+function updateProfileUI(profile) {
+    // Update profile picture
+    const profileImg = document.querySelector('.profile-pic img');
+    if (profileImg && profile.avatar_url) {
+        // Create a new image to preload
+        const newImg = new Image();
+        newImg.onload = function() {
+            profileImg.src = profile.avatar_url;
+            profileImg.alt = profile.name || profile.login;
+            profileImg.classList.remove('loading-avatar');
+        };
+        newImg.onerror = function() {
+            // If GitHub profile image fails, use a fallback
+            setFallbackProfile();
+        };
+        newImg.src = profile.avatar_url;
+    }
+    
+    const profileCard = document.getElementById('github-profile');
+    if (profileCard) {
+        profileCard.innerHTML = `
+            <img src="${profile.avatar_url}" alt="${profile.name || profile.login}" class="github-avatar">
+            <div class="github-info">
+                <h4 class="github-name">${profile.name || profile.login}</h4>
+                <p class="github-bio">${profile.bio || 'Frontend Developer & Student'}</p>
+                <div class="github-stats">
+                    <div class="github-stat">
+                        <span class="github-stat-number">${profile.public_repos}</span>
+                        <span class="github-stat-label">Repositories</span>
+                    </div>
+                    <div class="github-stat">
+                        <span class="github-stat-number">${profile.followers}</span>
+                        <span class="github-stat-label">Followers</span>
+                    </div>
+                    <div class="github-stat">
+                        <span class="github-stat-number">${profile.following}</span>
+                        <span class="github-stat-label">Following</span>
+                    </div>
+                </div>
+            </div>
+        `;
     }
 }
 
@@ -393,15 +464,22 @@ async function fetchGitHubContributions() {
         return;
     }
 
+    // Check cache first
+    const cached = getCachedData('contributions');
+    if (cached) {
+        console.log('Using cached contribution data');
+        displayContributionGraph(cached);
+        return;
+    }
+
     console.log('Fetching GitHub contributions...');
 
     try {
-        // Note: GitHub's GraphQL API would be ideal for contributions, but requires authentication
-        // We'll create a simulated contribution graph based on commit activity from repos
+        // Reduced timeout from 8s to 3s
         const response = await Promise.race([
             fetch(`${GITHUB_API_BASE}/users/${GITHUB_USERNAME}/events?per_page=100`),
             new Promise((_, reject) => 
-                setTimeout(() => reject(new Error('Contribution API timeout')), 8000)
+                setTimeout(() => reject(new Error('Contribution API timeout')), 3000)
             )
         ]);
 
@@ -411,6 +489,10 @@ async function fetchGitHubContributions() {
 
         const events = await response.json();
         console.log('GitHub events fetched:', events.length);
+        
+        // Cache the events data
+        setCachedData('contributions', events);
+        
         displayContributionGraph(events);
     } catch (error) {
         console.log('GitHub contributions fetch failed:', error.message);
@@ -714,6 +796,7 @@ function displayContributionFallback() {
 
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+    const startTime = performance.now();
     console.log('DOM loaded, initializing website');
     
     // Always display manual languages immediately (no API dependency)
@@ -728,10 +811,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize scroll animations
     initScrollAnimations();
     
-    // Try to load GitHub data with timeout fallbacks
-    const githubTimeout = 5000; // 5 second timeout
+    // Log performance metrics
+    setTimeout(() => {
+        const loadTime = performance.now() - startTime;
+        console.log(`Website initialization completed in ${loadTime.toFixed(2)}ms`);
+    }, 100);
     
-    // Attempt to fetch GitHub profile with timeout
+    // Try to load GitHub data with progressive loading strategy
+    const githubTimeout = 2000; // 2 second timeout for better UX
+    
+    // Load profile data first (highest priority)
     Promise.race([
         fetchGitHubProfile(),
         new Promise((_, reject) => 
@@ -742,27 +831,31 @@ document.addEventListener('DOMContentLoaded', function() {
         setFallbackProfile();
     });
     
-    // Attempt to fetch GitHub repos with timeout
-    Promise.race([
-        fetchGitHubRepos(),
-        new Promise((_, reject) => 
-            setTimeout(() => reject(new Error('GitHub API timeout')), githubTimeout)
-        )
-    ]).catch(error => {
-        console.log('GitHub repos fetch failed or timed out:', error.message);
-        // Fallback repos are handled within the fetchGitHubRepos function
-    });
+    // Load repos data with delay for better performance
+    setTimeout(() => {
+        Promise.race([
+            fetchGitHubRepos(),
+            new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('GitHub API timeout')), githubTimeout)
+            )
+        ]).catch(error => {
+            console.log('GitHub repos fetch failed or timed out:', error.message);
+            // Fallback repos are handled within the fetchGitHubRepos function
+        });
+    }, 200);
     
-    // Attempt to fetch GitHub contributions with timeout
-    Promise.race([
-        fetchGitHubContributions(),
-        new Promise((_, reject) => 
-            setTimeout(() => reject(new Error('GitHub API timeout')), githubTimeout)
-        )
-    ]).catch(error => {
-        console.log('GitHub contributions fetch failed or timed out:', error.message);
-        // Fallback is handled within the fetchGitHubContributions function
-    });
+    // Load contributions data with longer delay (lowest priority)
+    setTimeout(() => {
+        Promise.race([
+            fetchGitHubContributions(),
+            new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('GitHub API timeout')), githubTimeout)
+            )
+        ]).catch(error => {
+            console.log('GitHub contributions fetch failed or timed out:', error.message);
+            // Fallback is handled within the fetchGitHubContributions function
+        });
+    }, 500);
     
     // Add smooth scrolling to all anchor links
     const anchors = document.querySelectorAll('a[href^="#"]');
