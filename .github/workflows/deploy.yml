@@ -23,9 +23,11 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: List directory contents after build
+        run: ls -la && ls -la build || echo "Build directory not found"
+
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: dist  # The folder Vite builds to
-          cname: ayon1xw.me # Your custom domain
+          folder: build  # The folder Vite builds to

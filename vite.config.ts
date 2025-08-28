@@ -6,6 +6,9 @@
   export default defineConfig({
     base: '/',  // Change to '/repository-name/' if not using a custom domain
     plugins: [react()],
+    build: {
+      outDir: 'build',
+    },
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
       alias: {
