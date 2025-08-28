@@ -1,11 +1,21 @@
+# My Portfolio Website
 
-  # Personal Portfolio Website
+This is my personal portfolio website that I've been working on since I started coding :D
 
-  This is a code bundle for Personal Portfolio Website. The original project is available at https://www.figma.com/design/M34CEfUjPT1KqPumDChTcE/Personal-Portfolio-Website.
+The website: https://ayon1xw.me/
 
-  ## Running the code
+## About
 
-  Run `npm i` to install the dependencies.
+This is a personal portfolio website built with React, TypeScript, and Tailwind CSS. The design is inspired by a Figma template and customized to showcase my skills and projects.
 
-  Run `npm run dev` to start the development server.
-  
+## Running the code
+
+Run `npm i` to install the dependencies.
+
+Run `npm run dev` to start the development server.
+
+## License
+
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](./LICENSE) file for details.
+
+![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)

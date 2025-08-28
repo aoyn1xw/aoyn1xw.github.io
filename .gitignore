@@ -5,6 +5,7 @@ node_modules/
 
 # Testing
 /coverage
+test/
 
 # Production
 /build
@@ -12,6 +13,7 @@ node_modules/
 
 # Misc
 .DS_Store
+Thumbs.db
 .env.local
 .env.development.local
 .env.test.local
@@ -47,6 +49,10 @@ logs
 # Cache directories
 .cache/
 .parcel-cache/
+
+# Build artifacts
+*.min.css
+*.min.js
 
 # Local Netlify folder
 .netlify
