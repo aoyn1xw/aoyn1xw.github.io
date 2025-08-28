@@ -3,7 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - master  # or main, depending on your default branch name
+      -  # or main, depending on your default branch name
+      - preview # also deploy from preview branch
 
 jobs:
   build-and-deploy:
@@ -28,3 +29,4 @@ jobs:
         with:
           branch: gh-pages
           folder: dist  # The folder Vite builds to
+          cname: ayon1xw.me # Your custom domain
