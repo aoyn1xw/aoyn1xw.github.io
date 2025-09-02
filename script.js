@@ -1,3 +1,17 @@
+// Page title control: change this value to update the browser tab text.
+// Optionally the hidden-tab behavior below will show a short message when the user switches away.
+const PAGE_TITLE = 'My Portfolio';
+const HIDDEN_TITLE = 'Come back plz :( '; // change or set to null to disable
+document.title = PAGE_TITLE;
+// Toggle title on visibility change (optional)
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        if (HIDDEN_TITLE) document.title = HIDDEN_TITLE;
+    } else {
+        document.title = PAGE_TITLE;
+    }
+});
+
 // Cache configuration
 const CACHE_KEY_PREFIX = 'aoyn1xw_github_';
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
