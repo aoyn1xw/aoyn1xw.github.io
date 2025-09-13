@@ -2,7 +2,7 @@
   "name": "react-portfolio",
   "version": "0.0.0",
   "private": true,
-  "homepage": "http://aoyn1xw.github.io/aoyn1xw.github.io",
+  "homepage": "https://aoyn1xw.github.io",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -16,7 +16,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "vite": "^5.4.20",
-    "gh-pages": "^5.0.0"
+    "gh-pages": "^5.0.0",
+    "vite": "^5.4.20"
   }
 }
