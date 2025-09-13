@@ -67,6 +67,19 @@ body{font-family:Inter,system-ui,Arial,sans-serif;background:var(--bg);color:var
 .skill-pill{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:8px 10px;border-radius:999px;font-weight:600;color:var(--text)}
 
 .site-footer{margin-top:28px;text-align:center;color:var(--muted);padding:20px 0;font-size:0.9rem}
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.copyright {
+  margin-bottom: 12px;
+}
+.sponsor-button {
+  display: flex;
+  justify-content: center;
+}
 .footer-attr{font-size:0.8rem;margin-top:4px;color:var(--muted)}
 .footer-attr a{color:var(--muted);text-decoration:underline}
 

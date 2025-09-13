@@ -108,7 +108,18 @@ export default function App(){
         </main>
 
         <footer className="site-footer">
-          <div className="footer-inner">© 2025 [My Name] | All rights reserved</div>
+          <div className="footer-inner">
+            <div className="copyright">© 2025 [My Name] | All rights reserved</div>
+            <div className="sponsor-button">
+              <iframe 
+                src="https://github.com/sponsors/aoyn1xw/button" 
+                title="Sponsor aoyn1xw" 
+                height="32" 
+                width="114" 
+                style={{ border: 0, borderRadius: '6px', marginTop: '10px' }}
+              ></iframe>
+            </div>
+          </div>
         </footer>
 
         <button className="dark-toggle" onClick={()=> setDark(d => !d)} aria-label="Toggle dark mode">{dark? 'Light' : 'Dark'}</button>
