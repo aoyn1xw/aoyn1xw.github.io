@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
-    "build-gh": "git subtree push --prefix dist https://github.com/aoyn1xw/aoyn1xw.github.io.git gh-pages"
+    "build-gh": "git subtree push --prefix dist https://github.com/aoyn1xw/aoyn1xw.github.io.git main"
   },
   "dependencies": {
     "react": "^18.2.0",
