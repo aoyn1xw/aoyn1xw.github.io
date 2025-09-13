@@ -1,0 +1,22 @@
+{
+  "name": "react-portfolio",
+  "version": "0.0.0",
+  "private": true,
+  "homepage": "http://aoyn1xw.github.io/aoyn1xw.github.io",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
+    "build-gh": "git subtree push --prefix dist https://github.com/aoyn1xw/aoyn1xw.github.io.git gh-pages"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.20",
+    "gh-pages": "^5.0.0"
+  }
+}

@@ -1,143 +1,15 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Me - Erdi</title>
-    <!-- Minimal meta tags for SEO and social previews -->
-    <meta name="description" content="Erdi — Frontend developer and student from Germany.">
-    <meta name="author" content="Erdi (aoyn1xw)">
-    <meta property="og:title" content="About Me - Erdi">
-    <meta property="og:description" content="Frontend developer and student from Germany.">
-    <meta property="og:image" content="https://github.com/aoyn1xw.png">
-    <meta property="og:url" content="https://ayon1xw.me/">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://github.com/aoyn1xw.png">
-    <link rel="icon" href="assets/logos/logo.svg" type="image/svg+xml">
-    
-    <!-- Resource hints for performance -->
-    <link rel="dns-prefetch" href="//api.github.com">
-    <link rel="preload" href="style.css" as="style">
-    <link rel="preload" href="script.js" as="script">
-    
-    <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-    <div class="noise"></div>
-    <div class="floating-shapes">
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-    </div>
-
-    <div class="container">
-        <header>
-            <h1>About Me</h1>
-            <p class="subtitle">Developer & Student from Germany</p>
-        </header>
-
-        <section id="about">
-            <div class="profile-container">
-                <div class="profile-pic">
-                    <div class="profile-pic-inner">
-                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjNjM2NkYxIiByeD0iMTAwIi8+CjxjaXJjbGUgY3g9IjEwMCIgY3k9IjgwIiByPSIzMCIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTYwIDEzMGMwLTIyIDEyLTQwIDQwLTQwczQwIDE4IDQwIDQwdjUwSDYwdi01MHoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=" alt="Erdi Profile Picture" class="loading-avatar">
-                    </div>
-                </div>
-            </div>
-
-            <h2 class="section-title"><span id="hello-text">Hello! 👋</span></h2>
-            <p class="intro-text">I'm <span class="highlight">Erdi</span>, a passionate developer and student from Germany.</p>
-            
-            <p>I create beautiful, functional web experiences using <span class="highlight">HTML, CSS, and JavaScript</span>. Currently studying while building projects and exploring new technologies.</p>
-            
-            <p>My goal is to transition into professional development or start my own business. I'm always learning, building, and connecting with the developer community.</p>
-            
-            <p>Check out my <a href="https://github.com/aoyn1xw">GitHub repositories</a> below, connect on social media, or <a href="mailto:hello@ayon1xw.me">drop me an email</a>. <a href="https://ko-fi.com/ayon1xw">Support my journey</a> if you'd like :D</p>
-            
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-number">1+</div>
-                    <div class="stat-label">Years Learning</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">10+</div>
-                    <div class="stat-label">Projects Built</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">3</div>
-                    <div class="stat-label">Languages</div>
-                </div>
-            </div>
-
-            <!-- Programming Languages Section -->
-            <div class="languages-section">
-                <h3 class="subsection-title">Programming Languages & Technologies</h3>
-                <div id="languages-grid" class="languages-grid">
-                    <!-- Loading state -->
-                    <div class="loading-card">
-                        <div class="loading-spinner"></div>
-                        <p>Loading languages...</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- GitHub Repositories Section -->
-            <div class="repos-section">
-                <h3 class="subsection-title">Featured Projects</h3>
-                <div id="github-repos" class="repos-grid">
-                    <!-- Loading state -->
-                    <div class="loading-card">
-                        <div class="loading-spinner"></div>
-                        <p>Loading repositories...</p>
-                    </div>
-                </div>
-                
-                <!-- GitHub Profile Card -->
-                <div class="github-profile-section">
-                    <h3 class="subsection-title">GitHub Profile</h3>
-                    <div id="github-profile" class="github-profile-card">
-                        <!-- Profile will be loaded here -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="social-links">
-                <a href="https://github.com/aoyn1xw" class="social-icon">
-                    <img src="assets/logos/github-mark-white.png" alt="GitHub" loading="lazy">
-                    <div class="tooltip">GitHub</div>
-                </a>
-                <a href="https://wsfteam.xyz/discord" class="social-icon">
-                    <img src="assets/logos/Discord-Symbol-White.png" alt="Discord" loading="lazy">
-                    <div class="tooltip">Discord</div>
-                </a>
-                <a href="https://instagram.com/ayon1xw" class="social-icon">
-                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDIuMTYzQzE1LjIwNCAyLjE2MyAxNS41ODQgMi4xNzUgMTYuODUgMi4yMzNDMTguMTAyIDIuMjkgMTguNzE4IDIuNDcgMTkuMDc3IDIuNjI1QzE5LjU1IDIuODI0IDE5Ljg4OCAzLjA2MSAyMC4yNzUgMy40NDlDMjAuNjY0IDMuODM4IDIwLjg5OCA0LjE3MiAyMS4xMDEgNC42NDdDMjEuMjU0IDUuMDA2IDIxLjQzNSA1LjYyIDIxLjQ5MiA2Ljg3N0MyMS41NSA4LjEzOSAyMS41NjMgOC41MjEgMjEuNTYzIDEyQzIxLjU2MyAxNS40NzkgMjEuNTUgMTUuODYxIDIxLjQ5MiAxNy4xMjNDMjEuNDM1IDE4LjM4IDIxLjI1NCAxOC45OTQgMjEuMTAxIDE5LjM1M0MyMC44OTggMTkuODI4IDIwLjY2NCAyMC4xNjIgMjAuMjc1IDIwLjU1MUMxOS44ODggMjAuOTM5IDE5LjU1IDIxLjE3NiAxOS4wNzcgMjEuMzc1QzE4LjcxOCAyMS41MyAxOC4xMDIgMjEuNzEgMTYuODUgMjEuNzY3QzE1LjU4NCAyMS44MjUgMTUuMjA0IDIxLjgzNyAxMiAyMS44MzdDOC43OTYgMjEuODM3IDguNDE2IDIxLjgyNSA3LjE1IDIxLjc2N0M1Ljg5OCAyMS43MSA1LjI4MiAyMS41MyA0LjkyMyAyMS4zNzVDNC40NSAyMS4xNzYgNC4xMTIgMjAuOTM5IDMuNzI1IDIwLjU1MUMzLjMzNiAyMC4xNjIgMy4xMDIgMTkuODI4IDIuODk5IDE5LjM1M0MyLjc0NiAxOC45OTQgMi41NjUgMTguMzggMi41MDggMTcuMTIzQzIuNDUgMTUuODYxIDIuNDM3IDE1LjQ3OSAyLjQzNyAxMkMyLjQzNyA4LjUyMSAyLjQ1IDguMTM5IDIuNTA4IDYuODc3QzIuNTY1IDUuNjIgMi43NDYgNS4wMDYgMi44OTkgNC42NDdDMy4xMDIgNC4xNzIgMy4zMzYgMy44MzggMy43MjUgMy40NDlDNC4xMTIgMy4wNjEgNC40NSAyLjgyNCA0LjkyMyAyLjYyNUM1LjI4MiAyLjQ3IDUuODk4IDIuMjkgNy4xNSAyLjIzM0M4LjQxNiAyLjE3NSA4Ljc5NiAyLjE2MyAxMiAyLjE2M1pNMTIgMEMxMi44NzkgMCA5LjM4NSAwLjAxMyA3LjEyOSAwLjA3MkM0Ljg1NyAwLjEzIDMuNzc5IDAuMzQyIDMuMSAwLjY0OEMyLjM2NSAwLjk3NyAxLjc1OSAxLjQyNyAxLjEyMSAyLjA4MUMwLjUyMSAyLjczNiAwLjA4MiAzLjM3NiAwLjAxMyA0LjExOEMwIDQuNzA4IDAgNS43ODIgMCA4LjAwMkMwIDEwLjU5NSAwIDEwLjk1NiAwIDEyQzAgMTMuMDQ0IDAgMTMuNDA1IDAgMTUuOTk4QzAgMTguMjE4IDAgMTkuMjkyIDAuMDEzIDE5Ljg4MkMwLjA4MiAyMC42MjQgMC41MjEgMjEuMjY0IDEuMTIxIDIxLjkxOUMxLjc1OSAyMi41NzMgMi4zNjUgMjMuMDIzIDMuMSAyMy4zNTJDMy43NzkgMjMuNjU4IDQuODU3IDIzLjg3IDcuMTI5IDIzLjkyOEM5LjM4NSAyMy45ODcgMTAuOTY1IDI0IDEyIDI0QzEzLjAzNSAyNCAxNC42MTUgMjMuOTg3IDE2Ljg3MSAyMy45MjhDMTkuMTQzIDIzLjg3IDIwLjIyMSAyMy42NTggMjAuOSAyMy4zNTJDMjEuNjM1IDIzLjAyMyAyMi4yNDEgMjIuNTczIDIyLjg3OSAyMS45MTlDMjMuNDc5IDIxLjI2NCAyMy45MTggMjAuNjI0IDIzLjk4NyAxOS44ODJDMjQgMTkuMjkyIDI0IDE4LjIxOCAyNCAxNS45OThDMjQgMTMuNDA1IDI0IDEzLjA0NCAyNCAxMkMyNCAxMC45NTYgMjQgMTAuNTk1IDI0IDguMDAyQzI0IDUuNzgyIDI0IDQuNzA4IDIzLjk4NyA0LjExOEMyMy45MTggMy4zNzYgMjMuNDc5IDIuNzM2IDIyLjg3OSAyLjA4MUMyMi4yNDEgMS40MjcgMjEuNjM1IDAuOTc3IDIwLjkgMC42NDhDMjAuMjIxIDAuMzQyIDE5LjE0MyAwLjEzIDE2Ljg3MSAwLjA3MkMxNC42MTUgMC4wMTMgMTMuMDM1IDAgMTIgMFoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xMiA1Ljc4NEE2LjIxNiA2LjIxNiAwIDEgMCAxMiAxOC4yMTZBNi4yMTYgNi4yMTYgMCAwIDAgMTIgNS43ODRaTTEyIDcuNzI4QTQuMjcyIDQuMjcyIDAgMSAxIDEyIDE2LjI3MkE0LjI3MiA0LjI3MiAwIDAgMSAxMiA3LjcyOFoiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjE4LjUiIGN5PSI1LjUiIHI9IjEuNSIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==" alt="Instagram">
-                    <div class="tooltip">Instagram</div>
-                </a>
-            </div>
-
-            <!-- GitHub Contribution Graph Section -->
-            <div class="contribution-section">
-                <h3 class="subsection-title">GitHub Activity</h3>
-                <div id="contribution-graph" class="contribution-graph">
-                    <!-- Loading state -->
-                    <div class="loading-card">
-                        <div class="loading-spinner"></div>
-                        <p>Loading contribution graph...</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <footer>
-            &copy; 2025 Erdi. All rights reserved.
-        </footer>
-    </div>
-
-    <script src="script.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
