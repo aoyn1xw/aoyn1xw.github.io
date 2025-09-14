@@ -1,6 +1,6 @@
 // Vite config for GitHub Pages deployment
 module.exports = {
-  base: '',
+  base: './',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
