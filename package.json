@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist",
+    "deploy": "gh-pages -d dist -b gh-pages",
     "build-gh": "git subtree push --prefix dist https://github.com/aoyn1xw/aoyn1xw.github.io.git gh-pages"
   },
   "dependencies": {
