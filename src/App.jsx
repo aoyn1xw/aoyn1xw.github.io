@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-const GITHUB_USERNAME = 'aoyn1xw' // replace if needed
+const GITHUB_USERNAME = 'aoyn1xw'
 const API_BASE = 'https://api.github.com'
 
 function SocialIcons({ profile }){
@@ -109,7 +109,7 @@ export default function App(){
 
         <footer className="site-footer">
           <div className="footer-inner">
-            <div className="copyright">© 2025 [My Name] | All rights reserved</div>
+            <div className="copyright">© 2025 Erdi | All rights reserved</div>
             <div className="sponsor-button">
               <iframe 
                 src="https://github.com/sponsors/aoyn1xw/button" 
