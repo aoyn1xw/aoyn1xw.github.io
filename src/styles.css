@@ -7,6 +7,11 @@
   --radius: 16px;
   --shadow: 0 8px 28px rgba(16,24,40,0.06);
   --border: rgba(15,23,36,0.03);
+  /* New social color variables */
+  --social-bg: #f8f9fa;
+  --social-icon: #6c757d;
+  --social-hover-bg: #e9ecef;
+  --social-hover-icon: #495057;
 }
 
 *{box-sizing:border-box}
@@ -82,27 +87,41 @@ body{
   text-decoration: none;
   width: 50px;
   height: 50px;
-  background-color: var(--card);
+  background-color: var(--social-bg);
   border-radius: 50%;
-  transition: transform .2s ease, box-shadow .2s ease, background-color 0.2s ease;
+  transition: all 0.3s ease;
   overflow: hidden;
   border: 1px solid var(--border);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 .social-box:hover{
   transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-  background-color: var(--accent);
-}
-.social-box:hover svg {
-  fill: white;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+  background-color: var(--social-hover-bg);
 }
 .social-box svg {
   width: 50%;
   height: 50%;
   display: block;
-  fill: var(--text);
-  transition: fill 0.2s ease;
+  fill: var(--social-icon);
+  transition: fill 0.3s ease;
 }
+.social-box:hover svg {
+  fill: var(--social-hover-icon);
+}
+
+/* Individual social icon colors (desaturated) */
+.social-box:nth-child(1) svg { fill: #6c757d; } /* Email - Gray */
+.social-box:nth-child(2) svg { fill: #9e7b9f; } /* Instagram - Soft Purple */
+.social-box:nth-child(3) svg { fill: #6c8ebf; } /* LinkedIn - Light Blue */
+.social-box:nth-child(4) svg { fill: #6c757d; } /* TikTok - Gray */
+.social-box:nth-child(5) svg { fill: #555555; } /* GitHub - Medium Gray */
+
+.social-box:nth-child(1):hover svg { fill: #495057; }
+.social-box:nth-child(2):hover svg { fill: #7d5d7f; }
+.social-box:nth-child(3):hover svg { fill: #4a6d9e; }
+.social-box:nth-child(4):hover svg { fill: #495057; }
+.social-box:nth-child(5):hover svg { fill: #333333; }
 
 .section{
   margin-top: 32px;
@@ -319,15 +338,40 @@ body{
   --card: #0f1724;
   --shadow: 0 8px 24px rgba(2,6,23,0.6);
   --border: rgba(255,255,255,0.05);
+  /* Dark mode social colors */
+  --social-bg: #1a1f29;
+  --social-icon: #9aa6b2;
+  --social-hover-bg: #252d3b;
+  --social-hover-icon: #c5d1de;
 }
 
 .dark .social-box {
-  background-color: var(--card);
+  background-color: var(--social-bg);
   border: 1px solid var(--border);
 }
-.dark .social-box:hover svg {
-  fill: white;
+.dark .social-box:hover {
+  background-color: var(--social-hover-bg);
 }
+.dark .social-box svg {
+  fill: var(--social-icon);
+}
+.dark .social-box:hover svg {
+  fill: var(--social-hover-icon);
+}
+
+/* Individual social icon colors in dark mode */
+.dark .social-box:nth-child(1) svg { fill: #9aa6b2; } /* Email */
+.dark .social-box:nth-child(2) svg { fill: #b89fc4; } /* Instagram */
+.dark .social-box:nth-child(3) svg { fill: #8aa6d6; } /* LinkedIn */
+.dark .social-box:nth-child(4) svg { fill: #9aa6b2; } /* TikTok */
+.dark .social-box:nth-child(5) svg { fill: #a0a0a0; } /* GitHub */
+
+.dark .social-box:nth-child(1):hover svg { fill: #c5d1de; }
+.dark .social-box:nth-child(2):hover svg { fill: #d4c2e0; }
+.dark .social-box:nth-child(3):hover svg { fill: #b0c4e9; }
+.dark .social-box:nth-child(4):hover svg { fill: #c5d1de; }
+.dark .social-box:nth-child(5):hover svg { fill: #c0c0c0; }
+
 .dark .skill-bar {
   background-color: rgba(255,255,255,0.06);
 }
