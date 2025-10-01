@@ -1,12 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600">
-  <defs>
-    <linearGradient id="g" x1="0" x2="1">
-      <stop offset="0" stop-color="#f3f4f6" />
-      <stop offset="1" stop-color="#ece9f2" />
-    </linearGradient>
-  </defs>
-  <rect width="1200" height="600" fill="url(#g)" rx="12"/>
-  <g fill="#c7c6cc" font-family="Inter, Arial, sans-serif" font-weight="600" font-size="32">
-    <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">Placeholder</text>
-  </g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#111"/>
+  <text x="50%" y="50%" font-family="Courier, monospace" font-size="24" text-anchor="middle" fill="#fff" dominant-baseline="central">aoyn1xw</text>
+  <circle cx="100" cy="70" r="40" fill="none" stroke="#3498db" stroke-width="2"/>
+  <circle cx="85" cy="60" r="5" fill="#3498db"/>
+  <circle cx="115" cy="60" r="5" fill="#3498db"/>
+  <path d="M80,90 Q100,110 120,90" stroke="#3498db" stroke-width="2" fill="none"/>
+  <text x="50%" y="150" font-family="Courier, monospace" font-size="12" text-anchor="middle" fill="#3498db" dominant-baseline="central">I build random stuff</text>
 </svg>
