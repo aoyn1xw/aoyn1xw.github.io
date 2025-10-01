@@ -6,7 +6,7 @@
   --card: #ffffff;
   --radius: 16px;
   --shadow: 0 8px 28px rgba(16,24,40,0.06);
-  --border: rgba(15,23,36,0.03);
+  --border: rgba(15,23,36,0.15);
   /* New social color variables */
   --social-bg: #f8f9fa;
   --social-icon: #6c757d;
@@ -30,9 +30,26 @@ body{
   margin: 0 auto;
 }
 
-.profile{
+/* Box Container Styling */
+.box {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+
+.box h2 {
+  font-size: 1.3rem;
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.profile-box {
   text-align: center;
-  padding: 28px 12px 8px;
 }
 .avatar-wrap{
   width: 88px;
@@ -123,13 +140,49 @@ body{
 .social-box:nth-child(4):hover svg { fill: #495057; }
 .social-box:nth-child(5):hover svg { fill: #333333; }
 
-.section{
-  margin-top: 32px;
+/* List Styling */
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
-.section h2 {
-  font-size: 1.3rem;
-  margin-bottom: 16px;
-  font-weight: 700;
+
+.list li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.list li:last-child {
+  border-bottom: none;
+}
+
+.list a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.list a:hover {
+  color: var(--text);
+  text-decoration: underline;
+}
+
+/* ASCII Art Styling */
+.ascii-art {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  color: var(--text);
+  background: var(--bg);
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 0;
+}
+
+.github-contrib {
+  padding: 16px 0;
+  text-align: center;
 }
 
 .projects-grid{
@@ -346,12 +399,16 @@ body{
   --muted: #9aa6b2;
   --card: #0f1724;
   --shadow: 0 8px 24px rgba(2,6,23,0.6);
-  --border: rgba(255,255,255,0.05);
+  --border: rgba(255,255,255,0.15);
   /* Dark mode social colors */
   --social-bg: #1a1f29;
   --social-icon: #9aa6b2;
   --social-hover-bg: #252d3b;
   --social-hover-icon: #c5d1de;
+}
+
+.dark .box {
+  border-color: var(--border);
 }
 
 .dark .social-box {

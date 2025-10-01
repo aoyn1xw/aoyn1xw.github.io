@@ -80,57 +80,51 @@ function FeaturedProjects({ repos }){
 
   if (featuredRepos.length === 0) {
     return (
-      <section className="section">
-        <h2>Featured Projects</h2>
-        <div className="projects-grid">
-          <div className="card project-card">
-            <div className="project-placeholder">
-              <div className="placeholder-icon">🚀</div>
-              <div className="card-body">
-                <h3>Coming Soon</h3>
-                <p className="muted">Exciting projects are on the way!</p>
-                <div className="card-actions">
-                  <button className="btn" disabled>View Project</button>
-                </div>
+      <div className="projects-grid">
+        <div className="card project-card">
+          <div className="project-placeholder">
+            <div className="placeholder-icon">🚀</div>
+            <div className="card-body">
+              <h3>Coming Soon</h3>
+              <p className="muted">Exciting projects are on the way!</p>
+              <div className="card-actions">
+                <button className="btn" disabled>View Project</button>
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
     );
   }
 
   return (
-    <section className="section">
-      <h2>Featured Projects</h2>
-      <div className="projects-grid">
-        {featuredRepos.map(repo => (
-          <div key={repo.id} className="card project-card">
-            <div className="project-image">
-              {repo.language && <span className="language-tag">{repo.language}</span>}
+    <div className="projects-grid">
+      {featuredRepos.map(repo => (
+        <div key={repo.id} className="card project-card">
+          <div className="project-image">
+            {repo.language && <span className="language-tag">{repo.language}</span>}
+          </div>
+          <div className="card-body">
+            <h3>{repo.name}</h3>
+            <p className="muted">{repo.description || 'No description available'}</p>
+            <div className="project-stats">
+              <span>⭐ {repo.stargazers_count}</span>
+              <span>🍴 {repo.forks_count}</span>
             </div>
-            <div className="card-body">
-              <h3>{repo.name}</h3>
-              <p className="muted">{repo.description || 'No description available'}</p>
-              <div className="project-stats">
-                <span>⭐ {repo.stargazers_count}</span>
-                <span>🍴 {repo.forks_count}</span>
-              </div>
-              <div className="card-actions">
-                <a 
-                  className="btn" 
-                  href={repo.html_url} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                >
-                  View on GitHub
-                </a>
-              </div>
+            <div className="card-actions">
+              <a 
+                className="btn" 
+                href={repo.html_url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                View on GitHub
+              </a>
             </div>
           </div>
-        ))}
-      </div>
-    </section>
+        </div>
+      ))}
+    </div>
   )
 }
 
@@ -145,25 +139,22 @@ function Skills(){
   ];
 
   return (
-    <section className="section">
-      <h2>Skills</h2>
-      <div className="skills-container">
-        {skills.map((skill, index) => (
-          <div key={index} className="skill-item">
-            <div className="skill-header">
-              <span className="skill-name">{skill.name}</span>
-              <span className="skill-level">{skill.level}%</span>
-            </div>
-            <div className="skill-bar">
-              <div 
-                className="skill-progress" 
-                style={{ width: `${skill.level}%` }}
-              ></div>
-            </div>
+    <div className="skills-container">
+      {skills.map((skill, index) => (
+        <div key={index} className="skill-item">
+          <div className="skill-header">
+            <span className="skill-name">{skill.name}</span>
+            <span className="skill-level">{skill.level}%</span>
           </div>
-        ))}
-      </div>
-    </section>
+          <div className="skill-bar">
+            <div 
+              className="skill-progress" 
+              style={{ width: `${skill.level}%` }}
+            ></div>
+          </div>
+        </div>
+      ))}
+    </div>
   )
 }
 
@@ -234,7 +225,17 @@ export default function App(){
         setRepos(r)
       }catch(e){
         console.error('GitHub fetch error', e)
-        setError(e.message)
+        // Use fallback data for preview
+        setProfile({
+          login: GITHUB_USERNAME,
+          name: 'Ayon',
+          avatar_url: '/assets/picture/placeholder.svg',
+          bio: 'Developer passionate about creating amazing web experiences',
+          followers: 42,
+          public_repos: 15,
+          email: 'hello@ayon1xw.me'
+        })
+        setRepos([])
       }finally{
         setLoading(false)
       }
@@ -253,20 +254,13 @@ export default function App(){
     );
   }
 
-  if (error) {
-    return (
-      <div className="app">
-        <div className="error-container">
-          <p>Error loading profile: {error}</p>
-        </div>
-      </div>
-    );
-  }
+
 
   return (
     <div className={`app ${dark ? 'dark' : ''}`}>
       <div className="container">
-        <header className="profile">
+        {/* Profile Box */}
+        <section className="box profile-box">
           <div className="avatar-wrap">
             {profile && (
               <img 
@@ -288,14 +282,83 @@ export default function App(){
               <span>⭐ {profile.public_repos} Repos</span>
             </div>
           )}
+        </section>
 
+        {/* Social/Contact Box */}
+        <section className="box social-box-container">
+          <h2>Social / Contact</h2>
           <SocialIcons profile={profile} />
-        </header>
+        </section>
 
-        <main>
-          <FeaturedProjects repos={repos} />
+        {/* Skills Box */}
+        <section className="box">
+          <h2>Skills</h2>
           <Skills />
-        </main>
+        </section>
+
+        {/* Learning Box */}
+        <section className="box">
+          <h2>Currently Learning</h2>
+          <ul className="list">
+            <li>Advanced React Patterns</li>
+            <li>TypeScript Best Practices</li>
+            <li>Web Performance Optimization</li>
+            <li>GraphQL & Apollo Client</li>
+          </ul>
+        </section>
+
+        {/* Interests Box */}
+        <section className="box">
+          <h2>Interests</h2>
+          <ul className="list">
+            <li>Web Development & Design</li>
+            <li>Open Source Contributions</li>
+            <li>UI/UX Design</li>
+            <li>Tech Communities</li>
+          </ul>
+        </section>
+
+        {/* Projects Box */}
+        <section className="box">
+          <h2>Featured Projects</h2>
+          <FeaturedProjects repos={repos} />
+        </section>
+
+        {/* GitHub Contributions Box */}
+        <section className="box">
+          <h2>GitHub Contributions</h2>
+          <div className="github-contrib">
+            <p className="muted">Contribution grid coming soon...</p>
+          </div>
+        </section>
+
+        {/* ASCII Art Box */}
+        <section className="box ascii-box">
+          <h2>ASCII Art</h2>
+          <pre className="ascii-art">
+{`   ___                 ____       
+  / _ \\               /  _ \\      
+ / /_\\ \\ _   _  ___  | | | |_ __  
+/  _  \\| | | |/ _ \\ | | | | '_ \\ 
+| | | || |_| | (_) || |_| | | | |
+|_| |_| \\__, |\\___/ \\____/|_| |_|
+         __/ |                    
+        |___/                     `}
+          </pre>
+        </section>
+
+        {/* Promos/Referrals Box */}
+        <section className="box">
+          <h2>Promos / Referrals</h2>
+          <div className="promo-content">
+            <p className="muted">Check out my favorite tools and services:</p>
+            <ul className="list">
+              <li><a href="#" target="_blank" rel="noopener noreferrer">Tool 1</a></li>
+              <li><a href="#" target="_blank" rel="noopener noreferrer">Service 2</a></li>
+              <li><a href="#" target="_blank" rel="noopener noreferrer">Resource 3</a></li>
+            </ul>
+          </div>
+        </section>
 
         <footer className="site-footer">
           <div className="footer-inner">
