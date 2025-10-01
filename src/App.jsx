@@ -171,8 +171,45 @@ export default function App(){
   const [profile, setProfile] = useState(null)
   const [repos, setRepos] = useState([])
   const [loading, setLoading] = useState(true)
-  const [dark, setDark] = useState(false)
+  const [dark, setDark] = useState(() => {
+    // Get the stored theme preference from localStorage, default to false if not found
+    const savedTheme = localStorage.getItem('darkMode')
+    return savedTheme === 'true'
+  })
   const [error, setError] = useState(null)
+
+  // Effect for dark mode system preference
+  useEffect(() => {
+    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    // Only set based on system preference if user hasn't explicitly set a preference
+    if (localStorage.getItem('darkMode') === null) {
+      setDark(darkModeMediaQuery.matches);
+    }
+    
+    // Add listener for changes
+    const handleChange = (e) => {
+      // Only update if user hasn't set a manual preference
+      if (localStorage.getItem('darkMode') === null) {
+        setDark(e.matches);
+      }
+    };
+    
+    darkModeMediaQuery.addEventListener('change', handleChange);
+    
+    return () => {
+      darkModeMediaQuery.removeEventListener('change', handleChange);
+    };
+  }, []);
+
+  // Effect to update HTML element when dark mode changes
+  useEffect(() => {
+    if (dark) {
+      document.documentElement.classList.add('dark-theme');
+    } else {
+      document.documentElement.classList.remove('dark-theme');
+    }
+  }, [dark]);
 
   useEffect(()=>{
     async function fetchGitHub(){
@@ -279,7 +316,11 @@ export default function App(){
 
         <button 
           className="dark-toggle" 
-          onClick={() => setDark(d => !d)} 
+          onClick={() => {
+            const newDarkMode = !dark;
+            setDark(newDarkMode);
+            localStorage.setItem('darkMode', newDarkMode);
+          }} 
           aria-label="Toggle dark mode"
         >
           {dark ? '☀️ Light' : '🌙 Dark'}
