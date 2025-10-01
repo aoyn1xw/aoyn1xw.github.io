@@ -38,17 +38,45 @@ function SocialIcons() {
     }
   ];
 
+  // simple ripple bubble
+  const spawnBubble = (e) => {
+    const el = e.currentTarget
+    const rect = el.getBoundingClientRect()
+    const bubble = document.createElement('span')
+    const size = Math.max(rect.width, rect.height)
+    bubble.style.width = `${size}px`
+    bubble.style.height = `${size}px`
+    bubble.style.left = `${e.clientX - rect.left - size/2}px`
+    bubble.style.top = `${e.clientY - rect.top - size/2}px`
+    bubble.style.position = 'absolute'
+    bubble.style.borderRadius = '50%'
+    bubble.style.background = 'rgba(52,152,219,0.25)'
+    bubble.style.pointerEvents = 'none'
+    bubble.style.transform = 'scale(0.6)'
+    bubble.style.opacity = '0.9'
+    bubble.style.transition = 'transform 650ms ease, opacity 650ms ease'
+    el.appendChild(bubble)
+    requestAnimationFrame(() => {
+      bubble.style.transform = 'scale(1.2)'
+      bubble.style.opacity = '0'
+    })
+    setTimeout(() => bubble.remove(), 700)
+  }
+
   return (
     <div className="social-grid">
       {socialLinks.map((social, index) => (
-        <a 
+        <a
           key={index}
-          href={social.url} 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          aria-label={social.name} 
-          title={social.name} 
+          href={social.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={social.name}
+          title={social.name}
           className="social-bubble"
+          onPointerDown={spawnBubble}
+          onMouseDown={spawnBubble}
+          onTouchStart={spawnBubble}
         >
           <img src={social.icon} alt={social.name} width="30" height="30" />
         </a>
@@ -159,6 +187,7 @@ export default function App(){
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [githubContribData, setGithubContribData] = useState([])
+  const [contribWeeks, setContribWeeks] = useState([]) // GraphQL colored cells
 
   // Effect to fetch GitHub data
   useEffect(() => {
@@ -176,27 +205,38 @@ export default function App(){
         const profileData = await profileRes.json();
         setProfile(profileData);
         
-        // Fetch contribution data (public API, no token). Falls back to local generator if it fails.
-        try {
-          const contribRes = await fetch(`https://github-contributions-api.jogruber.de/v4/${GITHUB_USERNAME}?y=last`);
-          if (contribRes.ok) {
-            const contribJson = await contribRes.json();
-            // API returns { years: [{ total, range: { start, end }, contributions: [{date,count,level}] }] }
-            const latestYear = Array.isArray(contribJson?.years) && contribJson.years[0];
-            const days = (latestYear?.contributions || []).map(d => ({
-              date: d.date,
-              level: Math.max(0, Math.min(4, d.level || 0)),
-              count: d.count || 0
-            }));
-            // Keep last 35 days to resemble the sketch box size
-            setGithubContribData(days.slice(-35));
-          } else {
-            setGithubContribData(generateGithubGrid().map(level => ({ level })));
+        // Try to fetch contribution data from GitHub GraphQL API if token provided
+        const token = import.meta.env.VITE_GH_TOKEN
+        if (token) {
+          const to = new Date()
+          const from = new Date()
+          from.setDate(to.getDate() - 35)
+          const query = {
+            query: `query($login:String!, $from:DateTime!, $to:DateTime!){
+              user(login:$login){
+                contributionsCollection(from:$from, to:$to){
+                  contributionCalendar{ weeks { contributionDays { color contributionCount date weekday } }}
+                }
+              }
+            }`,
+            variables: { login: GITHUB_USERNAME, from: from.toISOString(), to: to.toISOString() }
           }
-        } catch {
-          setGithubContribData(generateGithubGrid().map(level => ({ level })));
+          try {
+            const resp = await fetch('https://api.github.com/graphql', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Authorization': `bearer ${token}` },
+              body: JSON.stringify(query)
+            })
+            if (resp.ok) {
+              const data = await resp.json()
+              const weeks = data?.data?.user?.contributionsCollection?.contributionCalendar?.weeks || []
+              if (weeks?.length) setContribWeeks(weeks)
+            }
+          } catch (_) {
+            // ignore and rely on fallback
+          }
         }
-
+        
         // Fetch repositories data
         const reposRes = await fetch(`${API_BASE}/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`);
         
@@ -215,11 +255,10 @@ export default function App(){
     }
     
     fetchGitHub();
-    // No global listeners needed; we attach interactivity inline where needed.
-    return () => {};
+    // No global listeners required
   }, [])
 
-  // Create interactive bubbles effect
+  // Create interactive bubbles effect on avatar
   const createBubble = (e, element) => {
     const bubble = document.createElement('div');
     bubble.className = 'interactive-bubble';
@@ -257,9 +296,7 @@ export default function App(){
     return days;
   };
   
-  const githubContributions = githubContribData.length
-    ? githubContribData.map(d => d.level)
-    : generateGithubGrid();
+  const githubContributions = generateGithubGrid();
   
   // ASCII art for the ASCII section
   const asciiArt = 
@@ -308,9 +345,10 @@ export default function App(){
       </header>
 
       <section className="profile-section" id="about">
-        <div 
-          className="profile-pic" 
-          onMouseMove={(e) => createBubble(e, e.currentTarget)}
+        <div
+          className="profile-pic"
+          onPointerMove={(e) => createBubble(e, e.currentTarget)}
+          onTouchMove={(e) => createBubble(e, e.currentTarget)}
         >
           <img 
             src={profile?.avatar_url || '/assets/picture/placeholder.svg'} 
@@ -379,15 +417,40 @@ export default function App(){
         {/* GitHub Contribution Grid Section */}
         <section className="github-section" id="projects">
           <h2>GitHub contribute grid</h2>
-          <div className="github-grid">
-            {githubContributions.map((level, index) => (
-              <div 
-                key={index} 
-                className={`github-day contribution-${level}`}
-                title={typeof level === 'number' ? `${level} contributions` : 'Contributions'}
-              ></div>
-            ))}
-          </div>
+          {contribWeeks.length > 0 ? (
+            <div style={{ display: 'grid', gridTemplateColumns: `repeat(${contribWeeks.length}, 1fr)`, gap: 4 }}>
+              {contribWeeks.map((week, wi) => (
+                <div key={wi} style={{ display: 'grid', gridTemplateRows: 'repeat(7, 1fr)', gap: 4 }}>
+                  {week.contributionDays.map((d, di) => (
+                    <div key={di} style={{ width: 14, height: 14, borderRadius: 2, background: d.color || 'var(--hover)' }} title={`${d.contributionCount} on ${d.date}`} />
+                  ))}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <>
+              {/* Try to load an SVG contribution calendar; fallback to mini grid */}
+              <img
+                src={`https://ghchart.rshah.org/39d353/${GITHUB_USERNAME}`}
+                alt={`${GITHUB_USERNAME} GitHub contributions graph`}
+                style={{ width: '100%', maxWidth: '100%', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.15)', background: 'rgba(255,255,255,0.02)' }}
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none'
+                  const fallback = document.getElementById('contrib-fallback')
+                  if (fallback) fallback.style.display = 'grid'
+                }}
+              />
+              <div id="contrib-fallback" className="github-grid" style={{ display: 'none', marginTop: '12px' }}>
+                {githubContributions.map((level, index) => (
+                  <div
+                    key={index}
+                    className={`github-day contribution-${level}`}
+                    title={`${level} contributions`}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </section>
 
         {/* ASCII Art Section */}

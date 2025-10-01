@@ -3,16 +3,10 @@
   --bg: #000000;
   --text: #ffffff;
   --accent: #3498db;
-  --border: rgba(255, 255, 255, 0.2);
-  --hover: rgba(255, 255, 255, 0.1);
-  --section-border: #333;
-  --muted: #9aa6b2;         /* used in several components */
-  --card: #0e0e0e;          /* dark card bg */
-  --shadow: 0 8px 24px rgba(0,0,0,0.45);
-  --social-bg: #121620;
-  --social-icon: #c5d1de;
-  --social-hover-bg: #1b2230;
-  --social-hover-icon: #ffffff;
+  --border: rgba(255, 255, 255, 0.25);
+  --hover: rgba(255, 255, 255, 0.08);
+  /* section outlines similar to the sketch */
+  --section-border: rgba(255, 255, 255, 0.35);
 }
 
 * {
@@ -216,6 +210,8 @@ nav a:hover {
   height: 70px;
   border-radius: 50%;
   background: var(--hover);
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -434,7 +430,7 @@ nav a:hover {
     margin-bottom: 10px;
   }
 }
-/* END responsive block */
+/* removed stray bracket */
 .social-box svg {
   width: 50%;
   height: 50%;
@@ -458,14 +454,6 @@ nav a:hover {
 .social-box:nth-child(3):hover svg { fill: #4a6d9e; }
 .social-box:nth-child(4):hover svg { fill: #495057; }
 .social-box:nth-child(5):hover svg { fill: #333333; }
-
-/* Ensure raster icon images appear visible on dark background */
-.social-bubble img{
-  width: 30px;
-  height: 30px;
-  filter: invert(1);
-  opacity: 0.9;
-}
 
 .section{
   margin-top: 32px;
