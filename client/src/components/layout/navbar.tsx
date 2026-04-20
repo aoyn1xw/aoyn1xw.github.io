@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "wouter";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { Menu, X } from "lucide-react";
@@ -22,63 +22,64 @@ export default function Navbar() {
   return (
     <motion.nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-background/80 backdrop-blur-md border-b border-border/50" : "bg-transparent"
+        isScrolled ? "bg-background/88 backdrop-blur-xl border-b border-border" : "bg-transparent"
       }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.45, ease: "easeOut" }}
     >
       <div className="container mx-auto px-6 h-20 flex items-center justify-between">
         <Link href="/">
-          <a className="text-2xl font-display font-bold tracking-tighter hover:text-primary transition-colors">
-            DEV<span className="text-primary">.</span>
+          <a className="text-base md:text-lg font-display tracking-[0.08em] hover:text-primary transition-colors uppercase text-black">
+            AOYN1XW
           </a>
         </Link>
 
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-6 lg:gap-8">
           {navLinks.map((link) => (
             <a
               key={link.name}
               href={link.href}
-              className="text-sm font-medium hover:text-primary transition-colors uppercase tracking-widest"
+              className="text-[11px] font-semibold hover:text-primary transition-colors uppercase tracking-[0.16em]"
             >
               {link.name}
             </a>
           ))}
-          <Button variant="outline" className="rounded-none border-primary text-primary hover:bg-primary hover:text-background font-bold uppercase tracking-wider">
-            Let's Talk
+          <Button variant="default" className="uppercase tracking-[0.14em] text-xs" asChild>
+            <a href="#contact">Start a Project</a>
           </Button>
         </div>
 
-        {/* Mobile Nav Toggle */}
         <button
           className="md:hidden text-foreground"
           onClick={() => setIsOpen(!isOpen)}
+          aria-label="Toggle menu"
         >
-          {isOpen ? <X /> : <Menu />}
+          {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </div>
 
-      {/* Mobile Menu */}
       {isOpen && (
         <motion.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
-          className="md:hidden bg-background border-b border-border"
+          className="md:hidden bg-background/95 backdrop-blur-xl border-b border-border"
         >
-          <div className="flex flex-col p-6 gap-6">
+          <div className="flex flex-col p-6 gap-5">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
-                className="text-lg font-display font-bold uppercase"
+                className="text-sm font-semibold uppercase tracking-[0.14em]"
                 onClick={() => setIsOpen(false)}
               >
                 {link.name}
               </a>
             ))}
+            <Button variant="default" className="justify-start uppercase tracking-[0.14em] text-xs" asChild>
+              <a href="#contact" onClick={() => setIsOpen(false)}>Start a Project</a>
+            </Button>
           </div>
         </motion.div>
       )}

@@ -4,56 +4,57 @@ import { Button } from "@/components/ui/button";
 
 export default function Hero() {
   return (
-    <section className="min-h-screen flex items-center justify-center pt-20 relative overflow-hidden">
-      {/* Abstract Background Elements */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute top-1/4 -left-20 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/20 rounded-full blur-[100px]" />
+    <section className="min-h-screen flex items-center justify-center pt-24 relative overflow-hidden border-b border-border">
+      <div className="pointer-events-none absolute inset-0 z-0">
+        <div className="absolute top-24 left-10 w-56 h-56 rounded-full bg-primary/20 blur-3xl" />
+        <div className="absolute bottom-12 right-8 w-64 h-64 rounded-full bg-accent/22 blur-3xl" />
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="max-w-4xl"
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="max-w-5xl"
         >
           <motion.p 
-            className="text-primary font-mono mb-4 tracking-widest uppercase text-sm"
+            className="inline-flex items-center gap-2 mb-7 uppercase tracking-[0.14em] text-xs font-semibold bg-white/80 border border-border rounded-full px-4 py-2"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
           >
-            student & frontend developer
+            Frontend Developer · Student · Building From Germany
           </motion.p>
-          <h1 className="text-6xl md:text-8xl font-display font-bold leading-none mb-6">
-            CRAFTING <br />
-            <span className="bg-primary text-background px-2">DIGITAL</span> <br />
-            EXPERIENCES
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-display leading-[0.92] mb-8 uppercase">
+            I Build Web Experiences <br />
+            That Feel <span className="text-primary">Fast</span>, <span className="text-accent">Clear</span>, and <span className="text-primary">Memorable</span>
           </h1>
-          <p className="text-muted-foreground text-lg md:text-xl max-w-md mb-8 leading-relaxed">
-            I'm a passionate student and frontend developer creating modern, responsive web applications. yet im still leanring how to programm.          </p>
+          <p className="text-base md:text-xl max-w-3xl mb-10 leading-relaxed text-muted-foreground">
+            I turn ideas into polished interfaces using React, TypeScript, and modern design systems.
+            From portfolio sites to product UI, I focus on clarity, interaction quality, and real-world performance.
+          </p>
           
-          <div className="flex gap-4">
-            <Button size="lg" className="rounded-none bg-primary text-background hover:bg-white font-bold text-lg px-8 h-14">
-              View Work
+          <div className="flex flex-wrap gap-4 items-center">
+            <Button size="lg" className="uppercase tracking-[0.14em] text-xs" asChild>
+              <a href="#projects">View Projects</a>
             </Button>
-            <Button variant="outline" size="lg" className="rounded-none border-border hover:border-primary hover:text-primary h-14 px-8 group">
-              Contact Me <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <Button variant="outline" size="lg" className="uppercase tracking-[0.14em] text-xs group" asChild>
+              <a href="#contact">
+                Book Collaboration <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </a>
             </Button>
           </div>
         </motion.div>
       </div>
       
-      {/* Scroll Indicator */}
       <motion.div 
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 1 }}
       >
-        <span className="text-xs uppercase tracking-widest text-muted-foreground">Scroll</span>
-        <div className="w-[1px] h-12 bg-gradient-to-b from-primary to-transparent" />
+        <span className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Scroll</span>
+        <div className="w-px h-12 bg-border" />
       </motion.div>
     </section>
   );
