@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import {
-  Coffee,
   ExternalLink,
   Gamepad2,
   Github,
@@ -71,7 +70,6 @@ const socialLinks = [
   { label: "PlayStation", href: "https://psnprofiles.com/ayonlxw", icon: Gamepad2 },
   { label: "GitHub", href: "https://github.com/aoyn1xw", icon: Github },
   { label: "Telegram", href: "https://t.me/ayonlxw", icon: Send },
-  { label: "Ko-fi", href: "https://ko-fi.com/ayonlxw", icon: Coffee },
   { label: "X", href: "https://x.com/@aoyn1xw", icon: Send },
   { label: "Instagram", href: "https://instagram.com/ayonlxw", icon: Instagram },
   { label: "TikTok", href: "https://tiktok.com/@ayonlxw", icon: Music2 },
