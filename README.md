@@ -1,133 +1,172 @@
-# Portfolio Website
+# Portfolio — Erdi / ayon1xw
 
-A modern, responsive portfolio website built with React, TypeScript, and Vite. This project showcases a clean and professional design using Tailwind CSS and Radix UI components.
+A dark, cinematic, minimal portfolio site showcasing projects and experiments.
 
-## Features
+## Overview
 
-- **Modern Stack**: Built with React 19, TypeScript, and Vite for fast development and optimal performance
-- **Responsive Design**: Fully responsive layout that works seamlessly across all devices
-- **Dark Mode Support**: Theme switching capability with next-themes
-- **UI Components**: Comprehensive set of accessible UI components powered by Radix UI
-- **Animations**: Smooth animations using Framer Motion and Tailwind CSS animations
-- **Form Handling**: Form validation and management with React Hook Form and Zod
-- **Type-Safe**: Full TypeScript support for enhanced developer experience
+This is a static single-page portfolio built for GitHub Pages. It features:
+- Dark, high-contrast design with cyan accent
+- Live GitHub API integration for project data
+- Responsive layout (mobile + desktop)
+- Smooth animations and transitions
+- Premium typography and spacing
 
 ## Tech Stack
 
-- **Framework**: React 19
-- **Build Tool**: Vite 7
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS 4
-- **UI Components**: Radix UI
-- **Animations**: Framer Motion
-- **Forms**: React Hook Form + Zod
-- **Routing**: Wouter
-- **State Management**: TanStack Query
+- **HTML5** — Semantic markup
+- **CSS3** — Custom properties, Grid, Flexbox
+- **Vanilla JavaScript** — GitHub API integration, no frameworks
+- **Vite** — Build tool for development and production
+- **GitHub Actions** — Automated deployment to GitHub Pages
 
-## Getting Started
+## Structure
 
-### Prerequisites
-
-- Node.js 18 or higher
-- npm or yarn package manager
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/aoyn1xw/aoyn1xw.github.io.git
-cd aoyn1xw.github.io
+```
+/
+├── .github/
+│   └── workflows/
+│       └── deploy.yml       # GitHub Actions deployment workflow
+├── assets/
+│   ├── cursor/
+│   │   └── cursor.png       # Custom cursor image
+│   ├── fonts/
+│   │   └── ndot-57-aligned.ttf  # Custom display font
+│   └── video/
+│       └── background.mp4   # Hero background video
+├── index.html               # Main page structure
+├── styles.css               # All styling and design system
+├── script.js                # GitHub API logic and interactions
+├── vite.config.js           # Vite configuration
+├── package.json             # Dependencies and scripts
+└── README.md                # This file
 ```
 
-2. Install dependencies:
+## Features
+
+### Hero Section
+- Full-screen cinematic video background
+- Large name/handle display with custom typography
+- Short intro
+- Call-to-action buttons
+- Custom cursor throughout the site
+
+### Featured Projects
+- Pulls live data from GitHub REST API
+- Displays: stars, forks, issues, contributors
+- Editorial-style cards with hover effects
+- Fallback data if API fails
+
+### About / What I Build
+- Brief overview of work areas
+- Clean, personal copy
+
+### Current Focus
+- Shows current projects or areas of exploration
+- Simple card layout
+
+### Contact / Links
+- GitHub, Twitter, and other links
+- Minimal, accessible design
+
+## Development
+
+### Local Development
+
 ```bash
+# Install dependencies
 npm install
-```
 
-### Development
-
-Start the development server:
-```bash
+# Start dev server (http://localhost:3000)
 npm run dev
-```
 
-The site will be available at `http://localhost:5000`
-
-### Build
-
-Build the project for production:
-```bash
+# Build for production
 npm run build
-```
 
-The built files will be in the `dist` directory.
-
-### Preview
-
-Preview the production build locally:
-```bash
+# Preview production build
 npm run preview
 ```
 
-### Type Checking
-
-Run TypeScript type checking:
-```bash
-npm run check
-```
-
-## Project Structure
-
-```
-.
-├── client/                 # Client-side code
-│   ├── public/            # Static assets
-│   ├── src/
-│   │   ├── components/    # React components
-│   │   │   ├── layout/   # Layout components (Navbar, etc.)
-│   │   │   ├── sections/ # Page sections (Hero, Projects, About, Contact)
-│   │   │   └── ui/       # Reusable UI components
-│   │   ├── hooks/        # Custom React hooks
-│   │   ├── lib/          # Utility functions and configurations
-│   │   ├── pages/        # Page components
-│   │   └── main.tsx      # Application entry point
-│   └── index.html        # HTML template
-├── vite.config.ts        # Vite configuration
-├── tsconfig.json         # TypeScript configuration
-└── package.json          # Project dependencies and scripts
-```
+The dev server includes hot module replacement for instant updates.
 
 ## Deployment
 
-This project is configured to automatically deploy to GitHub Pages whenever changes are pushed to the main branch.
+This site automatically deploys to **GitHub Pages** via GitHub Actions.
 
-### GitHub Actions Workflow
+### Automatic Deployment (Recommended)
 
-The deployment is handled by a GitHub Actions workflow that:
-1. Builds the project
-2. Deploys the built files to GitHub Pages
+1. **First-time setup:**
+   - Go to your repository settings on GitHub
+   - Navigate to **Settings → Pages**
+   - Under "Build and deployment", set **Source** to "GitHub Actions"
 
-To enable GitHub Pages deployment:
-1. Go to your repository Settings
-2. Navigate to Pages
-3. Under "Build and deployment", select "GitHub Actions" as the source
+2. **Deploy:**
+   - Push to the `main` branch
+   - GitHub Actions will automatically build and deploy
+   - Site will be live at `https://aoyn1xw.github.io`
 
-The site will be available at `https://aoyn1xw.github.io/`
+3. **Monitor deployment:**
+   - Check the **Actions** tab in your GitHub repo
+   - You'll see the deployment workflow running
+   - Once complete, your site is live
 
-## Contributing
+### Manual Deployment
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+If you prefer manual deployment:
+
+```bash
+# Build the site
+npm run build
+
+# The dist/ folder contains your production site
+# You can deploy this folder to any static host
+```
+
+### Workflow Details
+
+The deployment workflow (`.github/workflows/deploy.yml`):
+- Triggers on push to `main` branch
+- Can also be manually triggered from GitHub Actions tab
+- Builds the site with Vite
+- Deploys to GitHub Pages
+- Takes ~1-2 minutes to complete
+
+## API Rate Limits
+
+The GitHub API allows 60 requests/hour for unauthenticated users. If the rate limit is hit, the site falls back to hardcoded data so it always renders.
+
+## Customization
+
+### Colors
+Edit CSS variables in `styles.css`:
+```css
+--accent: #00d9ff;
+--bg-primary: #0a0a0a;
+```
+
+### Featured Projects
+Edit the array in `script.js`:
+```javascript
+const FEATURED_REPOS = [
+    'aoyn1xw/swift-devcontainer',
+    'aoyn1xw/ipa-signer',
+    'aoyn1xw/Untis-watcher'
+];
+```
+
+### Copy
+All text is in `index.html` — edit directly.
+
+## Browser Support
+
+- Chrome/Edge (latest)
+- Firefox (latest)
+- Safari (latest)
+- Mobile browsers
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+MIT — use this however you want.
 
-## Acknowledgments
+---
 
-- UI components from [Radix UI](https://www.radix-ui.com/)
-- Animations powered by [Framer Motion](https://www.framer.com/motion/)
-- Icons from [Lucide](https://lucide.dev/)
+Built by Erdi with Claude Code.
