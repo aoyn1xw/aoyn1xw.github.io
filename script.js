@@ -1,4 +1,34 @@
 // =============================================================================
+// VIDEO AUTOPLAY FIX FOR iOS
+// =============================================================================
+
+function forceVideoPlay() {
+    const video = document.getElementById('hero-video');
+    if (video) {
+        video.muted = true;
+        video.playsInline = true;
+
+        const playPromise = video.play();
+
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.log('Autoplay prevented, attempting to play on user interaction');
+
+                // Try to play on first user interaction
+                const playOnInteraction = () => {
+                    video.play().catch(err => console.log('Video play failed:', err));
+                    document.removeEventListener('touchstart', playOnInteraction);
+                    document.removeEventListener('click', playOnInteraction);
+                };
+
+                document.addEventListener('touchstart', playOnInteraction, { once: true });
+                document.addEventListener('click', playOnInteraction, { once: true });
+            });
+        }
+    }
+}
+
+// =============================================================================
 // GITHUB API INTEGRATION
 // =============================================================================
 
@@ -250,6 +280,12 @@ function initScrollAnimations() {
 // =============================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
+    forceVideoPlay();
     loadProjects();
     initScrollAnimations();
+});
+
+// Additional video play attempt after page fully loads
+window.addEventListener('load', () => {
+    forceVideoPlay();
 });

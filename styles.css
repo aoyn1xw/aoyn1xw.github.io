@@ -181,6 +181,16 @@ section {
     transform: translate(-50%, -50%);
     object-fit: cover;
     z-index: 0;
+    /* iOS-specific fixes */
+    -webkit-playsinline: true;
+    -webkit-transform: translate(-50%, -50%);
+}
+
+/* Ensure video plays on iOS Safari */
+@supports (-webkit-touch-callout: none) {
+    .hero-video {
+        pointer-events: none;
+    }
 }
 
 .hero-overlay {
