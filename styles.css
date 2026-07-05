@@ -451,49 +451,6 @@ section {
 }
 
 /* =============================================================================
-   FOCUS SECTION
-   ============================================================================= */
-
-.focus {
-    background: var(--bg-secondary);
-}
-
-.focus-card {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: var(--space-md);
-}
-
-.focus-item {
-    background: var(--bg-card);
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    padding: var(--space-md);
-    transition: all var(--duration) var(--ease-out);
-}
-
-.focus-item:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
-}
-
-.focus-label {
-    display: inline-block;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--accent);
-    margin-bottom: var(--space-xs);
-}
-
-.focus-text {
-    color: var(--text-secondary);
-    font-size: 16px;
-    line-height: 1.6;
-}
-
-/* =============================================================================
    CONTACT SECTION
    ============================================================================= */
 
