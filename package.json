@@ -15,6 +15,11 @@
   "author": "Erdi (ayon1xw)",
   "license": "MIT",
   "devDependencies": {
-    "vite": "^5.0.0"
+    "testdriverai": "^7.11.43-test",
+    "vite": "^5.0.0",
+    "vitest": "^4.1.10"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2"
   }
 }
