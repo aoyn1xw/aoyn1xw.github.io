@@ -1,0 +1,16 @@
+# Erdi / ayon1xw
+
+> Personal portfolio for Erdi, also known as ayon1xw. Student developer building desktop tools, automation projects, and AI experiments, mostly around iOS, GitHub, and local-first apps.
+
+## Site
+
+- [Homepage](https://aoyn1xw.github.io/): Portfolio, featured projects, short intro, and links.
+
+## Profiles
+
+- [GitHub](https://github.com/aoyn1xw): Source code and projects.
+- [Links](https://guns.lol/ayon1xw): Other profiles and links.
+
+## Notes
+
+This is a small personal portfolio site. The main purpose is to show what I build and where to find my work.
