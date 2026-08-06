@@ -21,4 +21,8 @@ Nothing too deep. I just wanted one place that shows who I am, what I build, and
 - GitHub Pages
 - GitHub API for the project cards
 
-Okay that’s it for the readme
+## Notes
+
+This site is still changing whenever I feel like improving it.
+
+Right now the goal is simple: make it look like me, show my projects, and not overcomplicate it.
