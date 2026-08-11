@@ -515,6 +515,12 @@ section {
     flex: 0 0 auto;
 }
 
+.commission-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
 /* =============================================================================
    CONTACT SECTION
    ============================================================================= */
@@ -718,6 +724,10 @@ section {
         align-items: flex-start;
         flex-direction: column;
         padding: var(--space-md);
+    }
+
+    .commission-actions {
+        width: 100%;
     }
 
     .footer-content {
