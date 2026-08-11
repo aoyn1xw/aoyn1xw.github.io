@@ -726,6 +726,10 @@ section {
         padding: var(--space-md);
     }
 
+    .commission-actions {
+        width: 100%;
+    }
+
     .footer-content {
         align-items: flex-start;
         flex-direction: column;
