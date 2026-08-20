@@ -1,3 +1,5 @@
+import { COMMISSION_CONFIG, trackCommissionEvent } from './commission-config.js';
+
 // =============================================================================
 // VIDEO AUTOPLAY FIX FOR iOS
 // =============================================================================
@@ -283,6 +285,10 @@ document.addEventListener('DOMContentLoaded', () => {
     forceVideoPlay();
     loadProjects();
     initScrollAnimations();
+    const statusLabels = { open: 'COMMISSIONS OPEN', limited: 'LIMITED AVAILABILITY', closed: 'COMMISSIONS CLOSED' };
+    document.querySelectorAll('[data-commission-status]').forEach(element => { element.textContent = statusLabels[COMMISSION_CONFIG.availability]; });
+    document.querySelectorAll('[data-commission-cta]').forEach(link => link.addEventListener('click', () => trackCommissionEvent('commission_cta_click')));
+    document.querySelectorAll('[data-terms-link]').forEach(link => link.addEventListener('click', () => trackCommissionEvent('commission_terms_click')));
 });
 
 // Additional video play attempt after page fully loads

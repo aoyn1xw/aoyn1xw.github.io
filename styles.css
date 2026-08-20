@@ -666,6 +666,70 @@ section {
     margin-top: var(--space-sm);
 }
 
+/* Commission experience */
+.narrow-container { max-width: 920px; }
+.commission-hero { padding: var(--space-xl) 0; background: var(--bg-primary); }
+.commission-hero h1 { max-width: 850px; margin-bottom: var(--space-md); font-family: var(--font-display); font-size: clamp(42px, 7vw, 76px); line-height: 1.05; }
+.lead, .section-lead, .reassurance, .request-heading > p, .info-card p, .submit-copy, .privacy-copy { color: var(--text-secondary); }
+.lead { max-width: 760px; font-size: clamp(18px, 2.5vw, 22px); }
+.status-badge { display: inline-flex; margin: var(--space-md) 0; padding: 7px 12px; border: 1px solid var(--accent-dim); border-radius: 999px; color: var(--accent); font-family: var(--font-mono); font-size: 13px; font-weight: 600; text-transform: uppercase; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+.reassurance { margin-top: var(--space-sm); font-size: 14px; }
+.commission-section { padding: var(--space-xl) 0; }
+.alt-section { background: var(--bg-secondary); }
+.commission-section .section-title { margin-bottom: var(--space-md); }
+.section-lead { max-width: 760px; margin-bottom: var(--space-lg); font-size: 18px; }
+.fit-grid, .pricing-grid, .work-grid, .process-grid { display: grid; gap: var(--space-md); }
+.fit-grid, .work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.pricing-grid, .process-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.info-card { padding: var(--space-md); background: var(--bg-card); border: 2px solid var(--border); border-radius: 16px; box-shadow: var(--shadow-md); }
+.info-card h2, .info-card h3 { margin-bottom: var(--space-sm); }
+.check-list { padding-left: 1.2rem; color: var(--text-secondary); }
+.check-list li + li { margin-top: var(--space-xs); }
+.quote-note { margin-top: var(--space-sm); color: var(--accent) !important; font-family: var(--font-mono); font-size: 13px; }
+.process-grid { padding: 0; list-style: none; counter-reset: process; }
+.process-grid span { display: block; margin-bottom: var(--space-sm); color: var(--accent); font-family: var(--font-mono); }
+.terms-summary { max-width: 900px; }
+.terms-summary .text-link { display: inline-block; margin-top: var(--space-md); }
+.text-link { color: var(--accent); font-weight: 600; text-underline-offset: 4px; }
+.request-section { scroll-margin-top: var(--space-sm); }
+.request-heading { max-width: 760px; margin-bottom: var(--space-lg); }
+.form-panel { max-width: 920px; padding: var(--space-lg); background: var(--bg-card); border: 2px solid var(--border); border-radius: 16px; box-shadow: var(--shadow-md); }
+.form-panel fieldset { min-width: 0; padding: 0 0 var(--space-lg); border: 0; }
+.form-panel fieldset + fieldset { padding-top: var(--space-lg); border-top: 1px solid var(--border); }
+.form-panel legend { width: 100%; margin-bottom: var(--space-md); font-family: var(--font-display); font-size: 26px; font-weight: 700; }
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-md); }
+.field.full { grid-column: 1 / -1; }
+.field label { display: block; margin-bottom: 6px; font-weight: 700; }
+.field label span { color: var(--text-secondary); font-size: 13px; font-weight: 500; }
+input, select, textarea { width: 100%; min-height: 48px; padding: 12px 14px; border: 2px solid var(--border); border-radius: 10px; background: var(--bg-primary); color: var(--text-primary); font: inherit; font-size: 16px; }
+textarea { min-height: 140px; resize: vertical; }
+input::placeholder, textarea::placeholder { color: #777; }
+input:hover, select:hover, textarea:hover { border-color: var(--border-hover); }
+input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="true"] { border-color: #ff6b6b; }
+.helper, .field-error { margin-top: 6px; font-size: 14px; }
+.helper { color: var(--text-secondary); }
+.field-error { min-height: 1.4em; color: #ff8c8c; font-weight: 600; }
+.message-panel { margin-bottom: var(--space-md); padding: var(--space-sm); border-radius: 10px; }
+.error-panel { border: 2px solid #b94b4b; background: #271515; color: #ffd7d7; }
+.setup-panel { border: 2px solid var(--accent-dim); background: var(--bg-secondary); color: var(--text-secondary); }
+.setup-panel h3 { color: var(--text-primary); }
+.error-panel ul { padding-left: 1.2rem; }
+.error-panel a { color: inherit; }
+.honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.submit-button { min-height: 52px; }
+.submit-button:disabled { cursor: wait; opacity: .7; transform: none; }
+.spinner { width: 17px; height: 17px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.submit-copy { max-width: 700px; margin-top: var(--space-sm); }
+.privacy-copy { margin-top: var(--space-xs); font-size: 14px; }
+.success-panel h2 { margin-bottom: var(--space-sm); font-family: var(--font-display); font-size: clamp(36px, 6vw, 56px); }
+.request-reference { margin: var(--space-md) 0; color: var(--accent); font-family: var(--font-mono); }
+.success-panel ol { margin: 0 0 var(--space-lg) 1.2rem; color: var(--text-secondary); }
+.summary-card { margin: var(--space-md) 0; }
+.term-jump-links { display: flex; flex-wrap: wrap; gap: var(--space-xs); margin-top: var(--space-md); }
+.term-jump-links a { padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; color: var(--text-secondary); text-decoration: none; }
+
 /* =============================================================================
    ANIMATIONS
    ============================================================================= */
@@ -734,6 +798,11 @@ section {
         align-items: flex-start;
         flex-direction: column;
     }
+
+    .fit-grid, .pricing-grid, .work-grid, .process-grid, .form-grid { grid-template-columns: 1fr; }
+    .form-panel { padding: var(--space-md); }
+    .commission-hero .btn, .request-section .submit-button { width: 100%; justify-content: center; }
+    .commission-hero .hero-actions { flex-direction: column; }
 }
 
 @media (max-width: 480px) {
