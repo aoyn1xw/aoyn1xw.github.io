@@ -1,0 +1,6 @@
+name = "commission-api"
+main = "src/index.js"
+compatibility_date = "2026-08-20"
+
+[vars]
+ALLOWED_ORIGIN = "https://aoyn1xw.github.io"
