@@ -14,6 +14,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(import.meta.dirname, 'index.html'),
+        commissions: resolve(import.meta.dirname, 'commissions.html'),
         commissionTerms: resolve(import.meta.dirname, 'commission-terms.html'),
         notFound: resolve(import.meta.dirname, '404.html')
       }

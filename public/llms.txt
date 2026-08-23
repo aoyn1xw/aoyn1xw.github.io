@@ -5,6 +5,8 @@
 ## Site
 
 - [Homepage](https://aoyn1xw.github.io/): Portfolio, featured projects, short intro, and links.
+- [Commissions](https://aoyn1xw.github.io/commissions.html): Commission process, pricing, and request form.
+- [Commission Terms](https://aoyn1xw.github.io/commission-terms.html): Terms applying to commissions.
 
 ## Profiles
 

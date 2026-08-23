@@ -1,0 +1,21 @@
+name = "portfolio-commissions"
+main = "src/index.js"
+compatibility_date = "2026-08-01"
+
+[vars]
+# Comma-separated list of browser origins allowed to call this worker.
+# Add or remove origins here as needed (e.g. your local dev server).
+ALLOWED_ORIGINS = "https://aoyn1xw.github.io,http://localhost:3000,http://127.0.0.1:3000"
+
+# Optional: uncomment to use the Cloudflare rate limiting binding instead of
+# the built-in per-isolate fallback limiter. See worker/README.md for details.
+#
+# [[unsafe.bindings]]
+# name = "RATE_LIMITER"
+# type = "ratelimit"
+# namespace_id = "1001"
+
+# Secrets are NOT defined here.
+# Configure them with:
+#   npx wrangler secret put TELEGRAM_BOT_TOKEN
+#   npx wrangler secret put TELEGRAM_CHAT_ID

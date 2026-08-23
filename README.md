@@ -20,6 +20,13 @@ Nothing too deep. I just wanted one place that shows who I am, what I build, and
 - Vite
 - GitHub Pages
 - GitHub API for the project cards
+- Cloudflare Worker for the commission form (see `worker/README.md`)
+
+## Commissions
+
+The commission form on `/commissions.html` sends requests through a small
+Cloudflare Worker to my private Telegram chat. To set that up (Telegram bot,
+secrets, deploy), follow `worker/README.md`.
 
 ## Notes
 

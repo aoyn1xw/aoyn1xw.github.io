@@ -18,7 +18,10 @@
 <body class="terms-page">
     <header class="terms-header">
         <div class="container">
-            <a href="index.html" class="back-link">← Back to portfolio</a>
+            <nav class="header-nav" aria-label="Page navigation">
+                <a href="/index.html" class="back-link">← Back to portfolio</a>
+                <a href="/commissions.html" class="back-link">← Back to commissions</a>
+            </nav>
         </div>
     </header>
 
@@ -31,7 +34,34 @@
                 <p class="terms-intro">These Commission Terms apply to small programming and development commissions requested through this website or linked contact methods. By accepting a quote and commissioning a project, you agree to these terms.</p>
             </header>
 
-            <section class="term-section">
+            <nav class="toc" aria-labelledby="toc-title">
+                <p class="toc-title" id="toc-title">Contents</p>
+                <ol class="toc-list">
+                    <li><a href="#term-1">Commission Requests</a></li>
+                    <li><a href="#term-2">Scope</a></li>
+                    <li><a href="#term-3">Quotes</a></li>
+                    <li><a href="#term-4">Payment</a></li>
+                    <li><a href="#term-5">Development</a></li>
+                    <li><a href="#term-6">Changes and Revisions</a></li>
+                    <li><a href="#term-7">Review and Approval</a></li>
+                    <li><a href="#term-8">Delivery</a></li>
+                    <li><a href="#term-9">Bugs and Support</a></li>
+                    <li><a href="#term-10">Cancellations and Refunds</a></li>
+                    <li><a href="#term-11">Ownership</a></li>
+                    <li><a href="#term-12">Portfolio Use</a></li>
+                    <li><a href="#term-13">Client Responsibilities</a></li>
+                    <li><a href="#term-14">Third-Party Services</a></li>
+                    <li><a href="#term-15">No Automatic Acceptance</a></li>
+                    <li><a href="#term-16">Changes to These Terms</a></li>
+                    <li><a href="#term-17">Questions</a></li>
+                </ol>
+            </nav>
+
+            <div class="terms-actions">
+                <a href="/commissions.html" class="btn btn-primary">Request a Commission</a>
+            </div>
+
+            <section class="term-section" id="term-1">
                 <h2>1. Commission Requests</h2>
                 <p>Submitting a commission request does not guarantee that your project will be accepted.</p>
                 <p>I mainly accept small, clearly scoped programming requests. I do not accept full startup builds, complex infrastructure, large platforms, payment systems, or ongoing maintenance-heavy projects unless explicitly agreed otherwise.</p>
@@ -39,7 +69,7 @@
                 <p>Before accepting a commission, we will discuss the project’s requirements, expected functionality, estimated delivery time, and price.</p>
             </section>
 
-            <section class="term-section">
+            <section class="term-section" id="term-2">
                 <h2>2. Scope</h2>
                 <p>The agreed scope defines what will be built. Only explicitly agreed features, deliverables, and work are included.</p>
                 <p>Extra features, major changes, redesigns, or new directions may require a new quote.</p>
@@ -47,14 +77,14 @@
                 <p>Unsuitable requests include full SaaS platforms, large apps, complete startup builds, complex infrastructure, login/payment systems, crypto or gambling-related systems, malware, spam tools, account bots, private-data scraping, or vague requests like “build me an app like Discord”.</p>
             </section>
 
-            <section class="term-section">
+            <section class="term-section" id="term-3">
                 <h2>3. Quotes</h2>
                 <p>Once the project requirements are sufficiently clear, I will provide a quote.</p>
                 <p>The quote will specify the agreed scope, price, and, where applicable, an estimated delivery time.</p>
                 <p>A quote only covers the features and work explicitly agreed upon. Additional features or significant changes requested afterward may require an additional payment or a new quote.</p>
             </section>
 
-            <section class="term-section">
+            <section class="term-section" id="term-4">
                 <h2>4. Payment</h2>
                 <p>Payment arrangements are handled manually after a quote has been accepted. There is currently no automatic checkout on this website.</p>
                 <p>Depending on the size and nature of the project, I may require either full payment upfront or an initial deposit with the remaining balance due before final delivery.</p>
@@ -62,14 +92,14 @@
                 <p>The complete source code, unrestricted project files, repository ownership, or other final deliverables may be withheld until the full agreed amount has been paid.</p>
             </section>
 
-            <section class="term-section">
+            <section class="term-section" id="term-5">
                 <h2>5. Development</h2>
                 <p>I will develop the project according to the requirements agreed upon before development begins.</p>
                 <p>Any delivery date or development duration provided is an estimate unless explicitly agreed otherwise.</p>
                 <p>If a significant delay occurs, I will inform you as soon as reasonably possible.</p>
             </section>
 
-            <section class="term-section">
+            <section class="term-section" id="term-6">
                 <h2>6. Changes and Revisions</h2>
                 <p>Reasonable revisions to the agreed project may be requested during the review process.</p>
                 <p>Unless otherwise agreed, a commission includes up to two revision rounds.</p>
@@ -77,21 +107,21 @@
                 <p>Requests for substantial new functionality, redesigns, or other work outside the original scope are not considered revisions and may result in an additional quote.</p>
             </section>
 
-            <section class="term-section">
+            <section class="term-section" id="term-7">
                 <h2>7. Review and Approval</h2>
                 <p>Before final delivery, you may be provided with a demonstration, preview, screenshots, video, hosted version, test build, or another reasonable method of reviewing the project.</p>
                 <p>You should use this review period to report issues or request included revisions.</p>
                 <p>Access to a preview does not grant ownership of or permission to copy, extract, redistribute, or otherwise obtain unreleased source code or project assets.</p>
             </section>
 
-            <section class="term-section">
+            <section class="term-section" id="term-8">
                 <h2>8. Delivery</h2>
                 <p>After the project has been approved and all required payments have been received, the agreed deliverables will be provided.</p>
                 <p>Delivery may include source files, a downloadable archive, a Git repository, repository ownership transfer, deployment, or another method agreed upon for the project.</p>
                 <p>The exact deliverables depend on the individual commission.</p>
             </section>
 
-            <section class="term-section">
+            <section class="term-section" id="term-9">
                 <h2>9. Bugs and Support</h2>
                 <p>Unless otherwise agreed, I will provide a 7-day bug-fix period beginning on the date of final delivery.</p>
                 <p>During this period, I will fix reproducible bugs that cause functionality included in the original agreed scope to not work as intended.</p>
@@ -100,7 +130,7 @@
                 <p>This support period does not affect any statutory rights that may apply.</p>
             </section>
 
-            <section class="term-section">
+            <section class="term-section" id="term-10">
                 <h2>10. Cancellations and Refunds</h2>
                 <p>If a commission is cancelled before development begins, payments made for work that has not yet started may be refundable.</p>
                 <p>If development has already begun, any refund will depend on the amount of work already completed and any non-recoverable costs incurred for the project.</p>
@@ -108,50 +138,55 @@
                 <p>Completed and delivered work is generally non-refundable, except where required by applicable law or where the delivered work materially fails to meet the agreed scope.</p>
             </section>
 
-            <section class="term-section">
+            <section class="term-section" id="term-11">
                 <h2>11. Ownership</h2>
                 <p>Unless otherwise agreed, rights to the custom final deliverables created specifically for your project are transferred to you after full payment.</p>
                 <p>I retain ownership of pre-existing materials, general-purpose code, reusable components, libraries, development tools, templates, techniques, and other materials that were not created exclusively for your commission.</p>
                 <p>Projects may contain third-party software, libraries, fonts, assets, APIs, or other materials. These remain subject to their respective licenses and terms.</p>
             </section>
 
-            <section class="term-section">
+            <section class="term-section" id="term-12">
                 <h2>12. Portfolio Use</h2>
                 <p>Unless confidentiality has been agreed upon beforehand, I may display non-sensitive portions of completed work in my portfolio or use them as examples of my development work.</p>
                 <p>I will not intentionally publish private credentials, personal information, confidential data, private source code, or other information that should reasonably remain confidential.</p>
                 <p>If you require the project to remain private, please communicate this before commissioning the project.</p>
             </section>
 
-            <section class="term-section">
+            <section class="term-section" id="term-13">
                 <h2>13. Client Responsibilities</h2>
                 <p>You are responsible for providing accurate project requirements and any materials, access, information, or feedback reasonably necessary to complete the project.</p>
                 <p>You must have the necessary rights or permission to provide any assets, code, branding, content, or other materials supplied for use in the project.</p>
                 <p>You may not commission work intended for unlawful, fraudulent, malicious, abusive, or otherwise prohibited purposes.</p>
             </section>
 
-            <section class="term-section">
+            <section class="term-section" id="term-14">
                 <h2>14. Third-Party Services</h2>
                 <p>Some projects may depend on third-party platforms, APIs, hosting providers, libraries, payment providers, or other external services.</p>
                 <p>I am not responsible for outages, pricing changes, account restrictions, API changes, discontinued services, or other actions taken by third-party providers that are outside my control.</p>
                 <p>Any recurring third-party costs will be the client’s responsibility unless explicitly agreed otherwise.</p>
             </section>
 
-            <section class="term-section">
+            <section class="term-section" id="term-15">
                 <h2>15. No Automatic Acceptance</h2>
                 <p>A submitted request, message, or form entry does not create a commission by itself.</p>
                 <p>A commission only starts once the scope, price, payment terms, and delivery expectations have been discussed and accepted.</p>
             </section>
 
-            <section class="term-section">
+            <section class="term-section" id="term-16">
                 <h2>16. Changes to These Terms</h2>
                 <p>These terms may be updated for future commissions.</p>
                 <p>The terms applicable to an existing commission will generally be the version accepted when that commission was agreed upon, unless both parties agree to different terms.</p>
             </section>
 
-            <section class="term-section">
+            <section class="term-section" id="term-17">
                 <h2>17. Questions</h2>
                 <p>If you have questions about these terms or how they apply to your project, please ask before accepting a quote or making a payment.</p>
             </section>
+
+            <div class="terms-actions terms-actions-bottom">
+                <a href="/commissions.html" class="btn btn-primary">Request a Commission</a>
+                <a href="/index.html" class="btn btn-secondary">Back to Portfolio</a>
+            </div>
         </article>
     </main>
 
@@ -159,7 +194,8 @@
         <div class="container footer-content">
             <p class="footer-text">Built by Erdi with love &lt;3</p>
             <nav class="footer-links" aria-label="Footer navigation">
-                <a href="index.html">Portfolio</a>
+                <a href="/index.html">Portfolio</a>
+                <a href="/commissions.html">Commissions</a>
                 <a href="https://github.com/aoyn1xw" target="_blank" rel="noopener noreferrer">GitHub</a>
             </nav>
         </div>
