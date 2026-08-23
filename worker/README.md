@@ -74,16 +74,14 @@ Requests from `http://localhost:3000` are allowed by default.
 
 ## Rate limiting
 
-Two modes:
+Production uses Cloudflare's `RATE_LIMITER` binding configured in
+`wrangler.toml`: five submissions per source IP per 60-second period in each
+Cloudflare location. The `namespace_id` is an account-local positive integer;
+keep it unique if you add other rate-limit bindings.
 
-1. **Fallback (default):** a small per-isolate limiter in the worker itself
-   (~5 requests per IP per minute). Best effort only — Cloudflare may run many
-   isolates, so it is not a hard guarantee.
-2. **Recommended:** Cloudflare's rate limiting binding. Uncomment the
-   `[[unsafe.bindings]]` block in `wrangler.toml` and redeploy. If the binding
-   requires enabling for your account, do it in the Cloudflare dashboard under
-   **Workers & Pages → your worker → Settings → Bindings** (or account-level
-   Rate limiting). No database is used in either mode.
+The Worker retains a per-isolate fallback only for direct unit tests and
+non-Wrangler local execution. It is best effort and must not be treated as the
+production security boundary. No database is used in either mode.
 
 No CAPTCHA is used in v1. An invisible honeypot field plus rate limiting cover
 basic bot traffic.

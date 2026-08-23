@@ -29,7 +29,7 @@ export const COMMISSION_CLOSED_MESSAGE = 'Commissions are currently closed. You 
 // Endpoint of the Cloudflare Worker that forwards commission requests
 // to Telegram. Replace YOUR_SUBDOMAIN with your real workers.dev subdomain
 // after deploying the worker (see worker/README.md).
-export const COMMISSION_ENDPOINT = 'https://portfolio-commissions.YOUR_SUBDOMAIN.workers.dev/';
+export const COMMISSION_ENDPOINT = 'https://portfolio-commissions.ayon1xw.workers.dev/';
 
 // Fallback contact used when a submission fails.
 export const TELEGRAM_CONTACT_URL = 'https://t.me/ayon1xw';

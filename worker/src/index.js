@@ -319,7 +319,8 @@ export default {
         try {
             withinLimit = await checkRateLimit(request, env);
         } catch {
-            console.error('Rate limiter unavailable, allowing request through');
+            console.error('Rate limiter unavailable, rejecting request');
+            return errorResponse('service_unavailable', 503, origin);
         }
         if (!withinLimit) {
             return errorResponse('rate_limited', 429, origin);

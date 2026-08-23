@@ -259,3 +259,20 @@ test('rate limits repeated submissions from the same IP without a binding', asyn
     }
     assert.equal(lastResponse.status, 429);
 });
+
+test('fails closed when the configured rate limiter is unavailable', async () => {
+    mockTelegram();
+    const response = await worker.fetch(
+        makeRequest(validPayload()),
+        makeEnv({
+            RATE_LIMITER: {
+                async limit() {
+                    throw new Error('rate limiter unavailable');
+                }
+            }
+        })
+    );
+
+    assert.equal(response.status, 503);
+    assert.equal(telegramCalls.length, 0);
+});
