@@ -17,7 +17,7 @@ function forceVideoPlay() {
         const playPromise = video.play();
 
         if (playPromise !== undefined) {
-            playPromise.catch(error => {
+            playPromise.catch(() => {
                 console.log('Autoplay prevented, attempting to play on user interaction');
 
                 // Try to play on first user interaction
@@ -110,8 +110,6 @@ const FALLBACK_DATA = {
 
 async function fetchRepoData(repo) {
     try {
-        const [owner, repoName] = repo.split('/');
-
         // Fetch basic repo info
         const repoResponse = await fetch(`https://api.github.com/repos/${repo}`, {
             headers: {
@@ -120,7 +118,8 @@ async function fetchRepoData(repo) {
         });
 
         if (!repoResponse.ok) {
-            throw new Error(`GitHub API returned ${repoResponse.status}`);
+            console.warn(`Failed to fetch ${repo} (HTTP ${repoResponse.status}), using fallback data.`);
+            return FALLBACK_DATA[repo];
         }
 
         const repoData = await repoResponse.json();
@@ -250,13 +249,38 @@ function createProjectCard(repo) {
 // LOAD AND RENDER PROJECTS
 // =============================================================================
 
+const CACHE_KEY = 'featured_repos_cache';
+const CACHE_TTL = 60 * 60 * 1000; // 1 hour
+
 async function loadProjects() {
     const grid = document.getElementById('projects-grid');
 
     try {
-        // Fetch all repos in parallel
-        const repoDataPromises = FEATURED_REPOS.map(repo => fetchRepoData(repo));
-        const reposData = await Promise.all(repoDataPromises);
+        let reposData = null;
+        const cached = localStorage.getItem(CACHE_KEY);
+
+        if (cached) {
+            try {
+                const { data, timestamp } = JSON.parse(cached);
+                if (Date.now() - timestamp < CACHE_TTL) {
+                    reposData = data;
+                }
+            } catch (e) {
+                console.warn('Failed to parse cached project data:', e);
+            }
+        }
+
+        if (!reposData) {
+            // Fetch all repos in parallel
+            const repoDataPromises = FEATURED_REPOS.map(repo => fetchRepoData(repo));
+            reposData = await Promise.all(repoDataPromises);
+
+            // Save to cache
+            localStorage.setItem(CACHE_KEY, JSON.stringify({
+                data: reposData,
+                timestamp: Date.now()
+            }));
+        }
 
         // Clear skeleton
         grid.innerHTML = '';
@@ -315,7 +339,7 @@ function initScrollAnimations() {
 
 document.addEventListener('DOMContentLoaded', () => {
     forceVideoPlay();
-    loadProjects();
+    void loadProjects();
     initScrollAnimations();
     initCommissionStatusLabel();
 });
