@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Commission a small programming project: process, pricing, payment flow, and request form for Erdi / ayon1xw.">
-    <meta name="theme-color" content="#0a0a0a">
+    <meta name="theme-color" content="#050505">
     <meta property="og:title" content="Commissions | Erdi / ayon1xw">
     <meta property="og:description" content="Small, clearly scoped programming commissions. Check the process and send a request.">
     <meta property="og:type" content="website">
@@ -13,45 +13,102 @@
     <link rel="canonical" href="https://aoyn1xw.github.io/commissions.html">
     <link rel="icon" type="image/png" href="assets/cursor/cursor.png">
     <link rel="apple-touch-icon" href="assets/cursor/cursor.png">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="commission.css">
 </head>
-<body class="terms-page">
-    <header class="terms-header">
-        <div class="container">
-            <nav class="header-nav" aria-label="Page navigation">
-                <a href="/index.html" class="back-link">← Back to portfolio</a>
-                <a href="/commission-terms.html" class="back-link">Commission Terms</a>
-            </nav>
+<body class="commission-page">
+    <a class="skip-link" href="#commission-content">Skip to commission information</a>
+
+    <div class="commission-frame" aria-hidden="true">
+        <span class="commission-frame__corner commission-frame__corner--tl"></span>
+        <span class="commission-frame__corner commission-frame__corner--tr"></span>
+        <span class="commission-frame__corner commission-frame__corner--bl"></span>
+        <span class="commission-frame__corner commission-frame__corner--br"></span>
+        <div class="commission-frame__scene">
+            <span data-scene-number>01</span>
+            <span data-scene-label>INTAKE</span>
         </div>
+        <div class="commission-frame__registration">AYN / COMM / 2026</div>
+        <div class="commission-frame__progress"><span data-scroll-progress></span></div>
+    </div>
+
+    <header class="commission-header">
+        <a class="commission-mark" href="/index.html" aria-label="Erdi portfolio home">
+            <span>ERDI / AYON1XW</span>
+            <span>COMMISSION INTAKE</span>
+        </a>
+        <nav aria-label="Commission navigation">
+            <a href="#process">Process</a>
+            <a href="#request">Request</a>
+            <a href="/commission-terms.html">Terms</a>
+        </nav>
     </header>
 
-    <main class="terms-main">
-        <article class="container terms-content">
-            <header>
-                <p class="eyebrow commission-status" data-commission-status-label>Limited availability</p>
-                <h1>Small programming commissions</h1>
-                <p class="terms-intro">I take on a limited number of small, clearly scoped programming projects. Send me what you need, and I’ll check whether it is a good fit before discussing the scope and price with you. Submitting a request does not mean it has been accepted.</p>
-                <p class="response-note">You’ll normally receive a response within 24 hours, often sooner depending on availability.</p>
+    <main id="commission-content">
+        <section class="commission-scene commission-hero" data-scene="01" data-scene-label-value="INTAKE" aria-labelledby="commission-title">
+            <p class="hero-index reveal" aria-hidden="true">01 / 04</p>
+            <p class="hero-status reveal">
+                <span class="status-pulse" aria-hidden="true"></span>
+                <span data-commission-status-label>Limited availability</span>
+            </p>
+
+            <div class="hero-title-wrap reveal">
+                <p class="technical-kicker">PROGRAMMING / SMALL SCOPE / DIRECT</p>
+                <h1 id="commission-title"><span>Selected</span><span>Commissions</span></h1>
+            </div>
+
+            <div class="hero-copy reveal">
+                <p>I take on a limited number of small, clearly scoped programming projects. Send what you need; I’ll check the fit before discussing scope and price.</p>
+                <p class="hero-caveat">A request is not an acceptance.</p>
+            </div>
+
+            <div class="hero-meta hero-meta--left reveal">
+                <span>RESPONSE</span>
+                <strong>USUALLY &lt; 24H</strong>
+            </div>
+            <div class="hero-meta hero-meta--right reveal">
+                <span>PAYMENT</span>
+                <strong>EUR / PAYPAL</strong>
+            </div>
+
+            <a class="hero-request-link reveal" href="#request">
+                <span>Open request protocol</span>
+                <span aria-hidden="true">↓</span>
+            </a>
+            <p class="hero-vertical" aria-hidden="true">SCOPED WORK / PRIVATE INTAKE</p>
+        </section>
+
+        <section class="commission-scene scope-scene" data-scene="02" data-scene-label-value="SCOPE" aria-labelledby="scope-title">
+            <header class="scene-heading reveal">
+                <p class="scene-number">SCENE 02 / SCOPE</p>
+                <h2 id="scope-title">Know the<br>boundary.</h2>
             </header>
 
-            <section class="term-section" id="accepts" aria-labelledby="accepts-title">
-                <h2 id="accepts-title">What I Accept</h2>
-                <ul class="commission-list">
+            <div class="scope-column scope-column--accept reveal" id="accepts">
+                <div class="scope-column__heading">
+                    <span>01</span>
+                    <h3>Good fit</h3>
+                    <span>ACCEPT</span>
+                </div>
+                <ul class="scope-list">
                     <li>Small websites and landing pages</li>
                     <li>Portfolio pages</li>
                     <li>Small scripts and tools</li>
                     <li>Bug fixes</li>
                     <li>UI cleanup</li>
                     <li>Discord or Telegram bot features</li>
-                    <li>README/GitHub setup</li>
+                    <li>README / GitHub setup</li>
                     <li>Small automation</li>
                     <li>Focused edits to existing code</li>
                 </ul>
-            </section>
+            </div>
 
-            <section class="term-section" id="declines" aria-labelledby="declines-title">
-                <h2 id="declines-title">What I Don’t Accept</h2>
-                <ul class="commission-list">
+            <div class="scope-column scope-column--decline reveal" id="declines">
+                <div class="scope-column__heading">
+                    <span>02</span>
+                    <h3>Not a fit</h3>
+                    <span>DECLINE</span>
+                </div>
+                <ul class="scope-list">
                     <li>Full SaaS or startup builds</li>
                     <li>Large or long-term projects</li>
                     <li>Payment systems</li>
@@ -59,130 +116,108 @@
                     <li>Malware, spam tools, account bots, or private-data scraping</li>
                     <li>Vague requests without a clear scope</li>
                 </ul>
-            </section>
+            </div>
 
-            <section class="term-section" id="process" aria-labelledby="process-title">
-                <h2 id="process-title">How It Works</h2>
+            <p class="scope-note reveal">SMALL DOES NOT MEAN VAGUE.<br>THE BOUNDARY IS THE BRIEF.</p>
+        </section>
 
-                <ol class="timeline">
-                    <li class="timeline-item">
-                        <span class="timeline-marker" aria-hidden="true">1</span>
-                        <div class="timeline-body">
-                            <h3>Request</h3>
-                            <p>You send a request through the form below or message me privately. Describe what you need in as much detail as you can.</p>
-                        </div>
-                    </li>
-                    <li class="timeline-item">
-                        <span class="timeline-marker" aria-hidden="true">2</span>
-                        <div class="timeline-body">
-                            <h3>Fit Check</h3>
-                            <p>I review whether the project matches what I take on and whether I have time for it. Requests can be declined at this stage.</p>
-                        </div>
-                    </li>
-                    <li class="timeline-item">
-                        <span class="timeline-marker" aria-hidden="true">3</span>
-                        <div class="timeline-body">
-                            <h3>Scope &amp; Quote</h3>
-                            <p>If it’s a good fit, we agree on exactly what gets built and you receive an individual quote in EUR, including how many revision rounds are covered.</p>
-                        </div>
-                    </li>
-                    <li class="timeline-item">
-                        <span class="timeline-marker" aria-hidden="true">4</span>
-                        <div class="timeline-body">
-                            <h3>Payment Agreement</h3>
-                            <p>We agree on how payment works before any work starts. Small projects are paid after the preview; larger projects start with a 50% deposit. PayPal is the only supported payment method right now.</p>
-                        </div>
-                    </li>
-                    <li class="timeline-item">
-                        <span class="timeline-marker" aria-hidden="true">5</span>
-                        <div class="timeline-body">
-                            <h3>Development</h3>
-                            <p>I build the project according to the agreed scope. Any delivery date I mention is an estimate unless explicitly agreed otherwise.</p>
-                        </div>
-                    </li>
-                    <li class="timeline-item">
-                        <span class="timeline-marker" aria-hidden="true">6</span>
-                        <div class="timeline-body">
-                            <h3>Preview &amp; Revisions</h3>
-                            <p>You get a preview of the work and can report issues or use the revision rounds included in your quote.</p>
-                        </div>
-                    </li>
-                    <li class="timeline-item">
-                        <span class="timeline-marker" aria-hidden="true">7</span>
-                        <div class="timeline-body">
-                            <h3>Final Payment &amp; Delivery</h3>
-                            <p>Once everything is approved, final payment is made and you receive the deliverables we agreed on. Final files, source code, and repository access are handed over after full payment.</p>
-                        </div>
-                    </li>
-                    <li class="timeline-item">
-                        <span class="timeline-marker" aria-hidden="true">8</span>
-                        <div class="timeline-body">
-                            <h3>7-Day Support</h3>
-                            <p>For seven days after delivery, I fix reproducible bugs that break functionality included in the agreed scope, free of charge.</p>
-                        </div>
-                    </li>
-                </ol>
-            </section>
+        <section class="commission-scene process-scene" id="process" data-scene="03" data-scene-label-value="PROTOCOL" aria-labelledby="process-title">
+            <header class="process-heading reveal">
+                <p class="scene-number">SCENE 03 / PROTOCOL</p>
+                <h2 id="process-title">Request to<br>handoff.</h2>
+                <p>Eight checkpoints. Every accepted job gets a clear scope, an individual EUR quote, and an agreed delivery path before work begins.</p>
+            </header>
 
-            <section class="term-section" id="pricing" aria-labelledby="pricing-title">
-                <h2 id="pricing-title">Pricing &amp; Payment</h2>
-                <p>Pricing depends entirely on the scope of the project, so there are no public starting prices. Every accepted request gets an individual quote.</p>
-                <p>All prices and payments use EUR. PayPal is the only supported payment method for now. Whether a commission counts as small or larger is decided during the fit check and is part of the quote.</p>
+            <ol class="process-track">
+                <li class="process-step reveal">
+                    <span class="process-step__number">01</span>
+                    <div><h3>Request</h3><p>You send a detailed request through the form or message me privately.</p></div>
+                </li>
+                <li class="process-step reveal">
+                    <span class="process-step__number">02</span>
+                    <div><h3>Fit check</h3><p>I check the scope, fit, and current availability. Requests can be declined here.</p></div>
+                </li>
+                <li class="process-step reveal">
+                    <span class="process-step__number">03</span>
+                    <div><h3>Scope &amp; quote</h3><p>We define exactly what gets built, the EUR quote, and included revisions.</p></div>
+                </li>
+                <li class="process-step reveal">
+                    <span class="process-step__number">04</span>
+                    <div><h3>Agreement</h3><p>We agree on payment before work starts. PayPal is currently the only method.</p></div>
+                </li>
+                <li class="process-step reveal">
+                    <span class="process-step__number">05</span>
+                    <div><h3>Development</h3><p>I build to the agreed scope. Dates remain estimates unless explicitly agreed.</p></div>
+                </li>
+                <li class="process-step reveal">
+                    <span class="process-step__number">06</span>
+                    <div><h3>Preview</h3><p>You inspect the work, report issues, and use the revision rounds in the quote.</p></div>
+                </li>
+                <li class="process-step reveal">
+                    <span class="process-step__number">07</span>
+                    <div><h3>Payment &amp; delivery</h3><p>After approval and full payment, you receive the agreed files and access.</p></div>
+                </li>
+                <li class="process-step reveal">
+                    <span class="process-step__number">08</span>
+                    <div><h3>7-day support</h3><p>I fix reproducible bugs in the agreed scope for seven days after delivery.</p></div>
+                </li>
+            </ol>
 
-                <h3>Small projects</h3>
-                <ul class="commission-list">
-                    <li>No upfront payment.</li>
-                    <li>I build the work and show you a preview.</li>
-                    <li>You pay the full amount once you’re happy with the preview.</li>
-                    <li>Final files, source code, repository access, or ownership are delivered after full payment.</li>
-                </ul>
+            <div class="terms-grid">
+                <article class="terms-panel reveal" id="pricing">
+                    <p class="technical-kicker">PAYMENT MODEL / 01</p>
+                    <h3>Small project</h3>
+                    <p class="terms-panel__statement">No upfront payment.</p>
+                    <ul>
+                        <li>I build and show a preview.</li>
+                        <li>You pay in full when happy with the preview.</li>
+                        <li>Files, source, repository access, or ownership follow full payment.</li>
+                    </ul>
+                </article>
+                <article class="terms-panel terms-panel--inverse reveal">
+                    <p class="technical-kicker">PAYMENT MODEL / 02</p>
+                    <h3>Larger project</h3>
+                    <p class="terms-panel__statement">50 / 50 split.</p>
+                    <ul>
+                        <li>50% before work begins.</li>
+                        <li>Preview when the work is ready.</li>
+                        <li>Remaining 50% before final delivery and handoff.</li>
+                    </ul>
+                </article>
+            </div>
 
-                <h3>Larger projects</h3>
-                <ul class="commission-list">
-                    <li>50% is paid before work begins.</li>
-                    <li>You get a preview when the work is ready.</li>
-                    <li>The remaining 50% is paid before final delivery.</li>
-                    <li>Final files, source code, repository access, or ownership are delivered after full payment.</li>
-                </ul>
-            </section>
+            <div class="project-details">
+                <article class="detail-block reveal" id="revisions">
+                    <p class="technical-kicker">REVISION CONTROL</p>
+                    <h3>Two rounds by default.</h3>
+                    <p>The exact allowance is always stated in the quote. Extra revisions may cost more; new features or changes beyond the agreed scope require a separate quote.</p>
+                </article>
+                <article class="detail-block reveal" id="delivery">
+                    <p class="technical-kicker">DELIVERY OPTIONS</p>
+                    <h3>Agreed per project.</h3>
+                    <p>Source files, ZIP archive, GitHub access or ownership transfer, deployment handoff, and setup documentation when agreed.</p>
+                </article>
+                <article class="detail-block detail-block--terms reveal">
+                    <p class="technical-kicker">FULL CONDITIONS</p>
+                    <h3>Read before sending.</h3>
+                    <a class="technical-link" href="/commission-terms.html">Commission terms <span aria-hidden="true">↗</span></a>
+                </article>
+            </div>
+        </section>
 
-            <section class="term-section" id="revisions" aria-labelledby="revisions-title">
-                <h2 id="revisions-title">Revisions</h2>
-                <p>Two revision rounds are included by default. Depending on the project, more than two may be included — the exact allowance is always stated in the quote.</p>
-                <p>Additional revisions beyond what’s included may cost extra. New features or changes outside the agreed scope are not revisions and may require a separate quote.</p>
-            </section>
+        <section class="commission-scene request-scene" id="request" data-scene="04" data-scene-label-value="TRANSMIT" aria-labelledby="request-title">
+            <div class="request-intro reveal">
+                <p class="scene-number">SCENE 04 / PRIVATE INTAKE</p>
+                <h2 id="request-title">Send the<br>brief.</h2>
+                <p>Describe the outcome, constraints, and what already exists. I’ll reply privately on Telegram if the request is a possible fit.</p>
+                <dl class="request-meta">
+                    <div><dt>CHANNEL</dt><dd>TELEGRAM</dd></div>
+                    <div><dt>STORAGE</dt><dd>NO SITE DATABASE</dd></div>
+                    <div><dt>STATUS</dt><dd data-commission-status-label>Limited availability</dd></div>
+                </dl>
+            </div>
 
-            <section class="term-section" id="delivery" aria-labelledby="delivery-title">
-                <h2 id="delivery-title">Delivery</h2>
-                <p>The delivery method depends on the project and is agreed in the quote. Possible delivery methods include:</p>
-                <ul class="commission-list">
-                    <li>Source files</li>
-                    <li>ZIP archive</li>
-                    <li>GitHub repository access</li>
-                    <li>Repository ownership transfer</li>
-                    <li>Deployment handoff</li>
-                    <li>Setup instructions or documentation when agreed</li>
-                </ul>
-            </section>
-
-            <section class="term-section" id="before-you-request" aria-labelledby="before-you-request-title">
-                <h2 id="before-you-request-title">Before You Request</h2>
-                <ul class="commission-list commission-list-plain">
-                    <li>Requests may be accepted or declined.</li>
-                    <li>Scope and price are agreed before work begins.</li>
-                    <li>Two revision rounds are included by default.</li>
-                    <li>Extra features or revisions may cost more.</li>
-                    <li>Final files are delivered after full payment.</li>
-                    <li>Bug-fix support lasts seven days after final delivery.</li>
-                </ul>
-                <div class="terms-actions">
-                    <a href="/commission-terms.html" class="btn btn-secondary">Read Full Terms</a>
-                </div>
-            </section>
-
-            <section class="term-section form-section" id="request" aria-labelledby="request-title">
-                <h2 id="request-title">Request a Commission</h2>
-
+            <div class="request-form-wrap reveal">
                 <div class="form-closed-message" data-commission-closed hidden></div>
 
                 <form id="commission-form" novalidate>
@@ -191,14 +226,14 @@
                         <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
                     </div>
 
-                    <div class="form-field">
+                    <div class="form-field" data-field-number="01">
                         <label for="telegram_username">Telegram username <span class="required-indicator" aria-hidden="true">*</span><span class="visually-hidden">(required)</span></label>
                         <input type="text" id="telegram_username" name="telegram_username" inputmode="text" autocomplete="off" spellcheck="false" maxlength="33" placeholder="@username" required aria-required="true" aria-describedby="hint-username error-telegram_username">
                         <p class="field-hint" id="hint-username">With or without the @. This is where I’ll reply.</p>
                         <p class="field-error" id="error-telegram_username" aria-live="polite"></p>
                     </div>
 
-                    <div class="form-field">
+                    <div class="form-field" data-field-number="02">
                         <label for="project_description">Project description <span class="required-indicator" aria-hidden="true">*</span><span class="visually-hidden">(required)</span></label>
                         <textarea id="project_description" name="project_description" rows="8" required aria-required="true" minlength="50" maxlength="3000" aria-describedby="hint-description counter-description error-project_description"></textarea>
                         <p class="field-hint" id="hint-description">What should be built, what it’s for, and anything already decided. At least 50 characters.</p>
@@ -206,22 +241,24 @@
                         <p class="field-error" id="error-project_description" aria-live="polite"></p>
                     </div>
 
-                    <div class="form-field">
-                        <label for="preferred_deadline">Preferred deadline <span class="optional-indicator">(optional)</span></label>
-                        <input type="text" id="preferred_deadline" name="preferred_deadline" maxlength="100" autocomplete="off" aria-describedby="hint-deadline error-preferred_deadline">
-                        <p class="field-hint" id="hint-deadline">Free text, e.g. “September 10”, “within two weeks”, or “no rush”. This is a preferred deadline, not a guaranteed delivery date.</p>
-                        <p class="field-error" id="error-preferred_deadline" aria-live="polite"></p>
-                    </div>
+                    <div class="form-row">
+                        <div class="form-field" data-field-number="03">
+                            <label for="preferred_deadline">Preferred deadline <span class="optional-indicator">optional</span></label>
+                            <input type="text" id="preferred_deadline" name="preferred_deadline" maxlength="100" autocomplete="off" placeholder="No rush" aria-describedby="hint-deadline error-preferred_deadline">
+                            <p class="field-hint" id="hint-deadline">Free text. This is preferred, not guaranteed.</p>
+                            <p class="field-error" id="error-preferred_deadline" aria-live="polite"></p>
+                        </div>
 
-                    <div class="form-field">
-                        <label for="reference_links">Reference links <span class="optional-indicator">(optional)</span></label>
-                        <textarea id="reference_links" name="reference_links" rows="4" aria-describedby="hint-links error-reference_links"></textarea>
-                        <p class="field-hint" id="hint-links">One URL per line, up to five. Files can be exchanged later through Telegram.</p>
-                        <p class="field-error" id="error-reference_links" aria-live="polite"></p>
+                        <div class="form-field" data-field-number="04">
+                            <label for="reference_links">Reference links <span class="optional-indicator">optional</span></label>
+                            <textarea id="reference_links" name="reference_links" rows="4" aria-describedby="hint-links error-reference_links"></textarea>
+                            <p class="field-hint" id="hint-links">One URL per line, up to five. Files can follow on Telegram.</p>
+                            <p class="field-error" id="error-reference_links" aria-live="polite"></p>
+                        </div>
                     </div>
 
                     <fieldset class="form-acknowledgements">
-                        <legend>Acknowledgements</legend>
+                        <legend>Confirm before transmission</legend>
                         <div class="checkbox-field">
                             <input type="checkbox" id="accepted_terms" name="accepted_terms" required aria-required="true" aria-describedby="error-accepted_terms">
                             <label for="accepted_terms">I have read the <a href="/commission-terms.html" target="_blank" rel="noopener noreferrer">Commission Terms</a>.<span class="required-indicator" aria-hidden="true">*</span><span class="visually-hidden">(required)</span></label>
@@ -235,28 +272,28 @@
                     </fieldset>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn btn-primary" id="submit-button">Submit Commission Request</button>
+                        <button type="submit" id="submit-button"><span>Submit commission request</span><span aria-hidden="true">→</span></button>
                     </div>
 
                     <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
                 </form>
 
                 <p class="privacy-note">Your submission is sent privately to my Telegram chat and is not intentionally stored in a website database.</p>
-            </section>
-        </article>
+            </div>
+        </section>
     </main>
 
-    <footer class="footer">
-        <div class="container footer-content">
-            <p class="footer-text">Built by Erdi with love &lt;3</p>
-            <nav class="footer-links" aria-label="Footer navigation">
-                <a href="/commission-terms.html">Commission Terms</a>
-                <a href="/index.html">Portfolio</a>
-                <a href="https://github.com/aoyn1xw" target="_blank" rel="noopener noreferrer">GitHub</a>
-            </nav>
-        </div>
+    <footer class="commission-footer">
+        <p>ERDI / AYON1XW</p>
+        <p>REQUEST ≠ ACCEPTED</p>
+        <nav aria-label="Footer navigation">
+            <a href="/index.html">Portfolio</a>
+            <a href="/commission-terms.html">Terms</a>
+            <a href="https://github.com/aoyn1xw" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </nav>
     </footer>
 
     <script type="module" src="commissions.js"></script>
+    <script type="module" src="commission-motion.js"></script>
 </body>
 </html>

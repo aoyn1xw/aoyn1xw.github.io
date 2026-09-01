@@ -5,7 +5,8 @@
   "description": "Personal portfolio site for Erdi / ayon1xw",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vue-tsc -b && vite build",
+    "typecheck": "vue-tsc -b",
     "preview": "vite preview",
     "test": "node --test worker/test/worker.test.mjs"
   },
@@ -15,7 +16,14 @@
   ],
   "author": "Erdi (ayon1xw)",
   "license": "MIT",
+  "dependencies": {
+    "vue": "^3.5.21"
+  },
   "devDependencies": {
-    "vite": "^5.0.0"
+    "@types/node": "^26.3.0",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "typescript": "^5.9.2",
+    "vite": "^8.2.2",
+    "vue-tsc": "^3.0.6"
   }
 }

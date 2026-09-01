@@ -14,12 +14,12 @@ Nothing too deep. I just wanted one place that shows who I am, what I build, and
 
 ## What it uses
 
-- HTML
-- CSS
-- JavaScript
+- Vue 3
+- TypeScript
+- Canvas 2D for the interactive identity
+- HTML and CSS for the commission pages
 - Vite
 - GitHub Pages
-- GitHub API for the project cards
 - Cloudflare Worker for the commission form (see `worker/README.md`)
 
 ## Commissions
