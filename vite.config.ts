@@ -14,7 +14,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
-    rolldownOptions: {
+    rollupOptions: {
       input: {
         main: resolve(import.meta.dirname, 'index.html'),
         commissions: resolve(import.meta.dirname, 'commissions.html'),

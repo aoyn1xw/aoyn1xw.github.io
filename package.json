@@ -2,7 +2,7 @@
   "name": "portfolio",
   "version": "1.0.0",
   "type": "module",
-  "description": "Personal portfolio site for Erdi / ayon1xw",
+  "description": "Personal portfolio site for ayon1xw",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
@@ -14,7 +14,7 @@
     "portfolio",
     "github-pages"
   ],
-  "author": "Erdi (ayon1xw)",
+  "author": "ayon1xw",
   "license": "MIT",
   "dependencies": {
     "vue": "^3.5.21"
@@ -22,6 +22,7 @@
   "devDependencies": {
     "@types/node": "^26.3.0",
     "@vitejs/plugin-vue": "^6.0.1",
+    "playwright": "^1.62.1",
     "typescript": "^5.9.2",
     "vite": "^8.2.2",
     "vue-tsc": "^3.0.6"

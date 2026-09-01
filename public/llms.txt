@@ -1,6 +1,6 @@
-# Erdi / ayon1xw
+# ayon1xw
 
-> Personal portfolio for Erdi, also known as ayon1xw. Student developer building desktop tools, automation projects, and AI experiments, mostly around iOS, GitHub, and local-first apps.
+> Personal portfolio for ayon1xw. Student developer building desktop tools, automation projects, and AI experiments, mostly around iOS, GitHub, and local-first apps.
 
 ## Site
 

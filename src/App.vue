@@ -34,7 +34,7 @@ onBeforeUnmount(() => sceneObserver?.disconnect());
   <TechnicalFrame :scene-number="currentScene.number" :scene-label="currentScene.label" />
 
   <header class="site-header">
-    <a class="site-mark" href="#identity" aria-label="Erdi / ayon1xw home">
+    <a class="site-mark" href="#identity" aria-label="ayon1xw home">
       <span>AYN</span><span>/01</span>
     </a>
     <nav aria-label="Primary navigation">
@@ -48,10 +48,10 @@ onBeforeUnmount(() => sceneObserver?.disconnect());
   <main id="main-content">
     <SceneShell id="identity" number="01" label="IDENTITY">
       <div class="hero-composition">
-        <h1 class="visually-hidden">Erdi, also known as ayon1xw — student developer</h1>
+        <h1 class="visually-hidden">ayon1xw — student developer</h1>
 
         <div class="hero-composition__location">
-          <MetadataLabel label="ORIGIN" value="WUPPERTAL / DE" vertical />
+          <MetadataLabel label="ORIGIN" value="GERMANY / UTC+1" vertical />
         </div>
 
         <div class="hero-composition__status">
@@ -122,9 +122,9 @@ onBeforeUnmount(() => sceneObserver?.disconnect());
         </nav>
 
         <footer class="contact-scene__footer">
-          <span>ERDI / AYON1XW</span>
-          <span>WUPPERTAL / DE</span>
-          <span>2026 / BUILT BY ERDI</span>
+          <span>AYON1XW</span>
+          <span>GERMANY / UTC+1</span>
+          <span>2026 / BUILT BY AYON1XW</span>
         </footer>
       </div>
     </SceneShell>

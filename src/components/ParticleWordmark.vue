@@ -100,13 +100,9 @@ function buildParticles() {
 
   sampleContext.fillStyle = '#fff';
   const metrics = wordmarkMetrics();
-  const primarySize = Math.min(width * (metrics.compact ? 0.31 : 0.2), height * 0.34);
-  const secondarySize = Math.min(width * (metrics.compact ? 0.155 : 0.105), height * 0.19);
-  const centerOffset = metrics.compact ? height * 0.13 : height * 0.12;
+  const markSize = Math.min(width * (metrics.compact ? 0.162 : 0.148), height * 0.32);
 
-  const points = sampleLine(sampleContext, 'ERDI', primarySize, height / 2 - centerOffset, metrics.sampleGap);
-  sampleContext.clearRect(0, 0, width, height);
-  points.push(...sampleLine(sampleContext, 'AYON1XW', secondarySize, height / 2 + centerOffset, metrics.sampleGap));
+  const points = sampleLine(sampleContext, 'AYON1XW', markSize, height / 2, metrics.sampleGap);
 
   particles.length = 0;
   points.forEach((point, index) => {
@@ -243,6 +239,6 @@ onBeforeUnmount(() => {
     @pointerleave="leavePointer"
     @pointercancel="leavePointer"
   >
-    <canvas ref="canvas" aria-hidden="true">ERDI / AYON1XW</canvas>
+    <canvas ref="canvas" aria-hidden="true">AYON1XW</canvas>
   </div>
 </template>
