@@ -3,19 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0a0a0a">
-    <title>Page not found | ayon1xw</title>
+    <meta name="description" content="Page not found — ayon1xw">
+    <meta name="theme-color" content="#050505">
+    <title>404 // Page Not Found | ayon1xw</title>
     <link rel="icon" type="image/png" href="assets/cursor/cursor.png">
     <link rel="apple-touch-icon" href="assets/cursor/cursor.png">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="commission.css">
 </head>
-<body>
-    <main class="not-found">
-        <div class="container not-found-content">
-            <p class="not-found-code">404</p>
-            <h1 class="section-title">Page not found.</h1>
-            <a href="/" class="btn btn-primary">Back to homepage</a>
+<body class="commission-page not-found-page">
+    <a class="skip-link" href="#not-found-content">Skip to content</a>
+
+    <div class="commission-frame" aria-hidden="true">
+        <span class="commission-frame__corner commission-frame__corner--tl"></span>
+        <span class="commission-frame__corner commission-frame__corner--tr"></span>
+        <span class="commission-frame__corner commission-frame__corner--bl"></span>
+        <span class="commission-frame__corner commission-frame__corner--br"></span>
+        <div class="commission-frame__registration">AYN / 404 / UNRESOLVED</div>
+    </div>
+
+    <header class="commission-header">
+        <a class="commission-mark" href="/index.html" aria-label="ayon1xw portfolio home">
+            <span>AYON1XW</span>
+            <span>SYSTEM / 404</span>
+        </a>
+        <nav aria-label="Page navigation">
+            <a href="/index.html">Portfolio</a>
+            <a href="/commissions.html">Commissions</a>
+            <a href="/commission-terms.html">Terms</a>
+        </nav>
+    </header>
+
+    <main class="commission-scene not-found-scene" id="not-found-content">
+        <div class="not-found-content reveal is-visible">
+            <p class="technical-kicker">HTTP 404 // ROUTE UNRESOLVED</p>
+            <h1 class="not-found-title"><span>404</span><span>Page Not Found</span></h1>
+            <p class="not-found-desc">The requested resource could not be found or has been moved to a new route.</p>
+            <div class="not-found-actions">
+                <a class="terms-cta__button" href="/index.html">
+                    <span>Back to portfolio</span>
+                    <span aria-hidden="true">→</span>
+                </a>
+                <a class="technical-link" href="/commissions.html">Commission intake <span aria-hidden="true">↗</span></a>
+            </div>
         </div>
     </main>
+
+    <footer class="commission-footer">
+        <p>AYON1XW</p>
+        <p>ROUTE NOT FOUND</p>
+        <nav aria-label="Footer navigation">
+            <a href="/index.html">Portfolio</a>
+            <a href="/commissions.html">Commissions</a>
+            <a href="https://github.com/aoyn1xw" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </nav>
+    </footer>
 </body>
 </html>
