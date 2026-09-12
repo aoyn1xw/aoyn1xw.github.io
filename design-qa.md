@@ -94,3 +94,43 @@ No actionable P0, P1, or P2 findings remain.
 - Production verification: Vite production build passed and emitted `dist/commissions.html`; all 17 Worker tests passed; `dist/.well-known/discord` remains present.
 
 final result: passed
+
+## Design System Unification & Visual Upgrade Pass (2026-09-12)
+
+### Comparison target
+
+- Design system truth: Single authoritative token architecture (`tokens.css`) bridging the Vue portfolio application and static commission pages.
+- Desktop CSS viewports: 2048 x 922 (device scale factor 1) & 1440 x 900.
+- Mobile CSS viewport: 390 x 844 (device scale factor 1).
+- Artifact evidence:
+  - Desktop home baseline vs upgrade: `design-qa-artifacts/upgrade-desktop-comparison.png`
+  - Desktop home capture: `design-qa-artifacts/upgrade-desktop-2048x922.png` & `design-qa-artifacts/upgrade-desktop-1440x900.png`
+  - Mobile home baseline vs upgrade: `design-qa-artifacts/upgrade-mobile-comparison.png`
+  - Mobile home capture: `design-qa-artifacts/upgrade-mobile-390x844.png`
+  - Commissions desktop baseline vs upgrade: `design-qa-artifacts/upgrade-commissions-comparison.png`
+  - Commissions desktop capture: `design-qa-artifacts/upgrade-commissions-desktop-1440x900.png`
+  - Commissions mobile capture: `design-qa-artifacts/upgrade-commissions-mobile-390x844.png`
+  - Commission terms desktop capture: `design-qa-artifacts/upgrade-terms-desktop-1440x900.png`
+  - 404 page desktop capture: `design-qa-artifacts/upgrade-404-desktop-1440x900.png`
+
+### Upgrade findings
+
+No actionable P0, P1, or P2 findings remain.
+
+- **Tokens and single source of truth (P1 resolved)**: The previously disconnected styling systems (`src/styles/main.css`, `commission.css`, and root `styles.css`) are unified under `tokens.css`. Both Vite-bundled assets and static routes inherit identical variables with zero duplicate token definitions.
+- **Typography and display face (P1 resolved)**: Audited the codebase for `Ndot 57` and verified zero active rendered references; removed the dead `@font-face` blocks. Replaced the system fallback display stack ("Arial Narrow", Impact) with **Space Grotesk** (weights 500–900), loaded via Google Fonts with preconnect headers, paired with **Inter** for clean body text. Implemented a ~1.25–1.333 modular type scale, tightened display line-heights to 1.15, loosened body copy line-heights to 1.6, and capped reading measure at 65ch (`--max-line-length`).
+- **Brand color reconciliation (P1 resolved & intentional)**: Replaced legacy cyan (`#00d9ff`) in `styles.css` with the portfolio's canonical violet-blue (`#667cff`), establishing consistent brand accent identity across the entire repository.
+- **Dark theme & contrast safety (P2 resolved)**: Replaced `#050505` with rich near-black `#0a0a0a` to prevent harsh OLED contrast and black clipping. Lightened `--color-dim` to `#848480`, measuring 5.27:1 contrast on `#0a0a0a` to guarantee a safe margin above the WCAG AA 4.5:1 requirement. Replaced hard black drop-shadows with soft dark/colored ambient shadows (`--shadow-device`, `--shadow-accent`). Updated `theme-color` meta tags to `#0a0a0a` across all HTML entry points.
+- **Spacing and layout rhythm (P2 resolved)**: Enforced a strict 4/8/16/24/32/48/64/96/128px spacing scale across all components. Outer page margins and gutters (`--page-gutter`) expand generously on desktop displays, maintaining deliberate negative space without edge crowding.
+- **Motion and interactivity (P2 resolved)**: Standardized interactive hover, focus, and button transitions to 220ms ease-out (`cubic-bezier(0.16, 1, 0.3, 1)`), ensuring smooth, non-jarring feedback cohesive with Vue scene transitions and `commission-motion.js`.
+- **Scene 02 Scope heading collision fix (P1 resolved)**: Resolved a collision where "KNOW THE BOUNDARY." overlapped the "GOOD FIT" column. Because Space Grotesk has wider geometric proportions than the previous condensed fallback font, the previous narrow column (`13rem` / `0.7fr`) and oversized clamp (`clamp(3.8rem, 7.6vw, 8.8rem)`) caused the word "BOUNDARY." to overflow into column 2. Fixed by expanding the heading column to `minmax(18rem, 1fr)` and calibrating `.scene-heading h2` to `clamp(2.2rem, 3.8vw, 4.2rem)` with line-height `0.92`, establishing clean 30–67px positive spacing across all desktop and laptop viewports.
+- **Prior findings preserved**: Verified that mobile line-height and tracking on the Profile scene and the Commission scenes remain clean and unregressed.
+
+### Verification evidence
+
+- All 17 Telegram worker unit tests passed (`npm test`).
+- Production build succeeded cleanly (`npm run build`).
+- Live browser console check across `/`, `/commissions.html`, `/commission-terms.html`, and `/404.html` yielded 0 errors and 0 warnings.
+- Side-by-side comparison artifacts generated and verified at desktop (2048x922, 1440x900) and mobile (390x844).
+
+final result: passed

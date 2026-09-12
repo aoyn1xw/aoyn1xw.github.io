@@ -1,31 +1,4 @@
-@font-face {
-  font-family: "Ndot 57";
-  src: url("/assets/fonts/ndot-57-aligned.ttf") format("truetype");
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
-
-:root {
-  color-scheme: dark;
-  --commission-bg: #050505;
-  --commission-fg: #f1efe9;
-  --commission-muted: #8a8a86;
-  --commission-dim: #484846;
-  --commission-accent: #667cff;
-  --commission-border: rgba(241, 239, 233, 0.2);
-  --commission-border-strong: rgba(241, 239, 233, 0.5);
-  --commission-error: #ff786b;
-  --font-display: "Arial Narrow", "Roboto Condensed", Impact, sans-serif;
-  --font-body: Inter, "Segoe UI", Arial, sans-serif;
-  --font-technical: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
-  --frame-inset: clamp(0.75rem, 1.45vw, 1.75rem);
-  --page-gutter: clamp(2.2rem, 6vw, 7rem);
-  --rule: 1px;
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --duration-fast: 220ms;
-  --duration-medium: 760ms;
-}
+@import './tokens.css';
 
 *,
 *::before,
@@ -44,6 +17,7 @@ body {
   background: var(--commission-bg);
   color: var(--commission-fg);
   font-family: var(--font-body);
+  line-height: var(--line-height-body);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -449,8 +423,8 @@ textarea {
 
 .scope-scene {
   display: grid;
-  grid-template-columns: minmax(13rem, 0.7fr) 1fr 1fr;
-  gap: clamp(1.5rem, 4vw, 5rem);
+  grid-template-columns: minmax(18rem, 1fr) 1.1fr 1.1fr;
+  gap: clamp(1.5rem, 3.5vw, 4.5rem);
   align-content: center;
   padding: clamp(7rem, 11vh, 10rem) max(calc(var(--frame-inset) + 4.5rem), var(--page-gutter));
   border-top: 1px solid rgba(241, 239, 233, 0.08);
@@ -467,12 +441,18 @@ textarea {
   background: rgba(241, 239, 233, 0.08);
 }
 
-.scene-heading h2,
+.scene-heading h2 {
+  margin: 0.7rem 0 0;
+  font: 900 clamp(2.2rem, 3.8vw, 4.2rem)/0.92 var(--font-display);
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
 .process-heading h2,
 .request-intro h2 {
   margin: 0.7rem 0 0;
-  font: 900 clamp(3.8rem, 7.6vw, 8.8rem)/0.8 var(--font-display);
-  letter-spacing: -0.06em;
+  font: 900 clamp(3.2rem, 6.5vw, 7.2rem)/0.85 var(--font-display);
+  letter-spacing: -0.05em;
   text-transform: uppercase;
 }
 

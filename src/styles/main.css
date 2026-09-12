@@ -1,36 +1,5 @@
-@font-face {
-  font-family: "Ndot 57";
-  src: url("/assets/fonts/ndot-57-aligned.ttf") format("truetype");
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
+@import '../../tokens.css';
 
-:root {
-  color-scheme: dark;
-  --color-bg: #050505;
-  --color-fg: #f1efe9;
-  --color-muted: #8a8a86;
-  --color-dim: #484846;
-  --color-accent: #667cff;
-  --color-border: rgba(241, 239, 233, 0.22);
-  --color-border-strong: rgba(241, 239, 233, 0.52);
-  --font-display: "Arial Narrow", "Roboto Condensed", Impact, sans-serif;
-  --font-body: Inter, "Segoe UI", Arial, sans-serif;
-  --font-technical: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
-  --frame-inset: clamp(0.75rem, 1.45vw, 1.75rem);
-  --space-1: clamp(0.4rem, 0.7vw, 0.75rem);
-  --space-2: clamp(0.75rem, 1.2vw, 1.25rem);
-  --space-3: clamp(1.25rem, 2vw, 2.5rem);
-  --space-4: clamp(2rem, 4vw, 5rem);
-  --space-5: clamp(4rem, 8vw, 10rem);
-  --rule: 1px;
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-  --duration-fast: 220ms;
-  --duration-medium: 700ms;
-  --duration-slow: 1200ms;
-}
 
 *,
 *::before,
@@ -49,8 +18,13 @@ body {
   background: var(--color-bg);
   color: var(--color-fg);
   font-family: var(--font-body);
+  line-height: var(--line-height-body);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+p {
+  max-width: var(--max-line-length);
 }
 
 a {
@@ -625,7 +599,7 @@ a {
   position: absolute;
   margin: 0;
   background: #efedf5;
-  box-shadow: 0 1.4rem 5rem rgba(0, 0, 0, 0.48);
+  box-shadow: var(--shadow-device);
 }
 
 .device-shot img {
