@@ -51,7 +51,7 @@ onBeforeUnmount(() => sceneObserver?.disconnect());
         <h1 class="visually-hidden">ayon1xw — student developer</h1>
 
         <div class="hero-composition__location">
-          <MetadataLabel label="ORIGIN" value="GERMANY / UTC+1" vertical />
+          <MetadataLabel label="ORIGIN" value="GERMANY / BERLIN" vertical />
         </div>
 
         <div class="hero-composition__status">
@@ -123,7 +123,7 @@ onBeforeUnmount(() => sceneObserver?.disconnect());
 
         <footer class="contact-scene__footer">
           <span>AYON1XW</span>
-          <span>GERMANY / UTC+1</span>
+          <span>GERMANY / BERLIN</span>
           <span>2026 / BUILT BY AYON1XW</span>
         </footer>
       </div>

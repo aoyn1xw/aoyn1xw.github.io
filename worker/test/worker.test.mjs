@@ -10,6 +10,11 @@ function makeEnv(overrides = {}) {
         TELEGRAM_BOT_TOKEN: '123456789:TEST-PLACEHOLDER-TOKEN',
         TELEGRAM_CHAT_ID: '999999999',
         ALLOWED_ORIGINS: `${ALLOWED_ORIGIN},http://localhost:3000`,
+        RATE_LIMITER: {
+            async limit() {
+                return { success: true };
+            }
+        },
         ...overrides
     };
 }
@@ -72,7 +77,7 @@ test('accepts a valid submission and sends exactly one Telegram notification', a
 
     const sentBody = JSON.parse(telegramCalls[0].init.body);
     assert.equal(sentBody.chat_id, '999999999');
-    assert.equal(sentBody.parse_mode, 'HTML');
+    assert.equal(sentBody.parse_mode, undefined);
     assert.match(sentBody.text, /Telegram: @client_user/);
     assert.match(sentBody.text, /New commission request/);
     assert.match(sentBody.text, /Terms read: Yes/);
@@ -82,6 +87,16 @@ test('rejects disallowed origins with 403', async () => {
     mockTelegram();
     const response = await worker.fetch(
         makeRequest(validPayload(), { origin: 'https://evil.example' }),
+        makeEnv()
+    );
+    assert.equal(response.status, 403);
+    assert.equal(telegramCalls.length, 0);
+});
+
+test('rejects POST requests without an Origin header', async () => {
+    mockTelegram();
+    const response = await worker.fetch(
+        makeRequest(validPayload(), { origin: null }),
         makeEnv()
     );
     assert.equal(response.status, 403);
@@ -165,6 +180,12 @@ test('rejects more than five reference links and non-http schemes', async () => 
         makeEnv()
     );
     assert.equal(response.status, 400);
+
+    response = await worker.fetch(
+        makeRequest(validPayload({ reference_links: [`https://example.com/${'a'.repeat(700)}`] })),
+        makeEnv()
+    );
+    assert.equal(response.status, 400);
 });
 
 test('rejects filled honeypot fields', async () => {
@@ -225,7 +246,7 @@ test('includes optional fields only when provided', () => {
     assert.match(full, /Reference links:\n- https:\/\/example\.com\/ref/);
 });
 
-test('escapes HTML in user-provided content', () => {
+test('sends user-provided content as plain text', () => {
     const message = buildTelegramMessage(
         validateSubmission(
             validPayload({
@@ -235,9 +256,23 @@ test('escapes HTML in user-provided content', () => {
             })
         ).value
     );
-    assert.ok(!message.includes('<script>'));
-    assert.ok(message.includes('&lt;script&gt;'));
-    assert.ok(message.includes('&amp;'));
+    assert.ok(message.includes('<script>'));
+    assert.ok(message.includes('& thank you.'));
+});
+
+test('keeps the largest valid Telegram message within the API limit', () => {
+    const links = Array.from({ length: 5 }, (_, index) =>
+        `https://example.com/${index}/${'a'.repeat(112)}`
+    );
+    const validation = validateSubmission(validPayload({
+        telegram_username: 'u'.repeat(32),
+        project_description: 'x'.repeat(3000),
+        preferred_deadline: 'd'.repeat(100),
+        reference_links: links
+    }));
+
+    assert.equal(validation.ok, true);
+    assert.ok(buildTelegramMessage(validation.value).length <= 4096);
 });
 
 test('formats the submission timestamp in Europe/Berlin', () => {
@@ -245,9 +280,17 @@ test('formats the submission timestamp in Europe/Berlin', () => {
     assert.match(message, /Submitted: .+ \(Europe\/Berlin\)/);
 });
 
-test('rate limits repeated submissions from the same IP without a binding', async () => {
+test('rate limits repeated submissions from the same IP', async () => {
     mockTelegram();
-    const env = makeEnv();
+    let remaining = 5;
+    const env = makeEnv({
+        RATE_LIMITER: {
+            async limit() {
+                remaining -= 1;
+                return { success: remaining >= 0 };
+            }
+        }
+    });
     const ip = '203.0.113.77';
 
     let lastResponse;
@@ -258,6 +301,17 @@ test('rate limits repeated submissions from the same IP without a binding', asyn
         }
     }
     assert.equal(lastResponse.status, 429);
+});
+
+test('fails closed when the rate limiter binding is missing', async () => {
+    mockTelegram();
+    const response = await worker.fetch(
+        makeRequest(validPayload()),
+        makeEnv({ RATE_LIMITER: undefined })
+    );
+
+    assert.equal(response.status, 503);
+    assert.equal(telegramCalls.length, 0);
 });
 
 test('fails closed when the configured rate limiter is unavailable', async () => {

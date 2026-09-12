@@ -50,13 +50,13 @@ npx wrangler deploy
 Wrangler prints the deployed URL, e.g.
 `https://portfolio-commissions.<your-subdomain>.workers.dev`.
 
-### 5. Point the website at the worker
+### 5. Verify the website endpoint
 
-Edit `config.js` in the repository root and replace
-`YOUR_SUBDOMAIN` with your real workers.dev subdomain:
+Confirm `COMMISSION_ENDPOINT` in the repository root `config.js` matches the
+URL printed by Wrangler. Update it if the Worker route changes:
 
 ```js
-export const COMMISSION_ENDPOINT = 'https://portfolio-commissions.YOUR_SUBDOMAIN.workers.dev/';
+export const COMMISSION_ENDPOINT = 'https://portfolio-commissions.<your-subdomain>.workers.dev/';
 ```
 
 The production origin `https://aoyn1xw.github.io` is already allowed via
@@ -79,9 +79,8 @@ Production uses Cloudflare's `RATE_LIMITER` binding configured in
 Cloudflare location. The `namespace_id` is an account-local positive integer;
 keep it unique if you add other rate-limit bindings.
 
-The Worker retains a per-isolate fallback only for direct unit tests and
-non-Wrangler local execution. It is best effort and must not be treated as the
-production security boundary. No database is used in either mode.
+The Worker fails closed if the binding is missing or unavailable, so a broken
+rate-limit configuration cannot silently expose the Telegram relay.
 
 No CAPTCHA is used in v1. An invisible honeypot field plus rate limiting cover
 basic bot traffic.
@@ -98,8 +97,9 @@ no real credentials are needed.
 ## Security notes
 
 - Secrets live only in Wrangler secrets (or `.dev.vars`, which is git-ignored).
-- User content is HTML-escaped before being sent to Telegram.
-- CORS is restricted to `ALLOWED_ORIGINS`; everything else gets a 403.
+- User content is sent as plain text, without a Telegram markup parse mode.
+- Browser origins are restricted to `ALLOWED_ORIGINS`; missing and unlisted
+  origins get a 403 on submissions.
 - Only `POST` (plus CORS preflight) is accepted; bodies over 16 KB are rejected.
 - All fields are re-validated server-side; frontend validation is never trusted.
 - Error responses are generic codes — no internal details are leaked.

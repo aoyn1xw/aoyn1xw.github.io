@@ -13,24 +13,13 @@ const MIN_DESCRIPTION_LENGTH = 50;
 const MAX_DESCRIPTION_LENGTH = 3000;
 const MAX_DEADLINE_LENGTH = 100;
 const MAX_REFERENCE_LINKS = 5;
+const MAX_REFERENCE_LINK_LENGTH = 500;
+const MAX_REFERENCE_LINKS_TOTAL_LENGTH = 700;
+const MAX_TELEGRAM_MESSAGE_LENGTH = 4096;
 const USERNAME_PATTERN = /^[a-zA-Z][a-zA-Z0-9_]{4,31}$/;
 
 const REQUIRED_STRING_FIELDS = ['telegram_username', 'project_description'];
 const OPTIONAL_STRING_FIELDS = ['preferred_deadline'];
-
-const RATE_LIMIT_WINDOW_MS = 60 * 1000;
-const RATE_LIMIT_MAX_REQUESTS = 5;
-
-const memoryRateLimits = new Map();
-
-function escapeHtml(value) {
-    return String(value ?? '')
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#39;');
-}
 
 function parseAllowedOrigins(env) {
     const raw = typeof env.ALLOWED_ORIGINS === 'string' ? env.ALLOWED_ORIGINS : '';
@@ -43,7 +32,7 @@ function parseAllowedOrigins(env) {
 function resolveOrigin(request, env) {
     const origin = request.headers.get('Origin');
     if (!origin) {
-        return { allowed: true, origin: null };
+        return { allowed: false, origin: null };
     }
     if (parseAllowedOrigins(env).includes(origin)) {
         return { allowed: true, origin };
@@ -164,11 +153,20 @@ export function validateSubmission(payload) {
         if (payload.reference_links.length > MAX_REFERENCE_LINKS) {
             return { ok: false, reason: 'too_many_reference_links' };
         }
+        let totalLength = 0;
         for (const link of payload.reference_links) {
-            if (typeof link !== 'string' || !isValidReferenceLink(link.trim())) {
+            const normalizedLink = typeof link === 'string' ? link.trim() : '';
+            if (
+                normalizedLink.length > MAX_REFERENCE_LINK_LENGTH ||
+                !isValidReferenceLink(normalizedLink)
+            ) {
                 return { ok: false, reason: 'invalid_reference_link' };
             }
-            referenceLinks.push(link.trim());
+            totalLength += normalizedLink.length;
+            referenceLinks.push(normalizedLink);
+        }
+        if (totalLength > MAX_REFERENCE_LINKS_TOTAL_LENGTH) {
+            return { ok: false, reason: 'reference_links_too_long' };
         }
     }
 
@@ -207,27 +205,27 @@ export function buildTelegramMessage(submission) {
     const lines = [];
     lines.push('🆕 New commission request');
     lines.push('');
-    lines.push(`Telegram: ${escapeHtml(submission.username)}`);
+    lines.push(`Telegram: ${submission.username}`);
     lines.push('Description:');
-    lines.push(escapeHtml(submission.description));
+    lines.push(submission.description);
 
     if (submission.deadline !== '') {
         lines.push('');
-        lines.push(`Preferred deadline: ${escapeHtml(submission.deadline)}`);
+        lines.push(`Preferred deadline: ${submission.deadline}`);
     }
 
     if (submission.referenceLinks.length > 0) {
         lines.push('');
         lines.push('Reference links:');
         for (const link of submission.referenceLinks) {
-            lines.push(`- ${escapeHtml(link)}`);
+            lines.push(`- ${link}`);
         }
     }
 
     lines.push('');
     lines.push('Terms read: Yes');
     lines.push('Request is not acceptance acknowledged: Yes');
-    lines.push(`Submitted: ${escapeHtml(formatBerlinTimestamp())}`);
+    lines.push(`Submitted: ${formatBerlinTimestamp()}`);
 
     return lines.join('\n');
 }
@@ -241,7 +239,6 @@ async function deliverToTelegram(env, message) {
             body: JSON.stringify({
                 chat_id: env.TELEGRAM_CHAT_ID,
                 text: message,
-                parse_mode: 'HTML',
                 disable_web_page_preview: true
             })
         }
@@ -261,32 +258,11 @@ async function deliverToTelegram(env, message) {
 
 async function checkRateLimit(request, env) {
     const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-
-    if (env.RATE_LIMITER && typeof env.RATE_LIMITER.limit === 'function') {
-        const result = await env.RATE_LIMITER.limit({ key: ip });
-        return result.success !== false;
+    if (!env.RATE_LIMITER || typeof env.RATE_LIMITER.limit !== 'function') {
+        throw new Error('rate_limiter_missing');
     }
-
-    const now = Date.now();
-    const entry = memoryRateLimits.get(ip);
-
-    if (!entry || now - entry.windowStart >= RATE_LIMIT_WINDOW_MS) {
-        memoryRateLimits.set(ip, { windowStart: now, count: 1 });
-        return true;
-    }
-
-    entry.count += 1;
-    if (entry.count > RATE_LIMIT_MAX_REQUESTS) {
-        return false;
-    }
-
-    for (const [key, value] of memoryRateLimits) {
-        if (now - value.windowStart >= RATE_LIMIT_WINDOW_MS) {
-            memoryRateLimits.delete(key);
-        }
-    }
-
-    return true;
+    const result = await env.RATE_LIMITER.limit({ key: ip });
+    return result.success === true;
 }
 
 export default {
@@ -297,12 +273,12 @@ export default {
             return handlePreflight(request, env);
         }
 
-        if (!allowed) {
-            return errorResponse('forbidden_origin', 403, null);
-        }
-
         if (request.method !== 'POST') {
             return errorResponse('method_not_allowed', 405, origin);
+        }
+
+        if (!allowed) {
+            return errorResponse('forbidden_origin', 403, null);
         }
 
         if (
@@ -354,8 +330,13 @@ export default {
             return errorResponse('invalid_request', 400, origin);
         }
 
+        const message = buildTelegramMessage(validation.value);
+        if (message.length > MAX_TELEGRAM_MESSAGE_LENGTH) {
+            return errorResponse('invalid_request', 400, origin);
+        }
+
         try {
-            await deliverToTelegram(env, buildTelegramMessage(validation.value));
+            await deliverToTelegram(env, message);
         } catch {
             return errorResponse('delivery_failed', 502, origin);
         }

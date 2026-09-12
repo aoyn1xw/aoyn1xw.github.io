@@ -7,10 +7,13 @@ import {
 } from './config.js';
 
 const TELEGRAM_USERNAME_PATTERN = /^[a-zA-Z][a-zA-Z0-9_]{4,31}$/;
+const MAX_REFERENCE_LINK_LENGTH = 500;
+const MAX_REFERENCE_LINKS_TOTAL_LENGTH = 700;
 
 const form = document.getElementById('commission-form');
 const statusRegion = document.getElementById('form-status');
 const submitButton = document.getElementById('submit-button');
+const submitLabel = submitButton?.querySelector('span:first-child');
 const descriptionInput = document.getElementById('project_description');
 const counterElement = document.getElementById('counter-description');
 
@@ -91,6 +94,12 @@ function validators() {
             if (invalid) {
                 return `“${invalid.length > 60 ? invalid.slice(0, 60) + '…' : invalid}” is not a valid URL. Each line must be an http:// or https:// address.`;
             }
+            if (links.some(link => link.length > MAX_REFERENCE_LINK_LENGTH)) {
+                return 'Keep each reference link under 500 characters.';
+            }
+            if (links.reduce((total, link) => total + link.length, 0) > MAX_REFERENCE_LINKS_TOTAL_LENGTH) {
+                return 'Keep the combined reference links under 700 characters.';
+            }
             return '';
         },
         accepted_terms() {
@@ -134,10 +143,6 @@ function validateAllFields() {
     return allValid;
 }
 
-function isFormValid() {
-    return validateAllFields();
-}
-
 function updateSubmitState() {
     if (hasSucceeded || isSubmitting) {
         return;
@@ -148,11 +153,11 @@ function updateSubmitState() {
             valid = false;
         }
     });
-    submitButton.disabled = !valid;
+    submitButton.disabled = !getStatusMeta().acceptingRequests || !valid;
 }
 
 function updateCounter() {
-    const length = descriptionInput.value.length;
+    const length = descriptionInput.value.trim().length;
     counterElement.textContent = `${length} / 3000 characters`;
 }
 
@@ -224,6 +229,12 @@ async function handleSubmit(event) {
         return;
     }
 
+    if (!getStatusMeta().acceptingRequests) {
+        lockForm();
+        setStatusMessage(COMMISSION_CLOSED_MESSAGE, { variant: 'error' });
+        return;
+    }
+
     if (!validateAllFields()) {
         setStatusMessage('Please fix the highlighted fields and try again.', { variant: 'error' });
         const firstInvalid = form.querySelector('[aria-invalid="true"]');
@@ -234,9 +245,9 @@ async function handleSubmit(event) {
     }
 
     isSubmitting = true;
-    const originalLabel = submitButton.textContent;
+    const originalLabel = submitLabel.textContent;
     submitButton.disabled = true;
-    submitButton.textContent = 'Sending…';
+    submitLabel.textContent = 'Sending…';
 
     if (COMMISSION_ENDPOINT.includes('YOUR_SUBDOMAIN')) {
         handleFailure(originalLabel);
@@ -247,7 +258,7 @@ async function handleSubmit(event) {
         await sendRequest(buildPayload());
         hasSucceeded = true;
         lockForm();
-        submitButton.textContent = originalLabel;
+        submitLabel.textContent = originalLabel;
         setStatusMessage(
             'Request sent. I’ll review it and normally contact you on Telegram within 24 hours. This does not mean the commission has been accepted yet.',
             { variant: 'success' }
@@ -259,10 +270,10 @@ async function handleSubmit(event) {
 
 function handleFailure(originalLabel) {
     isSubmitting = false;
-    submitButton.disabled = false;
-    submitButton.textContent = originalLabel;
+    submitLabel.textContent = originalLabel;
+    updateSubmitState();
     setStatusMessage(
-        'Something went wrong and your request wasn’t sent. Please message me privately instead.',
+        'I couldn’t confirm whether the request was sent. To avoid a duplicate, please message me privately before retrying.',
         {
             variant: 'error',
             fallbackLink: {
@@ -304,10 +315,8 @@ function initForm() {
             return;
         }
         field.addEventListener('blur', () => {
-            if (touchedFields.has(name)) {
-                validateField(name);
-            }
             touchedFields.add(name);
+            validateField(name);
         });
         field.addEventListener('input', () => {
             if (touchedFields.has(name)) {
