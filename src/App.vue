@@ -61,7 +61,11 @@ onBeforeUnmount(() => sceneObserver?.disconnect());
 
         <div class="hero-composition__identity">
           <ParticleWordmark />
-          <p class="interaction-note"><span>INTERACTION /</span> MOVE THROUGH THE FIELD</p>
+          <p class="interaction-note">
+            <span>INTERACTION /</span>
+            <span class="interaction-note__pointer">MOVE THROUGH THE FIELD</span>
+            <span class="interaction-note__touch">DRAG THROUGH THE FIELD</span>
+          </p>
         </div>
 
         <p class="hero-composition__statement">
