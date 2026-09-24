@@ -105,14 +105,15 @@ a {
 
 .site-header nav a {
   position: relative;
-  padding-bottom: 0.35rem;
+  /* Keep the underline offset while giving keyboard/mouse users a larger target. */
+  padding: 0.6rem 0.2rem 0.95rem;
 }
 
 .site-header nav a::after,
 .text-link::after {
   position: absolute;
   right: 0;
-  bottom: 0;
+  bottom: 0.55rem;
   left: 0;
   height: 1px;
   content: "";
