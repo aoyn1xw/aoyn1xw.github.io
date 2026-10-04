@@ -863,6 +863,13 @@ textarea {
   background: linear-gradient(90deg, rgba(102, 124, 255, 0.05), transparent 60%);
 }
 
+/* Base rule sets outline: 0, so re-assert a ring for keyboard focus. */
+.form-field input:focus-visible,
+.form-field textarea:focus-visible {
+  outline: 2px solid var(--commission-accent);
+  outline-offset: 3px;
+}
+
 .form-field input[aria-invalid="true"],
 .form-field textarea[aria-invalid="true"] {
   border-bottom-color: var(--commission-error);
@@ -1494,8 +1501,13 @@ textarea {
     grid-column: 2;
   }
 
+  /* Keep the request CTA reachable on tablet instead of removing it. */
   .hero-request-link {
-    display: none;
+    grid-column: 1 / -1;
+    grid-row: auto;
+    justify-self: stretch;
+    width: 100%;
+    margin-top: 1.5rem;
   }
 
   .scope-scene {
