@@ -52,7 +52,7 @@ Wrangler prints the deployed URL, e.g.
 
 ### 5. Verify the website endpoint
 
-Confirm `COMMISSION_ENDPOINT` in the repository root `config.js` matches the
+Confirm `COMMISSION_ENDPOINT` in `src/commissions/config.js` matches the
 URL printed by Wrangler. Update it if the Worker route changes:
 
 ```js
@@ -67,7 +67,7 @@ The production origin `https://aoyn1xw.github.io` is already allowed via
 
 ```bash
 npx wrangler dev
-npm run dev   # from the repository root, in a second terminal
+pnpm dev   # from the repository root, in a second terminal
 ```
 
 Requests from `http://localhost:3000` are allowed by default.
@@ -88,7 +88,7 @@ basic bot traffic.
 ## Tests
 
 ```bash
-npm test
+pnpm test
 ```
 
 Runs the Node test suite in `worker/test/` with mocked Telegram responses, so

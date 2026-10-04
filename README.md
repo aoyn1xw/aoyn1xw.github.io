@@ -16,7 +16,7 @@ Nothing too deep. I just wanted one place that shows who I am, what I build, and
 
 - Vue 3
 - TypeScript
-- Canvas 2D for the interactive identity
+- Variable typography for the interactive identity
 - HTML and CSS for the commission pages
 - Vite
 - GitHub Pages
@@ -27,6 +27,19 @@ Nothing too deep. I just wanted one place that shows who I am, what I build, and
 The commission form on `/commissions.html` sends requests through a small
 Cloudflare Worker to my private Telegram chat. To set that up (Telegram bot,
 secrets, deploy), follow `worker/README.md`.
+
+## Source layout
+
+- `src/App.vue`: homepage layout and interactions.
+- `src/data/site.ts`: project copy and repository links.
+- `src/styles/`: shared design tokens, homepage styles, and commission styles.
+- `src/commissions/`: request form logic and availability/endpoint configuration.
+- Root HTML files: Vite entry points for the homepage, commissions, terms, and 404.
+- `worker/`: Telegram delivery backend and its tests.
+- `docs/research/`: historical redesign research and reference captures.
+
+Use `corepack pnpm dev` for the local preview, `corepack pnpm build` for the
+production build and type check, and `corepack pnpm test` for backend tests.
 
 ## Notes
 
