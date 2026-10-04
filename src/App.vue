@@ -1,136 +1,73 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
-import { COMMISSION_STATUS, COMMISSION_STATUS_META } from '../config.js';
-import MetadataLabel from './components/MetadataLabel.vue';
-import ParticleWordmark from './components/ParticleWordmark.vue';
-import ProjectIndexScene from './components/ProjectIndexScene.vue';
-import SceneShell from './components/SceneShell.vue';
-import ShadowPlayScene from './components/ShadowPlayScene.vue';
-import TechnicalFrame from './components/TechnicalFrame.vue';
-import { scenes, secondaryProjects, shadowPlay } from './data/site';
-
-const currentScene = ref<(typeof scenes)[number]>(scenes[0]);
-const commissionLabel = computed(() => COMMISSION_STATUS_META[COMMISSION_STATUS]?.label ?? 'Availability by request');
-let sceneObserver: IntersectionObserver | undefined;
-
-onMounted(() => {
-  const elements = [...document.querySelectorAll<HTMLElement>('[data-scene]')];
-  sceneObserver = new IntersectionObserver(entries => {
-    const candidate = entries
-      .filter(entry => entry.isIntersecting)
-      .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-    if (!candidate) return;
-    const found = scenes.find(scene => scene.id === candidate.target.id);
-    if (found) currentScene.value = found;
-  }, { rootMargin: '-38% 0px -38% 0px', threshold: [0, 0.25, 0.5, 0.75] });
-  elements.forEach(element => sceneObserver?.observe(element));
-});
-
-onBeforeUnmount(() => sceneObserver?.disconnect());
+import { ref } from 'vue';
+import { secondaryProjects as projects, shadowPlay } from './data/site';
+const gallery = ref<HTMLElement>();
+const screenIndex = ref(0);
+const headlineStyle = ref<Record<string, string>>({});
+function playWithType(event: PointerEvent) {
+ if (event.pointerType !== 'mouse') return;
+ const bounds = (event.currentTarget as HTMLElement).getBoundingClientRect();
+ const x = Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width));
+ const y = Math.max(0, Math.min(1, (event.clientY - bounds.top) / bounds.height));
+ headlineStyle.value = {
+  '--type-weight': String(Math.round(550 + x * 250)),
+  '--type-optical': String(Math.round(12 + y * 84)),
+  '--type-color': ['var(--teal)', 'var(--rust)', 'var(--violet)'][Math.min(2, Math.floor(x * 3))]!,
+  '--type-origin': `${Math.round(x * 100)}%`
+ };
+}
+function resetType() { headlineStyle.value = {}; }
+function showScreen(index: number) {
+ const target = gallery.value?.children[index] as HTMLElement | undefined;
+ if (!target || !gallery.value) return;
+ gallery.value.scrollTo({left: target.offsetLeft - gallery.value.offsetLeft, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'});
+}
+function trackScreen() {
+ if (gallery.value) screenIndex.value = gallery.value.scrollLeft > gallery.value.clientWidth / 3 ? 1 : 0;
+}
 </script>
-
 <template>
-  <a class="skip-link" href="#main-content">Skip to content</a>
-  <TechnicalFrame :scene-number="currentScene.number" :scene-label="currentScene.label" />
-
+ <a class="skip-link" href="#main-content">Skip to content</a>
+ <div class="portfolio">
   <header class="site-header">
-    <a class="site-mark" href="#identity" aria-label="ayon1xw home">
-      <span>AYN</span><span>/01</span>
-    </a>
-    <nav aria-label="Primary navigation">
-      <a href="#projects">PROJECTS</a>
-      <a href="#profile">ABOUT</a>
-      <a href="#contact">CONTACT</a>
-      <a href="https://github.com/aoyn1xw" target="_blank" rel="noopener noreferrer">GITHUB ↗</a>
-    </nav>
+   <a class="site-mark" href="#identity" aria-label="ayon1xw home">AYON1XW<span class="cursor" aria-hidden="true">▍</span></a>
+   <nav aria-label="Primary navigation"><a href="#projects">Work</a><a href="#about">About</a><a href="#contact">Contact</a></nav>
   </header>
-
   <main id="main-content">
-    <SceneShell id="identity" number="01" label="IDENTITY">
-      <div class="hero-composition">
-        <h1 class="visually-hidden">ayon1xw — student developer</h1>
-
-        <div class="hero-composition__location">
-          <MetadataLabel label="ORIGIN" value="GERMANY / BERLIN" vertical />
-        </div>
-
-        <div class="hero-composition__status">
-          <MetadataLabel label="STATUS" value="BUILDING" accent />
-          <span class="status-pulse" aria-hidden="true" />
-        </div>
-
-        <div class="hero-composition__identity">
-          <ParticleWordmark />
-          <p class="interaction-note">
-            <span>INTERACTION /</span>
-            <span class="interaction-note__pointer">MOVE THROUGH THE FIELD</span>
-            <span class="interaction-note__touch">DRAG THROUGH THE FIELD</span>
-          </p>
-        </div>
-
-        <p class="hero-composition__statement">
-          Student developer building desktop tools,<br>
-          automation projects, and AI experiments.
-        </p>
-
-        <div class="hero-composition__stack">
-          <span>.NET</span><span>FLUTTER</span><span>VUE</span><span>LOCAL-FIRST</span>
-        </div>
-
-        <a class="hero-composition__advance" href="#profile">
-          <span>ENTER / 02</span>
-          <span aria-hidden="true">↓</span>
-        </a>
+   <section id="identity" class="introduction" aria-labelledby="intro-title">
+    <div><p class="eyebrow desktop-copy">PERSONAL SOFTWARE / SMALL FRICTIONS</p><p class="eyebrow mobile-copy">STUDENT DEVELOPER · GERMANY</p>
+     <h1 id="intro-title" class="playful-type" :class="{ 'is-playing': Object.keys(headlineStyle).length > 0 }" :style="headlineStyle" @pointermove="playWithType" @pointerleave="resetType" @pointercancel="resetType"><span class="desktop-copy">I make software when<br>something <em>annoys me.</em></span><span class="mobile-copy">I make things<br>that <em>bug me.</em></span><span class="headline-cursor" aria-hidden="true">|</span></h1>
+     <p class="intro-detail">Local-first apps, small automations, and experiments I want to understand.</p>
+    </div>
+    <aside class="build-note"><p class="eyebrow">WHY I BUILD</p><p>It usually starts with something annoying—or a question I can’t leave alone.</p><span class="note-corner" aria-hidden="true">↳</span></aside>
+   </section>
+   <section id="projects" class="featured" aria-labelledby="feature-title">
+    <div class="section-label"><p class="eyebrow">01 / FEATURED PROJECT</p><span class="label-line" aria-hidden="true" /></div>
+    <div class="feature-card">
+     <div class="feature-copy">
+      <p class="eyebrow origin"><span aria-hidden="true" />ORIGIN · CLIPS STUCK ON PC</p>
+      <h2 id="feature-title">Shadow<span>Play</span><sup aria-hidden="true">↗</sup></h2>
+      <p class="feature-description">I built ShadowPlay to get PC clips onto my phone.<span class="desktop-copy"> Browse finished game clips and download the original files over my local network.</span></p>
+      <div class="feature-bottom"><div class="stack"><span><b aria-hidden="true">⊞</b> WINDOWS<span class="desktop-copy"> HOST</span></span><span><b aria-hidden="true">◇</b> FLUTTER<span class="desktop-copy"> CLIENT</span></span></div>
+       <a class="button" :href="shadowPlay.repository" target="_blank" rel="noopener noreferrer"><span class="desktop-copy">Open the repository</span><span class="mobile-copy">Open repository</span><span aria-hidden="true">↗</span></a>
       </div>
-    </SceneShell>
-
-    <SceneShell id="profile" number="02" label="PROFILE">
-      <div class="profile-scene">
-        <p class="profile-scene__ghost" aria-hidden="true">BUILD</p>
-        <p class="scene-number">02 / PROFILE</p>
-        <div class="profile-scene__headline">
-          <span>I BUILD</span>
-          <strong>THINGS I<br>NEED TO USE.</strong>
-        </div>
-        <div class="profile-scene__copy">
-          <p>Desktop apps. Mobile clients. Automation. Small systems that stay out of the way.</p>
-          <p>Most projects begin as “I need this” and become something other people can use too.</p>
-        </div>
-        <div class="profile-scene__axis" aria-hidden="true">
-          <span>DESKTOP</span><i /><span>MOBILE</span><i /><span>WEB</span>
-        </div>
-        <MetadataLabel class="profile-scene__meta" label="OPERATING MODE" value="CURIOUS / PRACTICAL / SHIPPING" accent />
+     </div>
+     <div class="app-preview">
+      <div class="preview-bar" aria-hidden="true"><span class="window-dots"><i /><i /><i /></span><span>shadowplay / app</span><span>↗</span></div>
+      <div ref="gallery" class="screens" tabindex="0" aria-label="ShadowPlay app screenshots; scroll to see both screens" @scroll="trackScreen" @keydown.right.prevent="showScreen(1)" @keydown.left.prevent="showScreen(0)">
+       <figure><img src="/assets/projects/shadowplay-home-online.png" alt="ShadowPlay mobile home screen connected to a gaming PC" width="912" height="2048" loading="lazy"><figcaption><span>01</span> HOME / ONLINE</figcaption></figure>
+       <figure><img src="/assets/projects/shadowplay-clips.png" alt="ShadowPlay mobile clips browser" width="912" height="2048" loading="lazy"><figcaption><span>02</span> CLIP INDEX</figcaption></figure>
       </div>
-    </SceneShell>
-
-    <ShadowPlayScene :project="shadowPlay" />
-    <ProjectIndexScene :projects="secondaryProjects" />
-
-    <SceneShell id="contact" number="07" label="CONTACT">
-      <div class="contact-scene">
-        <div class="contact-scene__topline">
-          <MetadataLabel label="CHANNEL" value="DIRECT / OPEN" accent />
-          <MetadataLabel label="COMMISSIONS" :value="commissionLabel.toUpperCase()" />
-        </div>
-
-        <div class="contact-scene__title">
-          <p>HAVE A SMALL,<br>SHARP PROBLEM?</p>
-          <h2>LET’S<br><span>TALK.</span></h2>
-        </div>
-
-        <nav class="contact-scene__links" aria-label="Contact and social links">
-          <a href="https://github.com/aoyn1xw" target="_blank" rel="noopener noreferrer"><span>01</span> GITHUB <b>↗</b></a>
-          <a href="https://guns.lol/ayon1xw" target="_blank" rel="noopener noreferrer"><span>02</span> SOCIALS <b>↗</b></a>
-          <a href="/commissions.html"><span>03</span> COMMISSIONS <b>→</b></a>
-          <a href="/commission-terms.html"><span>04</span> TERMS <b>→</b></a>
-        </nav>
-
-        <footer class="contact-scene__footer">
-          <span>AYON1XW</span>
-          <span>GERMANY / BERLIN</span>
-          <span>2026 / BUILT BY AYON1XW</span>
-        </footer>
-      </div>
-    </SceneShell>
+      <div class="gallery-controls"><p class="eyebrow">SWIPE TO SEE THE CLIPS VIEW</p><div aria-label="Select app screenshot"><button :aria-pressed="screenIndex === 0" aria-label="Show home screen" @click="showScreen(0)">01</button><button :aria-pressed="screenIndex === 1" aria-label="Show clips screen" @click="showScreen(1)">02</button></div></div>
+     </div>
+    </div>
+   </section>
+   <section class="other-projects" aria-labelledby="other-title"><p class="eyebrow">02 / SMALLER PROJECTS</p><h2 id="other-title">Other projects<span aria-hidden="true"> /</span></h2>
+    <div class="project-list"><a v-for="(project, i) in projects" :key="project.repository" class="project-row" :href="project.repository" target="_blank" rel="noopener noreferrer"><span class="project-number">0{{ i + 1 }}</span><div class="project-detail"><h3>{{ project.title }}</h3><p>{{ project.summary }}</p></div><span class="project-stack">{{ project.technologies }}</span><span class="project-arrow" aria-hidden="true">↗</span></a></div>
+   </section>
+   <section id="about" class="about" aria-labelledby="about-title"><p class="eyebrow">03 / ABOUT ME</p><div class="about-content"><h2 id="about-title">A bit<br class="desktop-copy"> about me<span>.</span></h2><p>I’m Erdi, a student developer in Germany. I learn by building things I need, fixing little annoyances, and figuring out how they work.</p><span class="about-symbol" aria-hidden="true">*</span></div></section>
+   <section id="contact" class="contact" aria-labelledby="contact-title"><div><p class="eyebrow">04 / CONTACT</p><h2 id="contact-title">Questions about something I made?</h2></div><a class="button" href="https://github.com/aoyn1xw" target="_blank" rel="noopener noreferrer">GitHub · @aoyn1xw <span aria-hidden="true">↗</span></a></section>
   </main>
+  <footer><a class="site-mark" href="#identity">AYON1XW<span class="cursor" aria-hidden="true">▍</span></a><nav aria-label="Additional links"><a href="https://guns.lol/ayon1xw" target="_blank" rel="noopener noreferrer">Socials ↗</a><a href="/commissions.html">Commissions ↗</a><a href="/commission-terms.html">Terms ↗</a></nav><span class="eyebrow">PERSONAL PROJECTS · 2026</span></footer>
+ </div>
 </template>

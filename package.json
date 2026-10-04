@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "description": "Personal portfolio site for ayon1xw",
+  "packageManager": "pnpm@11.0.9",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
