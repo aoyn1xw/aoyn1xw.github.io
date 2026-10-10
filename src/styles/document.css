@@ -1,0 +1,10 @@
+@import './main.css';
+
+.document-content { max-width:760px; padding:64px 0 80px; }
+.document-content h1 { font-size:clamp(36px,5vw,60px); margin:16px 0 44px; }
+.document-content section + section { margin-top:32px; }
+.document-content h2 { font:600 24px/1.25 var(--display); letter-spacing:-.025em; margin-bottom:12px; }
+.document-content p,.document-content li { color:var(--muted); }
+.document-content a { text-decoration:underline; text-underline-offset:3px; color:var(--violet); }
+.document-content ul { padding-left:24px; }
+@media (max-width:809px) { .document-content { padding:44px 0 56px; } }

@@ -88,11 +88,14 @@ basic bot traffic.
 ## Tests
 
 ```bash
-pnpm test
+pnpm test:worker
 ```
 
 Runs the Node test suite in `worker/test/` with mocked Telegram responses, so
 no real credentials are needed.
+
+The root `pnpm test` also checks the built site and requires the production build
+and a Playwright Chromium installation; see the root README for setup.
 
 ## Security notes
 
