@@ -36,10 +36,20 @@ secrets, deploy), follow `worker/README.md`.
 - `src/commissions/`: request form logic and availability/endpoint configuration.
 - Root HTML files: Vite entry points for the homepage, commissions, terms, and 404.
 - `worker/`: Telegram delivery backend and its tests.
+- `about/`, `contact/`, `privacy/`: static trust pages using the shared design tokens.
+- `src/entry-server.ts` and `scripts/prerender.mjs`: build-time homepage HTML and Markdown.
+- `public/`: crawler guidance, sitemap, recovery Markdown, and trust page Markdown.
+- `tests/site.test.mjs`: production artifact, endpoint, and browser regression checks.
 - `docs/research/`: historical redesign research and reference captures.
 
-Use `corepack pnpm dev` for the local preview, `corepack pnpm build` for the
-production build and type check, and `corepack pnpm test` for backend tests.
+Use `corepack pnpm dev` for the local preview and `corepack pnpm build` for the
+production build and type check. After building, run `corepack pnpm exec playwright
+install chromium` once, then `corepack pnpm test` for site and backend tests.
+`corepack pnpm test:site` builds and tests the site. `corepack pnpm verify:public`
+checks final response headers and bodies on the public domain.
+
+See [agent readiness](docs/agent-readiness.md) for implemented fixes, verification,
+and Markdown negotiation/MCP limitations while using GitHub Pages.
 
 ## Notes
 

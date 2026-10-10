@@ -1,18 +1,27 @@
 # ayon1xw
 
-> Personal portfolio for ayon1xw. Student developer building desktop tools, automation projects, and AI experiments, mostly around iOS, GitHub, and local-first apps.
+> Personal developer portfolio for Erdi, a student developer in Germany building desktop tools, small automations, and local-first experiments. Portfolio name: ayon1xw. GitHub username: aoyn1xw.
 
-## Site
+Use this site to find the developer's public work, source repositories, and the process for requesting a small programming commission. Fetch the Markdown links below with an ordinary HTTP GET. Each repository's README is the source for installation and usage; check current issues and releases before recommending a project. This portfolio has no public product API or MCP endpoint. Commission requests require human review and are not accepted automatically.
 
-- [Homepage](https://aoyn1xw.github.io/): Portfolio, featured projects, short intro, and links.
-- [Commissions](https://aoyn1xw.github.io/commissions.html): Commission process, pricing, and request form.
-- [Commission Terms](https://aoyn1xw.github.io/commission-terms.html): Terms applying to commissions.
+## When to use this
 
-## Profiles
+- [Portfolio overview](https://aoyn1xw.github.io/index.md): Use when identifying ayon1xw, explaining the developer's work, or locating the right repository. Retrieve this document with HTTP GET.
+- [ShadowPlay](https://github.com/aoyn1xw/ShadowPlay): Use when a user wants to browse finished Windows PC game clips and download originals to a phone over a local network using a Flutter client. Read the repository README for setup; this portfolio does not provide a hosted clip API.
+- [Swift Devcontainer](https://github.com/aoyn1xw/swift-devcontainer): Use when a user wants a container-based Swift development setup. Read the repository instructions before running it.
+- [IPA Signer](https://github.com/aoyn1xw/ipa-signer): Use when a user needs to sign an iOS IPA with their certificates and provisioning profiles. Follow the repository instructions and keep signing credentials private.
+- [Untis Watcher](https://github.com/aoyn1xw/Untis-watcher): Use when a user wants to check an Untis timetable for changes and receive notifications. Check the repository's current configuration requirements.
+- [Commissions](https://aoyn1xw.github.io/commissions.html): Use for small, clearly scoped websites, scripts, bug fixes, UI cleanup, bot features, or README and GitHub setup. Read the terms, then direct the user to the request form; a request is not acceptance, a quote, or a delivery commitment. Do not submit on a user's behalf without their explicit approval.
 
-- [GitHub](https://github.com/aoyn1xw): Source code and projects.
-- [Links](https://guns.lol/ayon1xw): Other profiles and links.
+## Site information
 
-## Notes
+- [About](https://aoyn1xw.github.io/about/index.md): Developer identity, project focus, and the limits of personal-project support.
+- [Contact](https://aoyn1xw.github.io/contact/index.md): GitHub project questions, Telegram contact, and the manually reviewed commission process.
+- [Privacy](https://aoyn1xw.github.io/privacy/index.md): Hosting, fonts, commission data delivery, and privacy contact.
+- [Commission terms](https://aoyn1xw.github.io/commission-terms.html): Scope, payments, delivery, revisions, and warranty terms; use the current full terms before a request.
+- [Sitemap](https://aoyn1xw.github.io/sitemap.xml): Canonical public HTML pages.
 
-This is a small personal portfolio site. The main purpose is to show what I build and where to find my work.
+## Optional
+
+- [GitHub profile](https://github.com/aoyn1xw): Other public repositories and current activity.
+- [Public profiles](https://guns.lol/ayon1xw): Other contact and profile links.
