@@ -36,7 +36,7 @@ function trackScreen() {
   <main id="main-content">
    <section id="identity" class="introduction" aria-labelledby="intro-title">
     <div><p class="eyebrow desktop-copy">PERSONAL SOFTWARE / SMALL FRICTIONS</p><p class="eyebrow mobile-copy">STUDENT DEVELOPER · GERMANY</p>
-     <h1 id="intro-title" class="playful-type" :class="{ 'is-playing': Object.keys(headlineStyle).length > 0 }" :style="headlineStyle" @pointermove="playWithType" @pointerleave="resetType" @pointercancel="resetType"><span class="desktop-copy">I make software when<br>something <em>annoys me.</em></span><span class="mobile-copy">I make things<br>that <em>bug me.</em></span><span class="headline-cursor" aria-hidden="true">|</span></h1>
+     <h1 id="intro-title" class="playful-type" :class="{ 'is-playing': Object.keys(headlineStyle).length > 0 }" :style="headlineStyle" @pointermove="playWithType" @pointerleave="resetType" @pointercancel="resetType"><span class="sr-only">ayon1xw developer portfolio: </span><span class="desktop-copy">I make software when<br>something <em>annoys me.</em></span><span class="mobile-copy">I make things<br>that <em>bug me.</em></span><span class="headline-cursor" aria-hidden="true">|</span></h1>
      <p class="intro-detail">Local-first apps, small automations, and experiments I want to understand.</p>
     </div>
     <aside class="build-note"><p class="eyebrow">WHY I BUILD</p><p>It usually starts with something annoying—or a question I can’t leave alone.</p><span class="note-corner" aria-hidden="true">↳</span></aside>
@@ -68,6 +68,6 @@ function trackScreen() {
    <section id="about" class="about" aria-labelledby="about-title"><p class="eyebrow">03 / ABOUT ME</p><div class="about-content"><h2 id="about-title">A bit<br class="desktop-copy"> about me<span>.</span></h2><p>I’m Erdi, a student developer in Germany. I learn by building things I need, fixing little annoyances, and figuring out how they work.</p><span class="about-symbol" aria-hidden="true">*</span></div></section>
    <section id="contact" class="contact" aria-labelledby="contact-title"><div><p class="eyebrow">04 / CONTACT</p><h2 id="contact-title">Questions about something I made?</h2></div><a class="button" href="https://github.com/aoyn1xw" target="_blank" rel="noopener noreferrer">GitHub · @aoyn1xw <span aria-hidden="true">↗</span></a></section>
   </main>
-  <footer><a class="site-mark" href="#identity">AYON1XW<span class="cursor" aria-hidden="true">▍</span></a><nav aria-label="Additional links"><a href="https://guns.lol/ayon1xw" target="_blank" rel="noopener noreferrer">Socials ↗</a><a href="/commissions.html">Commissions ↗</a><a href="/commission-terms.html">Terms ↗</a></nav><span class="eyebrow">PERSONAL PROJECTS · 2026</span></footer>
+  <footer><a class="site-mark" href="#identity">AYON1XW<span class="cursor" aria-hidden="true">▍</span></a><nav aria-label="Additional links"><a href="https://guns.lol/ayon1xw" target="_blank" rel="noopener noreferrer">Socials ↗</a><a href="/commissions.html">Commissions ↗</a><a href="/commission-terms.html">Terms ↗</a><a href="/about/">About</a><a href="/contact/">Contact</a><a href="/privacy/">Privacy</a></nav><span class="eyebrow">PERSONAL PROJECTS · 2026</span></footer>
  </div>
 </template>
