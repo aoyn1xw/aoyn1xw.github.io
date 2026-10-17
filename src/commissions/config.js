@@ -7,7 +7,10 @@
 // - 'open':    accepting requests, shown as "Open for commissions"
 // - 'limited': accepting a few requests, shown as "Limited availability"
 // - 'closed':  form locked, shown as "Commissions closed"
-export const COMMISSION_STATUS = 'limited';
+// 'open' rather than 'limited': there is no current demand to be rationed,
+// so advertising scarcity would be artificial. Both keep the form accepting
+// requests, so this only changes the wording shown to visitors.
+export const COMMISSION_STATUS = 'open';
 
 export const COMMISSION_STATUS_META = {
     open: {
