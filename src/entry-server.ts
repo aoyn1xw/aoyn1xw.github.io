@@ -29,7 +29,7 @@ ${secondaryProjects.map(project => `### ${project.title}\n\n${project.summary}\n
 
 ## About me
 
-I’m Erdi, a student developer in Germany. I learn by building things I need, fixing little annoyances, and figuring out how they work.
+I’m Erdi, a student developer in Germany. I learn by building things I need, fixing little annoyances, and figuring out how they work. I use the name ayon1xw here and aoyn1xw on GitHub.
 
 ## Contact and site information
 

@@ -81,7 +81,7 @@ test('trust pages work without JavaScript and contain substantive content', asyn
 });
 
 test('llms.txt follows the published file-list format and gives specific when-to-use guidance', async () => {
-  const text = await readFile(resolve(root, 'llms.txt'), 'utf8');
+  const text = (await readFile(resolve(root, 'llms.txt'), 'utf8')).replace(/\r\n/g, '\n');
   assert.match(text, /^# ayon1xw\n\n> /);
   assert.match(text, /## When to use this/);
   assert.match(text, /ShadowPlay/);

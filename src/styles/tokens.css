@@ -1,65 +1,71 @@
 /* =============================================================================
    AUTHORITATIVE DESIGN TOKENS (tokens.css)
    Single source of truth for the entire site (Vue app + static commission pages)
+
+   Direction: black canvas, hairline structure, one electric-blue accent.
+   Panels are separated by 1px rules rather than fills, so the page stays flat
+   and the accent carries all the emphasis.
    ============================================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 
-  /* --- 1. Colors & Surfaces --- */
-  /* Warm paper surfaces */
-  --color-bg: #f6f5ef;
-  --color-surface: #efeee6;
-  --color-surface-elevated: #fffef8;
-  --color-surface-hover: #e9eee6;
+  /* --- 1. Colour --- */
+  /* Pure black canvas. Surfaces lift only far enough for nested panels to
+     separate; the hairlines do the real structural work. */
+  --color-bg: #000000;
+  --color-surface: #050505;
+  --color-surface-elevated: #0b0b0b;
+  --color-surface-hover: #131313;
 
-  /* Text & Foreground */
-  --color-fg: #242521;
-  --color-muted: #686960;
-  --color-dim: #686960;
+  /* Text: near-white, never pure white, so long reading stays comfortable. */
+  --color-fg: #ededed;
+  --color-muted: rgba(237, 237, 237, 0.62);
+  --color-dim: rgba(237, 237, 237, 0.40);
 
-  /* Accent: Signature violet-blue (reconciled across all pages) */
-  --color-accent: #6550b8;
-  --color-accent-dim: #53409e;
-  --color-accent-glow: rgba(102, 124, 255, 0.22);
+  /* Accent: electric blue, reserved for links and the wordmark's X. */
+  --color-accent: #4d8eff;
+  --color-accent-dim: #3a6fd6;
+  --color-accent-glow: rgba(77, 142, 255, 0.18);
 
-  /* Status Colors */
-  --color-error: #a33b2e;
-  --color-success: #287266;
+  /* Status colours, tuned for black. */
+  --color-error: #e0574f;
+  --color-success: #4ea653;
+  --color-warn: #d7a13b;
 
-  /* Borders & Rules */
-  --color-border: #d9dad0;
-  --color-border-strong: #aeb2a5;
-  --color-border-subtle: #e5e5dc;
+  /* Hairlines: white at low alpha reads finer than any grey hex. */
+  --color-border: rgba(255, 255, 255, 0.16);
+  --color-border-strong: rgba(255, 255, 255, 0.28);
+  --color-border-subtle: rgba(255, 255, 255, 0.08);
   --rule: 1px;
 
   /* --- 2. Typography --- */
-  /* Bricolage display, DM Sans body, IBM Plex Mono metadata */
-  --font-display: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-technical: 'IBM Plex Mono', monospace;
+  --font-display: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+  --font-body: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, monospace;
+  --font-technical: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
 
-  /* Modular type scale (~1.25–1.333 ratio) */
-  --text-xs: clamp(0.7rem, 0.75vw, 0.75rem); /* ~11-12px metadata */
-  --text-sm: clamp(0.8rem, 0.85vw, 0.875rem); /* ~13-14px captions/hints */
-  --text-base: clamp(1rem, 1.05vw, 1.125rem); /* ~16-18px body copy */
-  --text-md: clamp(1.25rem, 1.35vw, 1.4rem); /* ~20-22px */
-  --text-lg: clamp(1.5rem, 1.8vw, 1.875rem); /* ~24-30px */
-  --text-xl: clamp(2rem, 2.4vw, 2.5rem); /* ~32-40px H3 */
-  --text-2xl: clamp(2.5rem, 3.5vw, 3.5rem); /* ~40-56px H2 */
-  --text-3xl: clamp(3.5rem, 5.5vw, 5rem); /* ~56-80px H1 */
+  /* Document scale. Deliberately small — this should read like a well-set page,
+     not a landing page. Headings stay close to body size. */
+  --text-xs: 0.6875rem;   /* 11px meta */
+  --text-sm: 0.8125rem;   /* 13px secondary */
+  --text-base: 0.9375rem; /* 15px body */
+  --text-md: 1.0625rem;   /* 17px lede */
+  --text-lg: 1.25rem;     /* 20px */
+  --text-xl: 1.75rem;     /* 28px */
+  --text-2xl: 2.5rem;     /* 40px wordmark */
+  --text-3xl: 3.25rem;
 
-  /* Line Heights */
-  --line-height-display: 1.15; /* Tightened 1.1–1.2 for large display headlines */
-  --line-height-body: 1.6; /* Loosened 1.5–1.6 for comfortable body copy reading */
+  --line-height-display: 1.12;
+  --line-height-body: 1.65;
 
-  /* Reading measure limit */
-  --max-line-length: 65ch;
+  /* Reading measure and the frame it sits in. */
+  --max-line-length: 62ch;
+  --content-width: 42rem;
+  --frame-width: 64rem;
 
-  /* --- 3. Spacing Scale --- */
-  /* Strict 4 / 8 / 16 / 24 / 32 / 48 / 64 / 96 / 128px rhythm */
+  /* --- 3. Spacing --- */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 16px;
@@ -70,34 +76,35 @@
   --space-8: 96px;
   --space-9: 128px;
 
-  /* Page Layout Margins */
-  --frame-inset: clamp(0.75rem, 1.45vw, 1.75rem);
-  --page-gutter: clamp(2.5rem, 6.5vw, 7.5rem);
+  --page-gutter: 1.5rem;
 
-  /* --- 4. Border Radius --- */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  /* --- 4. Radius --- */
+  /* Flat. Nothing on this site is rounded. */
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
   --radius-full: 9999px;
 
-  /* --- 5. Soft Ambient Shadows --- */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
-  --shadow-md: 0 8px 24px -4px rgba(0, 0, 0, 0.45), 0 0 1px rgba(241, 239, 233, 0.1);
-  --shadow-lg: 0 16px 48px -8px rgba(0, 0, 0, 0.55), 0 0 1px rgba(241, 239, 233, 0.12);
-  --shadow-accent: 0 4px 24px var(--color-accent-glow);
-  --shadow-device: 0 1.4rem 4.5rem -0.5rem rgba(0, 0, 0, 0.55), 0 0 32px rgba(102, 124, 255, 0.12);
+  /* --- 5. Depth --- */
+  /* Shadows are almost absent; separation comes from rules, not elevation. */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.6);
+  --shadow-md: 0 8px 24px -8px rgba(0, 0, 0, 0.8);
+  --shadow-lg: 0 24px 60px -12px rgba(0, 0, 0, 0.9);
+  --shadow-accent: none;
+  --shadow-device: 0 12px 32px -10px rgba(0, 0, 0, 0.9);
 
-  /* --- 6. Motion & Interactivity --- */
+  /* --- 6. Motion --- */
+  /* Fast and short. Anything slow reads as decoration on a page this plain. */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-  --duration-fast: 220ms; /* Consistent 150-300ms interactive transition */
-  --duration-medium: 700ms;
-  --duration-slow: 1200ms;
+  --duration-fast: 120ms;
+  --duration-medium: 200ms;
+  --duration-slow: 320ms;
 
   /* ===========================================================================
      CROSS-SYSTEM BACKWARD COMPATIBILITY ALIASES
      Bridges Vue app, commission pages, and legacy stylesheet without duplication
-     =========================================================================== */
+     ======================================================================= */
 
   /* Commission page namespace */
   --commission-bg: var(--color-bg);

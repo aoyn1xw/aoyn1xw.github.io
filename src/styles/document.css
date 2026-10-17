@@ -1,10 +1,50 @@
 @import './main.css';
 
-.document-content { max-width:760px; padding:64px 0 80px; }
-.document-content h1 { font-size:clamp(36px,5vw,60px); margin:16px 0 44px; }
-.document-content section + section { margin-top:32px; }
-.document-content h2 { font:600 24px/1.25 var(--display); letter-spacing:-.025em; margin-bottom:12px; }
-.document-content p,.document-content li { color:var(--muted); }
-.document-content a { text-decoration:underline; text-underline-offset:3px; color:var(--violet); }
-.document-content ul { padding-left:24px; }
-@media (max-width:809px) { .document-content { padding:44px 0 56px; } }
+/* Long-form pages reuse the homepage frame and hairline structure; only the
+   prose measure and heading rhythm differ. */
+
+.eyebrow {
+  font: 500 var(--text-xs)/1.5 var(--font-technical);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+}
+
+.document-content { padding: 56px 0 0; }
+
+.document-content h1 {
+  margin-top: 14px;
+  font: 800 var(--text-xl)/var(--line-height-display) var(--font-display);
+  letter-spacing: -0.035em;
+}
+
+.document-content section { padding: 32px 0; border-top: var(--rule) solid var(--color-border); }
+.document-content section + section { margin-top: 0; }
+
+.document-content h2 {
+  font: 500 var(--text-xs)/1.5 var(--font-technical);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+  margin-bottom: 14px;
+}
+
+.document-content p, .document-content li {
+  max-width: var(--max-line-length);
+  font-size: var(--text-base);
+  color: var(--color-muted);
+}
+.document-content p + p { margin-top: 14px; }
+.document-content strong { color: var(--color-fg); font-weight: 500; }
+
+.document-content ul { display: grid; gap: 9px; margin-top: 4px; }
+
+.document-content a { text-decoration: underline; text-underline-offset: 3px; }
+
+/* The footer colophon reuses .eyebrow on the long-form pages. */
+.site-footer .eyebrow { color: var(--color-dim); font-size: var(--text-xs); }
+
+@media (max-width: 560px) {
+  .document-content { padding: 40px 0 0; }
+  .document-content section { padding: 26px 0; }
+}
