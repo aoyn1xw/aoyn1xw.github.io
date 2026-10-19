@@ -156,15 +156,15 @@ kbd {
 .section { padding: 44px 0; border-top: var(--rule) solid var(--color-border); }
 
 .section-title {
-  font: 500 var(--text-xs)/1.5 var(--font-technical);
+  font: 500 var(--text-xxs)/1.5 var(--font-technical);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-dim);
+  color: var(--color-muted);
 }
 
 /* -------------------------------------------------------------- projects --- */
 
-.project { padding: 26px 0; border-top: var(--rule) solid var(--color-border-subtle); }
+.project { padding: 26px 0 0; border-top: var(--rule) solid var(--color-border-subtle); }
 .project:first-of-type { border-top: 0; }
 
 .project-head {
@@ -181,9 +181,27 @@ kbd {
   color: var(--color-fg);
 }
 
+/* Status sits at the end of the head row, out of the reading path. */
+.project-flag {
+  margin-left: auto;
+  font: 400 var(--text-xs)/1.5 var(--font-technical);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+}
+
+/* What it does. The strongest line of the entry. */
 .project-summary {
-  margin-top: 10px;
-  max-width: 56ch;
+  margin-top: 12px;
+  max-width: 58ch;
+  font-size: var(--text-base);
+  color: var(--color-fg);
+}
+
+/* Why it exists and how it works. One step quieter than the summary. */
+.project-context {
+  margin-top: 8px;
+  max-width: 64ch;
   font-size: var(--text-sm);
   color: var(--color-muted);
 }
@@ -201,33 +219,72 @@ kbd {
 
 .project-link { font-size: var(--text-sm); }
 
-/* Shared row treatment for the three secondary projects. Hover turns the name
-   blue and nudges the arrow — nothing else moves. */
+/* The three supporting projects sit under a rule of their own, so the
+   featured entry stays a separate thing. */
+.project-list {
+  margin-top: 40px;
+  border-top: var(--rule) solid var(--color-border);
+}
+
+.project-list-title {
+  padding-top: 22px;
+  font: 500 var(--text-xxs)/1.5 var(--font-technical);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+}
+
 .project-row {
-  display: grid;
-  grid-template-columns: 26px minmax(0, 1fr) auto;
+  padding: 24px 0;
+  border-top: var(--rule) solid var(--color-border-subtle);
+}
+.project-row:first-of-type { border-top: 0; }
+
+.project-row-head {
+  display: flex;
   align-items: baseline;
   gap: 14px;
-  padding: 22px 0;
-  border-top: var(--rule) solid var(--color-border-subtle);
-  color: var(--color-fg);
 }
-.project-row:hover { text-decoration: none; }
-.project-row:hover .project-title { color: var(--color-accent); }
-.project-row:hover .project-arrow { transform: translate(2px, -2px); }
 
+/* Only the name is a link: the rest of the card is text to read. */
 .project-title {
   font: 700 var(--text-md)/1.3 var(--font-display);
   letter-spacing: -0.02em;
-  transition: color var(--duration-fast);
 }
-.project-row-summary { display: block; margin-top: 5px; font-size: var(--text-sm); color: var(--color-muted); }
-.project-arrow { color: var(--color-dim); transition: transform var(--duration-fast), color var(--duration-fast); }
-.project-row:hover .project-arrow { color: var(--color-accent); }
+.project-title a { color: var(--color-fg); transition: color var(--duration-fast); }
+.project-title a:hover { color: var(--color-accent); text-decoration: none; }
+.project-title .ext { transition: transform var(--duration-fast), color var(--duration-fast); }
+.project-title a:hover .ext { color: var(--color-accent); transform: translate(2px, -2px); }
 
-/* Screenshots sit under the flagship entry as plain images — no window chrome. */
+.project-row-summary {
+  margin-top: 8px;
+  max-width: 58ch;
+  font-size: var(--text-base);
+  color: var(--color-fg);
+}
+
+.project-row-context {
+  margin-top: 6px;
+  max-width: 66ch;
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.project-row-foot {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px 18px;
+}
+
+.project-status { margin-left: auto; font: 400 var(--text-xs)/1.5 var(--font-technical); color: var(--color-dim); }
+
+/* Screenshots sit under the flagship entry as plain images — no window chrome.
+   Wide enough that the phone screens stay readable. */
 .shots { margin-top: 22px; display: flex; gap: 16px; }
-.shots figure { width: 148px; min-width: 0; }
+.shots figure { width: 210px; min-width: 0; }
 .shots img {
   display: block;
   width: 100%;
@@ -248,6 +305,37 @@ kbd {
 }
 .shot-toggle button[aria-pressed='true'] { border-color: var(--color-accent); color: var(--color-accent); }
 
+/* ---------------------------------------------------------------- contact --- */
+
+.contact-list {
+  margin-top: 20px;
+  border-top: var(--rule) solid var(--color-border);
+}
+
+.contact-row {
+  padding: 16px 0;
+  border-top: var(--rule) solid var(--color-border-subtle);
+}
+.contact-row:first-of-type { border-top: 0; }
+
+.contact-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  font: 500 var(--text-base)/1.5 var(--font-display);
+  color: var(--color-fg);
+}
+.contact-link:hover { color: var(--color-accent); }
+
+.contact-detail { font: 400 var(--text-sm)/1.5 var(--font-technical); color: var(--color-dim); }
+
+.contact-note {
+  margin-top: 4px;
+  max-width: 58ch;
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
 /* ------------------------------------------------------------ prose lists --- */
 
 .prose p { max-width: var(--max-line-length); color: var(--color-muted); }
@@ -256,7 +344,9 @@ kbd {
 
 .link-list { display: grid; gap: 10px; margin-top: 20px; }
 .link-list a { font-size: var(--text-sm); }
-.link-list .ext { color: var(--color-dim); margin-left: 4px; }
+
+/* The outward arrow that marks a link leaving the site. */
+.ext { color: var(--color-dim); margin-left: 4px; }
 
 /* ---------------------------------------------------------------- footer --- */
 
@@ -341,11 +431,14 @@ kbd {
 @media (max-width: 560px) {
   body { padding-bottom: 64px; }
   .site-header { flex-wrap: wrap; gap: 10px; }
-  .site-header nav { gap: 16px; }
+  .site-header nav { gap: 14px; flex-wrap: wrap; }
+  /* Touch devices have no use for the shortcut hint; the Ctrl/⌘K shortcut
+     itself keeps working. */
+  .palette-trigger { display: none; }
   .hero { padding: 48px 0 0; }
   .section { padding: 36px 0; }
-  .project-row { grid-template-columns: 22px minmax(0, 1fr); gap: 10px; }
-  .project-arrow { display: none; }
+  .project-list { margin-top: 32px; }
+  .project-head, .project-row-head { gap: 10px; }
   .shots { overflow-x: auto; scrollbar-width: none; }
   .shots::-webkit-scrollbar { display: none; }
   /* Wider than desktop so the pair genuinely overflows and can be scrolled. */

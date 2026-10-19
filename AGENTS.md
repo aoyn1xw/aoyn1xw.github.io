@@ -7,7 +7,7 @@ Personal portfolio and commission website for ayon1xw. The homepage uses Vue 3 a
 ## Source map
 
 - `src/App.vue`: homepage layout and interactions.
-- `src/data/site.ts`: project descriptions and repository links.
+- `src/data/site.ts`: project, stack, "now", and contact copy with repository links.
 - `src/main.ts`: homepage entry point.
 - `src/styles/tokens.css`: shared design tokens.
 - `src/styles/main.css` and `src/styles/commission.css`: page styles.

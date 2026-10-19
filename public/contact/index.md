@@ -10,7 +10,7 @@ For a small development commission, read the commissions page and commission ter
 
 ## Other contact routes
 
-The Telegram contact linked by the commission form is @ayon1xw. It is also the fallback if the form cannot send your request. My links profile lists other public profiles. Choose the route that fits your question and send only the information needed to understand it. For a question about information you submitted, contact me on Telegram and identify the request without posting its contents publicly. The privacy page explains how the website and request form handle data.
+Telegram @ayon1xw is the direct route and the fastest way to reach me. It is also the fallback if the commission form cannot send your request. My links profile lists the other public profiles. Choose the route that fits your question and send only the information needed to understand it. For a question about information you submitted, contact me on Telegram and identify the request without posting its contents publicly. The privacy page explains how the website and request form handle data.
 
 ## Useful links
 

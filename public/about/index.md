@@ -6,7 +6,11 @@ I’m Erdi, a student developer in Germany. I use the name ayon1xw on this portf
 
 ## What I build
 
-My work includes desktop tools, small automations, and local-first experiments. ShadowPlay helps me browse finished game clips from my Windows PC and download the original files to my phone over the local network, using a Flutter client. Other projects include a Swift development container, a Python tool for signing iOS IPA files with certificates and provisioning profiles, and an Untis timetable watcher that sends change notifications.
+My work includes desktop tools, small automations, and local-first experiments. ShadowPlay helps me browse finished game clips from my Windows PC and download the original files to my phone over the local network, using a Flutter client. Other projects include a devcontainer that builds and signs iOS apps on Linux without a Mac, a Node.js server that signs an IPA with my own certificate and provisioning profile, and an Untis timetable watcher that sends change notifications to Telegram.
+
+## What I work with
+
+I mostly write C# for Windows and the web, TypeScript and JavaScript for the front end and for tools, Python for automation, Dart for the mobile client, and Swift where an Apple toolchain is needed. Containers, GitHub Actions, and a lot of reading of documentation fill the gaps. Every technology named here shows up in one of my repositories, or in the build of this site.
 
 ## Explore or ask about a project
 

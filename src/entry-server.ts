@@ -1,7 +1,7 @@
 import { createSSRApp } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import App from './App.vue';
-import { secondaryProjects, shadowPlay } from './data/site';
+import { contactRoutes, secondaryProjects, shadowPlay } from './data/site';
 
 // Render the same component that the browser hydrates: no duplicate crawler copy.
 export function render() {
@@ -9,6 +9,24 @@ export function render() {
 }
 
 export function renderMarkdown() {
+  const site = 'https://aoyn1xw.github.io';
+  // Site-internal routes are absolute in the Markdown version so a reader
+  // following a link from another site still lands on the right page.
+  const absolute = (href: string) => (href.startsWith('/') ? `${site}${href}` : href);
+
+  const featured = `I built ShadowPlay to get PC clips onto my phone. ${shadowPlay.summary}\n\n${shadowPlay.context}\n\n${shadowPlay.technologies.join(' · ')} — ${shadowPlay.status}: ${shadowPlay.statusNote}.\n\n- [ShadowPlay repository](${shadowPlay.repository})`;
+
+  const others = secondaryProjects
+    .map(
+      project =>
+        `### ${project.title}\n\n${project.summary}\n\n${project.context}\n\n${project.technologies.join(' · ')} — ${project.status}: ${project.statusNote}.\n\n- [${project.title} repository](${project.repository})`
+    )
+    .join('\n\n');
+
+  const contact = contactRoutes
+    .map(route => `- [${route.label} · ${route.detail}](${absolute(route.href)}): ${route.note}`)
+    .join('\n');
+
   return `# ayon1xw Developer Portfolio
 
 > Erdi, a student developer in Germany building desktop tools, small automations, and local-first experiments. The portfolio name is ayon1xw; the GitHub username is aoyn1xw.
@@ -19,13 +37,11 @@ I make software when something annoys me. Local-first apps, small automations, a
 
 ## ShadowPlay
 
-I built ShadowPlay to get PC clips onto my phone. Browse finished game clips and download the original files over my local network. Windows host, Flutter client.
-
-- [ShadowPlay repository](${shadowPlay.repository})
+${featured}
 
 ## Other projects
 
-${secondaryProjects.map(project => `### ${project.title}\n\n${project.summary}\n\n${project.technologies}\n\n- [${project.title} repository](${project.repository})`).join('\n\n')}
+${others}
 
 ## About me
 
@@ -33,10 +49,9 @@ I’m Erdi, a student developer in Germany. I learn by building things I need, f
 
 ## Contact and site information
 
-- [GitHub](https://github.com/aoyn1xw): Questions about something I made.
-- [Socials](https://guns.lol/ayon1xw)
+${contact}
+
 - [About](https://aoyn1xw.github.io/about/index.md)
-- [Contact](https://aoyn1xw.github.io/contact/index.md)
 - [Privacy](https://aoyn1xw.github.io/privacy/index.md)
 - [Commissions](https://aoyn1xw.github.io/commissions.html)
 - [Commission terms](https://aoyn1xw.github.io/commission-terms.html)

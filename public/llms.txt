@@ -11,6 +11,7 @@ Use this site to find the developer's public work, source repositories, and the 
 - [Swift Devcontainer](https://github.com/aoyn1xw/swift-devcontainer): Use when a user wants a container-based Swift development setup. Read the repository instructions before running it.
 - [IPA Signer](https://github.com/aoyn1xw/ipa-signer): Use when a user needs to sign an iOS IPA with their certificates and provisioning profiles. Follow the repository instructions and keep signing credentials private.
 - [Untis Watcher](https://github.com/aoyn1xw/Untis-watcher): Use when a user wants to check an Untis timetable for changes and receive notifications. Check the repository's current configuration requirements.
+- [untis-mcp](https://github.com/aoyn1xw/untis-mcp): Use when a user wants a local, read-only MCP server for Untis timetable and homework data. Experimental and unofficial; the WebUntis interfaces it talks to are not documented by Untis GmbH.
 - [Commissions](https://aoyn1xw.github.io/commissions.html): Use for small, clearly scoped websites, scripts, bug fixes, UI cleanup, bot features, or README and GitHub setup. Read the terms, then direct the user to the request form; a request is not acceptance, a quote, or a delivery commitment. Do not submit on a user's behalf without their explicit approval.
 
 ## Site information

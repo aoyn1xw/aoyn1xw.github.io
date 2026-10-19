@@ -59,6 +59,12 @@ export const SHELL_COMMANDS: ShellCommand[] = [
     action: { kind: 'external', href: 'https://github.com/aoyn1xw', message: '→ github.com/aoyn1xw' }
   },
   {
+    name: 'telegram',
+    aliases: ['tg', 'message'],
+    summary: 'Open the Telegram chat',
+    action: { kind: 'external', href: 'https://t.me/ayon1xw', message: '→ t.me/ayon1xw' }
+  },
+  {
     name: 'socials',
     summary: 'Open the social links page',
     action: { kind: 'external', href: 'https://guns.lol/ayon1xw', message: '→ guns.lol/ayon1xw' }
@@ -86,7 +92,8 @@ export const SHELL_COMMANDS: ShellCommand[] = [
     summary: 'List available commands',
     action: {
       kind: 'status',
-      message: 'projects · shadowplay · about · contact · github · socials · commissions · terms · top'
+      message:
+        'projects · shadowplay · about · contact · github · telegram · socials · commissions · terms · top'
     }
   }
 ];

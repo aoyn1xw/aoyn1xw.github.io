@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { secondaryProjects as projects, shadowPlay } from './data/site';
+import { contactRoutes, secondaryProjects as projects, shadowPlay } from './data/site';
 import { useShell } from './shell/useShell';
 import CommandPalette from './components/CommandPalette.vue';
 
@@ -103,16 +103,16 @@ function trackShot() {
       <section id="projects" class="section" aria-labelledby="projects-title">
         <h2 id="projects-title" class="section-title">Projects</h2>
 
-        <article class="project">
+        <article class="project" aria-labelledby="shadowplay-title">
           <div class="project-head">
             <span class="project-number" aria-hidden="true">01</span>
-            <h3 class="project-name">ShadowPlay</h3>
+            <h3 id="shadowplay-title" class="project-name">ShadowPlay</h3>
+            <span class="project-flag">{{ shadowPlay.status }}</span>
           </div>
-          <p class="project-summary">
-            Browse finished game clips from my PC and download the original files to my phone over the local network.
-          </p>
+          <p class="project-summary">{{ shadowPlay.summary }}</p>
+          <p class="project-context">{{ shadowPlay.context }}</p>
           <div class="project-foot">
-            <span class="project-stack">Windows host · Flutter client</span>
+            <span class="project-stack">{{ shadowPlay.technologies.join(' · ') }}</span>
             <a class="project-link" :href="shadowPlay.repository" target="_blank" rel="noopener noreferrer">
               Source <span aria-hidden="true">↗</span>
             </a>
@@ -141,21 +141,30 @@ function trackShot() {
           </div>
         </article>
 
-        <a
-          v-for="(project, i) in projects"
-          :key="project.repository"
-          class="project-row"
-          :href="project.repository"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <span class="project-number" aria-hidden="true">0{{ i + 2 }}</span>
-          <span>
-            <h3 class="project-title">{{ project.title }}</h3>
-            <span class="project-row-summary">{{ project.summary }}</span>
-          </span>
-          <span class="project-arrow" aria-hidden="true">↗</span>
-        </a>
+        <div class="project-list">
+          <h3 class="project-list-title">Other projects</h3>
+          <article
+            v-for="(project, i) in projects"
+            :key="project.repository"
+            class="project-row"
+            :aria-labelledby="`project-${i}`"
+          >
+            <div class="project-row-head">
+              <span class="project-number" aria-hidden="true">0{{ i + 2 }}</span>
+              <h4 :id="`project-${i}`" class="project-title">
+                <a :href="project.repository" target="_blank" rel="noopener noreferrer">
+                  {{ project.title }}<span class="ext" aria-hidden="true">↗</span>
+                </a>
+              </h4>
+            </div>
+            <p class="project-row-summary">{{ project.summary }}</p>
+            <p class="project-row-context">{{ project.context }}</p>
+            <div class="project-row-foot">
+              <span class="project-stack">{{ project.technologies.join(' · ') }}</span>
+              <span class="project-status">{{ project.status }} · {{ project.statusNote }}</span>
+            </div>
+          </article>
+        </div>
       </section>
 
       <section id="about" class="section" aria-labelledby="about-title">
@@ -175,12 +184,21 @@ function trackShot() {
 
       <section id="contact" class="section" aria-labelledby="contact-title">
         <h2 id="contact-title" class="section-title">Contact</h2>
-        <div class="link-list">
-          <a href="https://github.com/aoyn1xw" target="_blank" rel="noopener noreferrer">GitHub · @aoyn1xw <span class="ext">↗</span></a>
-          <a href="https://guns.lol/ayon1xw" target="_blank" rel="noopener noreferrer">Socials <span class="ext">↗</span></a>
-          <a href="/contact/">All contact options</a>
-          <a href="/commissions.html">Commissions</a>
-        </div>
+        <ul class="contact-list">
+          <li v-for="route in contactRoutes" :key="route.href" class="contact-row">
+            <a
+              class="contact-link"
+              :href="route.href"
+              :target="route.external ? '_blank' : undefined"
+              :rel="route.external ? 'noopener noreferrer' : undefined"
+            >
+              {{ route.label }}
+              <span class="contact-detail">{{ route.detail }}</span>
+              <span v-if="route.external" class="ext" aria-hidden="true">↗</span>
+            </a>
+            <p class="contact-note">{{ route.note }}</p>
+          </li>
+        </ul>
       </section>
     </main>
 
