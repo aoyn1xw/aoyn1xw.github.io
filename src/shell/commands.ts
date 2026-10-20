@@ -70,10 +70,16 @@ export const SHELL_COMMANDS: ShellCommand[] = [
     action: { kind: 'external', href: 'https://guns.lol/ayon1xw', message: '→ guns.lol/ayon1xw' }
   },
   {
-    name: 'Games',
+    name: 'games',
     aliases: ['games'],
     summary: 'Open the arcade',
     action: { kind: 'external', href: 'https://anoma.ly/arcade/', message: '→ anoma.ly/arcade/' }
+  },
+  {
+    name: 'playstation',
+    aliases: ['psn', 'trophies'],
+    summary: 'see my playstation trophies lol',
+    action: { kind: 'external', href: 'https://psnprofiles.com/ayon1xw', message: '→ psnprofiles.com/ayon1xw' }
   },
   {
     name: 'commissions',
