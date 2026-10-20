@@ -2,7 +2,7 @@
 // Command palette, opened with ⌘K / Ctrl+K or the header control. Mirrors an
 // OpenTUI select: filter the list, move with arrows, commit with Enter.
 import { nextTick, ref, watch } from 'vue';
-import type { useShell } from '../shell/useShell';
+import type { useShell } from './useShell';
 
 const props = defineProps<{ shell: ReturnType<typeof useShell> }>();
 

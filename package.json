@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "test": "node --test worker/test/worker.test.mjs tests/site.test.mjs",
     "test:worker": "node --test worker/test/worker.test.mjs",
-    "test:site": "npm run build && node --test tests/site.test.mjs",
+    "test:site": "pnpm build && node --test tests/site.test.mjs",
     "verify:public": "node scripts/verify-public.mjs"
   },
   "keywords": [

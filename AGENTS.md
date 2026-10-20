@@ -6,16 +6,20 @@ Personal portfolio and commission website for ayon1xw. The homepage uses Vue 3 a
 
 ## Source map
 
-- `src/App.vue`: homepage layout and interactions.
-- `src/data/site.ts`: project, stack, "now", and contact copy with repository links.
+- `src/App.vue`: homepage composition and shared command-palette state.
+- `src/components/layout/`: site header and footer.
+- `src/components/home/`: homepage sections and screenshot gallery; section-specific interactions live in their components.
+- `src/shell/`: command palette, command registry, and keyboard navigation runtime.
+- `src/data/site.ts`: project and contact copy with repository links.
 - `src/main.ts`: homepage entry point.
 - `src/styles/tokens.css`: shared design tokens.
 - `src/styles/main.css` and `src/styles/commission.css`: page styles.
 - `src/commissions/config.js`: commission availability, submission endpoint, and fallback contact.
 - `src/commissions/request.js`: commission form behavior.
-- Root HTML files: homepage, commissions, commission terms, 404, and site verification.
-- `public/`: static files copied into the build, including SEO and social preview assets.
-- `assets/`: fonts, cursors, project images, and background video.
+- Root HTML files: homepage, commissions, commission terms, and 404 entry points.
+- `public/`: static files copied unchanged into the build, including SEO, ownership verification, and social preview assets.
+- `assets/`: favicon and project screenshots processed by Vite.
+- `about/`, `contact/`, `privacy/`: static HTML entry points with their existing directory routes.
 - `worker/src/index.js`: commission submission backend.
 - `worker/test/worker.test.mjs`: backend tests with mocked Telegram responses.
 - `worker/README.md`: backend setup, secrets, and deployment instructions.
@@ -30,7 +34,8 @@ Use the pnpm version declared in `package.json` and preserve `pnpm-lock.yaml`.
 - Start the site: `corepack pnpm dev` (configured port: 3000).
 - Check types: `corepack pnpm typecheck`.
 - Build for production: `corepack pnpm build` (includes type checking).
-- Run backend tests: `corepack pnpm test`.
+- Run all tests after building: `corepack pnpm test`.
+- Run backend tests alone: `corepack pnpm test:worker`.
 - Preview the production build: `corepack pnpm preview`.
 
 Run the production build for frontend or build configuration changes. Run backend tests for changes to the Worker or submission behavior. For visual changes, inspect the affected pages at desktop and mobile sizes and check relevant keyboard interactions. Documentation-only edits do not require a build or backend tests. Report checks run and any checks that could not be completed.

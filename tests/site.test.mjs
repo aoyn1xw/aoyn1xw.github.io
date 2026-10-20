@@ -52,6 +52,7 @@ test('raw homepage contains the real portfolio, identity, and sequential heading
   assert.equal(await page.locator('main').count(), 1);
   assert.ok((await page.locator('main').textContent()).trim().length >= 500);
   assert.equal(await page.locator('h1').count(), 1);
+  assert.equal(await page.locator('.palette-trigger').count(), 0);
   assert.match(await page.locator('h1').textContent(), /ayon1xw developer portfolio/i);
   assert.match(await page.title(), /ayon1xw.*developer portfolio/i);
   assert.equal(await page.locator('a[href="https://github.com/aoyn1xw/ShadowPlay"]').count(), 1);
@@ -126,6 +127,12 @@ test('every public content endpoint and machine-readable file is served and inte
   await page.close();
 });
 
+test('Google ownership verification keeps its existing URL and token', async () => {
+  const response = await fetch(origin + '/google1458743846eb87e9.html');
+  assert.equal(response.status, 200);
+  assert.equal((await response.text()).trim(), 'google-site-verification: google1458743846eb87e9.html');
+});
+
 test('public verifier distinguishes static successes from the three hosting blockers', async () => {
   let output;
   try {
@@ -172,6 +179,54 @@ test('hydration preserves typography interaction, mobile gallery, and responsive
     }
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
     assert.deepEqual(errors, []);
+    await page.close();
+  }
+});
+
+test('header and keyboard shortcuts open the same palette and navigate to homepage sections', async () => {
+  for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844 }]) {
+    const page = await browser.newPage({ viewport, reducedMotion: 'reduce' });
+    page.setDefaultTimeout(5000);
+    await page.goto(origin + '/');
+    await page.locator('.palette-trigger').waitFor({ state: 'attached' });
+    if (viewport.width >= 810) await page.locator('.palette-trigger').click();
+    else await page.keyboard.press('Control+k');
+    const dialog = page.getByRole('dialog', { name: 'Command palette' });
+    const input = page.getByRole('textbox', { name: 'Search commands' });
+    await input.waitFor({ state: 'visible' });
+    await page.waitForFunction(() => document.activeElement?.id === 'palette-filter');
+    await input.fill('contact');
+    assert.equal(await dialog.locator('.palette__row').count(), 1);
+    await input.press('Enter');
+    await dialog.waitFor({ state: 'hidden' });
+    assert.equal(await page.locator('#contact').evaluate(element => element === document.activeElement), true);
+
+    await page.keyboard.press('Control+k');
+    await dialog.waitFor({ state: 'visible' });
+    assert.equal(await input.inputValue(), '');
+    await input.press('ArrowDown');
+    assert.equal(await dialog.locator('.palette__row').nth(1).getAttribute('aria-selected'), 'true');
+    await input.press('ArrowUp');
+    assert.equal(await dialog.locator('.palette__row').first().getAttribute('aria-selected'), 'true');
+    await input.press('Escape');
+    await dialog.waitFor({ state: 'hidden' });
+    await page.close();
+  }
+});
+
+test('gallery keyboard controls select both screenshots with reduced motion', async () => {
+  for (const viewport of [{ width: 1440, height: 1000 }, { width: 390, height: 844 }]) {
+    const page = await browser.newPage({ viewport, reducedMotion: 'reduce' });
+    page.setDefaultTimeout(5000);
+    await page.goto(origin + '/');
+    // The trigger confirms hydration has installed the page's event handlers.
+    await page.locator('.palette-trigger').waitFor({ state: 'attached' });
+    const gallery = page.getByLabel('ShadowPlay app screenshots; scroll to see both screens');
+    await gallery.focus();
+    await gallery.press('ArrowRight');
+    await page.waitForFunction(() => document.querySelector('[aria-label="Show clips screen"]').getAttribute('aria-pressed') === 'true');
+    await gallery.press('ArrowLeft');
+    await page.waitForFunction(() => document.querySelector('[aria-label="Show home screen"]').getAttribute('aria-pressed') === 'true');
     await page.close();
   }
 });

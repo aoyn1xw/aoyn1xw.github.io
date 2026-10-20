@@ -1,3 +1,4 @@
+
 # ayon1xw
 
 This is my website.
@@ -16,7 +17,7 @@ Nothing too deep. I just wanted one place that shows who I am, what I build, and
 
 - Vue 3
 - TypeScript
-- Variable typography for the interactive identity
+- Custom CSS and an interactive wordmark
 - HTML and CSS for the commission pages
 - Vite
 - GitHub Pages
@@ -30,7 +31,10 @@ secrets, deploy), follow `worker/README.md`.
 
 ## Source layout
 
-- `src/App.vue`: homepage layout and interactions.
+- `src/App.vue`: homepage composition and shared command-palette state.
+- `src/components/layout/`: site header and footer.
+- `src/components/home/`: homepage sections and the screenshot gallery, with interactions kept beside their markup.
+- `src/shell/`: command palette, command registry, and keyboard navigation runtime.
 - `src/data/site.ts`: project copy and repository links.
 - `src/styles/`: shared design tokens, homepage styles, and commission styles.
 - `src/commissions/`: request form logic and availability/endpoint configuration.
@@ -38,7 +42,8 @@ secrets, deploy), follow `worker/README.md`.
 - `worker/`: Telegram delivery backend and its tests.
 - `about/`, `contact/`, `privacy/`: static trust pages using the shared design tokens.
 - `src/entry-server.ts` and `scripts/prerender.mjs`: build-time homepage HTML and Markdown.
-- `public/`: crawler guidance, sitemap, recovery Markdown, and trust page Markdown.
+- `public/`: crawler guidance, sitemap, ownership verification, social previews, and Markdown documents copied unchanged into the build.
+- `assets/`: favicon and project screenshots processed by Vite.
 - `tests/site.test.mjs`: production artifact, endpoint, and browser regression checks.
 - `docs/research/`: historical redesign research and reference captures.
 
@@ -50,6 +55,8 @@ checks final response headers and bodies on the public domain.
 
 See [agent readiness](docs/agent-readiness.md) for implemented fixes, verification,
 and Markdown negotiation/MCP limitations while using GitHub Pages.
+See the [repository structure audit](docs/repository-structure-audit.md) for cleanup
+decisions, dependency usage, and route-preservation checks.
 
 ## Notes
 

@@ -20,5 +20,3 @@ const placeholder = '<div id="app"></div>';
 if (!html.includes(placeholder)) throw new Error('Homepage render placeholder is missing');
 await writeFile(file, html.replace(placeholder, `<div id="app">${await render()}</div>`));
 await writeFile(resolve('dist/index.md'), renderMarkdown());
-// This verification file must survive Vite's clean build too.
-await writeFile(resolve('dist/google1458743846eb87e9.html'), await readFile('google1458743846eb87e9.html'));
