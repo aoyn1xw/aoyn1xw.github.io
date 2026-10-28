@@ -45,18 +45,12 @@ secrets, deploy), follow `worker/README.md`.
 - `public/`: crawler guidance, sitemap, ownership verification, social previews, and Markdown documents copied unchanged into the build.
 - `assets/`: favicon and project screenshots processed by Vite.
 - `tests/site.test.mjs`: production artifact, endpoint, and browser regression checks.
-- `docs/research/`: historical redesign research and reference captures.
 
 Use `corepack pnpm dev` for the local preview and `corepack pnpm build` for the
 production build and type check. After building, run `corepack pnpm exec playwright
 install chromium` once, then `corepack pnpm test` for site and backend tests.
 `corepack pnpm test:site` builds and tests the site. `corepack pnpm verify:public`
 checks final response headers and bodies on the public domain.
-
-See [agent readiness](docs/agent-readiness.md) for implemented fixes, verification,
-and Markdown negotiation/MCP limitations while using GitHub Pages.
-See the [repository structure audit](docs/repository-structure-audit.md) for cleanup
-decisions, dependency usage, and route-preservation checks.
 
 ## Notes
 
