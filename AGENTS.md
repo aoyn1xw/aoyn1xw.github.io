@@ -20,7 +20,8 @@ Personal portfolio and commission website for ayon1xw. The homepage uses Vue 3 a
 - Root HTML files: homepage, commissions, commission terms, and 404 entry points.
 - `about/`, `contact/`, `privacy/`: static trust HTML entry points with their existing directory routes.
 - `public/`: static files copied unchanged into the build, including `llms.txt`, `robots.txt`, `sitemap.xml`, Markdown alternatives (`about/index.md`, `contact/index.md`, `privacy/index.md`, `404.md`), ownership verification (`google1458743846eb87e9.html`, `.well-known/discord`), and social preview assets.
-- `assets/`: favicon and project screenshots processed by Vite.
+- `assets/`: PNG favicon (`cursor/cursor.png`, used as `rel="icon"` and `rel="apple-touch-icon"` across all entry points) and project screenshots processed by Vite.
+- `.codex/`, `.zed/`: editor-specific configuration.
 - `tests/site.test.mjs`: Playwright and Node regression tests for the production build (`dist/`), routes, `llms.txt`, sitemap, Markdown copy parity, hydration, command palette, and keyboard navigation.
 - `scripts/verify-public.mjs`: live origin verification script (`corepack pnpm verify:public`). Note that static GitHub Pages hosting cannot pass dynamic `Accept: text/markdown` negotiation or `/.well-known/mcp` discovery.
 - `worker/src/index.js`: commission submission backend.
