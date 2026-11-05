@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
-import { mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, stat } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
 import { join, resolve, sep } from 'node:path';
@@ -47,8 +47,9 @@ after(async () => {
   if (server) await new Promise(done => server.close(done));
 });
 
-test('raw homepage contains the real portfolio, identity, and sequential headings', async () => {
+test('raw homepage contains the real portfolio, identity, updated tagline, and sequential headings', async () => {
   const html = await readFile(resolve(root, 'index.html'), 'utf8');
+  const markdown = await readFile(resolve(root, 'index.md'), 'utf8');
   const page = await browser.newPage({ javaScriptEnabled: false });
   await page.setContent(html, { waitUntil: 'domcontentloaded' });
   assert.equal(await page.locator('main').count(), 1);
@@ -57,6 +58,21 @@ test('raw homepage contains the real portfolio, identity, and sequential heading
   assert.equal(await page.locator('.palette-trigger').count(), 0);
   assert.match(await page.locator('h1').textContent(), /ayon1xw developer portfolio/i);
   assert.match(await page.title(), /ayon1xw.*developer portfolio/i);
+  assert.equal(await page.locator('.lede').textContent(), 'I build things because I can.');
+  assert.equal(
+    await page.locator('.sublede').textContent(),
+    "Sometimes they're useful. Sometimes they're experiments. Usually both."
+  );
+  assert.equal(
+    await page.locator('.meta').textContent(),
+    'Student developer and graphic designer based in Germany.'
+  );
+  assert.equal(
+    await page.locator('.footer-note').textContent(),
+    'Made with curiosity and questionable amounts of debugging.'
+  );
+  assert.ok(markdown.includes('I build things because I can.'));
+  assert.ok(!markdown.includes('I make software when something annoys me.'));
   assert.equal(await page.locator('#kivo-title').textContent(), 'Kivo');
   assert.equal(await page.locator('a[href="https://github.com/aoyn1xw/Kivo"]').count(), 1);
   assert.equal(await page.locator('.project-row').count(), 3);
@@ -238,23 +254,39 @@ test('gallery keyboard controls select both screenshots with reduced motion', as
   }
 });
 
-test('GitHub repository showcase renders curated and public repos, clarifies counts, and supports filtering', async () => {
+test('More on GitHub section deduplicates featured projects, excludes forks/meta repos, clarifies counts, and supports filtering', async () => {
   const page = await browser.newPage();
   await page.goto(origin + '/');
   await page.locator('.palette-trigger').waitFor({ state: 'attached' });
 
-  const totalCards = await page.locator('.repo-card').count();
-  assert.ok(totalCards >= 6, `Expected at least 6 public repos in grid, got ${totalCards}`);
+  assert.equal(await page.locator('#github-repos-title').textContent(), 'More on GitHub');
 
-  // Verify clarified repository count label when viewing all categories
-  const allCountText = await page.locator('.repo-count').textContent();
-  assert.match(allCountText, new RegExp(`${totalCards}\\s+in index\\s+\\(${totalCards + 1}\\s+showcased total\\)`));
+  const totalCards = await page.locator('.repo-card').count();
+  assert.equal(totalCards, 5, `Expected 5 non-featured discovered repos in grid, got ${totalCards}`);
+
+  // Verify repository count label when viewing all categories
+  const allCountText = (await page.locator('.repo-count').textContent()).trim();
+  assert.equal(allCountText, `${totalCards} repositories`);
+
+  const titles = (await page.locator('.repo-card__title').allTextContents()).map(t =>
+    t.replace('↗', '').trim()
+  );
+
+  // Flagship and Featured projects must not be duplicated in "More on GitHub"
+  assert.ok(!titles.includes('Kivo'));
+  assert.ok(!titles.includes('Swift Devcontainer'));
+  assert.ok(!titles.includes('IPA Signer'));
+  assert.ok(!titles.includes('Untis Watcher'));
 
   // Excluded meta repos and forks must not appear
-  const titles = await page.locator('.repo-card__title').allTextContents();
-  assert.ok(!titles.some(t => /^\.github/i.test(t.trim())));
-  assert.ok(!titles.some(t => /^aoyn1xw$/i.test(t.trim())));
+  assert.ok(!titles.some(t => /^\.github/i.test(t)));
+  assert.ok(!titles.some(t => /^aoyn1xw$/i.test(t)));
   assert.ok(!titles.some(t => /OpenJarvis|spoti\.pw|free-llm/i.test(t)));
+
+  // Archived repository (SSH Portfolio) is present and clearly labeled
+  const archivedCard = page.locator('.repo-card', { hasText: 'SSH Portfolio' });
+  assert.equal(await archivedCard.count(), 1);
+  assert.equal(await archivedCard.locator('.repo-badge').textContent(), 'Archived');
 
   // Every card must have a non-empty summary and language label
   const summaries = await page.locator('.repo-card__summary').allTextContents();
@@ -266,20 +298,15 @@ test('GitHub repository showcase renders curated and public repos, clarifies cou
     assert.ok(lang.trim().length > 0);
   }
 
-  // Category filter narrows the grid, clarifies filtered count, and 'All' restores it
+  // Category filter narrows the grid, updates the counter, and 'All' restores it
   await page.getByRole('button', { name: 'AI & Automation' }).click();
   const aiCount = await page.locator('.repo-card').count();
-  assert.ok(aiCount >= 1 && aiCount < totalCards);
-  const filteredCountText = await page.locator('.repo-count').textContent();
-  assert.match(filteredCountText, new RegExp(`Showing\\s+${aiCount}\\s+of\\s+${totalCards}\\s+in index`));
+  assert.equal(aiCount, 1);
+  const filteredCountText = (await page.locator('.repo-count').textContent()).trim();
+  assert.equal(filteredCountText, `${aiCount} of ${totalCards} repositories`);
 
   await page.getByRole('button', { name: 'All' }).click();
   assert.equal(await page.locator('.repo-card').count(), totalCards);
-
-  // Sort by Stars places starred repositories first
-  await page.getByRole('button', { name: 'Stars' }).click();
-  const firstCardStars = await page.locator('.repo-card').first().locator('.repo-star').textContent();
-  assert.match(firstCardStars, /★\s*\d+/);
 
   // Link to view all repositories on GitHub is present
   assert.equal(
@@ -355,7 +382,7 @@ test('syncGitHubSnapshot paginates across pages and falls back safely to existin
   }
 });
 
-test('client GitHub integration uses fresh sessionStorage cache, refreshes on stale cache, and falls back on API error', async () => {
+test('client GitHub integration uses fresh sessionStorage cache, merges live responses without losing snapshot repos, and falls back on API error', async () => {
   const context = await browser.newContext();
   const page = await context.newPage();
 
@@ -415,8 +442,10 @@ test('client GitHub integration uses fresh sessionStorage cache, refreshes on st
   await page.reload();
   await page.locator('.repo-card', { hasText: 'Cached Local Tool' }).waitFor({ state: 'visible' });
   assert.equal(apiRequests, 0, 'Fresh sessionStorage cache must prevent redundant GitHub API requests');
+  // Partial cache payload is merged with the build-time snapshot so known repos are never wiped out
+  assert.equal(await page.locator('.repo-card', { hasText: 'Untis MCP' }).count(), 1);
 
-  // 2. Expired cache triggers live API request, renders new repo, and updates sessionStorage
+  // 2. Expired cache triggers live API request, merges new repo with snapshot, and updates sessionStorage
   await page.evaluate(() => {
     window.sessionStorage.setItem(
       'ayon1xw:github-repos:v1',
@@ -425,7 +454,13 @@ test('client GitHub integration uses fresh sessionStorage cache, refreshes on st
   });
   await page.reload();
   await page.locator('.repo-card', { hasText: 'Live Api Experiment' }).waitFor({ state: 'visible' });
-  assert.equal(apiRequests, 1, 'Expired cache should trigger exactly one GitHub API request');
+  assert.equal(apiRequests, 1, 'Expired cache should trigger one GitHub API request');
+  assert.equal(await page.locator('.repo-card', { hasText: 'Untis MCP' }).count(), 1);
+
+  // Verify star sorting places the newly fetched 42-star repo first
+  await page.getByRole('button', { name: 'Stars' }).click();
+  const firstCardStars = await page.locator('.repo-card').first().locator('.repo-star').textContent();
+  assert.match(firstCardStars, /★\s*42/);
 
   const storedCache = await page.evaluate(() =>
     JSON.parse(window.sessionStorage.getItem('ayon1xw:github-repos:v1') || 'null')
@@ -440,7 +475,7 @@ test('client GitHub integration uses fresh sessionStorage cache, refreshes on st
   await page.reload();
   await page.locator('.palette-trigger').waitFor({ state: 'attached' });
   assert.equal(apiRequests, 2);
-  assert.ok((await page.locator('.repo-card').count()) >= 6, 'Snapshot fallback should stay rendered on API 503');
+  assert.equal(await page.locator('.repo-card').count(), 5, 'Snapshot fallback should stay rendered on API 503');
   assert.deepEqual(errors, []);
 
   await context.close();

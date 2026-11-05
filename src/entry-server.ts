@@ -24,7 +24,8 @@ export function renderMarkdown() {
     )
     .join('\n\n');
 
-  const githubIndex = initialPortfolioRepos
+  const discoveredRepos = initialPortfolioRepos.filter(repo => !repo.flagship && !repo.featured);
+  const githubIndex = discoveredRepos
     .map(repo => {
       const stars = repo.stars > 0 ? ` · ★ ${repo.stars}` : '';
       return `- [${repo.title}](${repo.repositoryUrl}) (${repo.language} · ${repo.category}${stars}): ${repo.summary}`;
@@ -37,11 +38,11 @@ export function renderMarkdown() {
 
   return `# ayon1xw Developer Portfolio
 
-> Erdi, a student developer and graphic designer in Germany building desktop and mobile tools, UI/UX designs, Linux and Docker containers, and AI automation experiments. The portfolio name is ayon1xw; the GitHub username is aoyn1xw.
+> Erdi, a student developer and graphic designer based in Germany. The portfolio name is ayon1xw; the GitHub username is aoyn1xw.
 
 ## Why I build
 
-I make software when something annoys me. Local-first apps, small automations, and experiments I want to understand. It usually starts with something annoying—or a question I can’t leave alone.
+I build things because I can. Sometimes they're useful. Sometimes they're experiments. Usually both.
 
 ## Kivo
 
@@ -51,15 +52,15 @@ ${featured}
 
 ${others}
 
-## GitHub repositories (@${githubConfig.username})
+## More on GitHub (@${githubConfig.username})
 
 ${githubIndex}
 
-- [View all repositories on GitHub](${githubConfig.repositoriesUrl})
+- [All repositories on GitHub](${githubConfig.repositoriesUrl})
 
 ## About me
 
-I’m Erdi, a student developer and graphic designer based in Germany. I learn by building things I need, fixing little annoyances, and figuring out how they work — across desktop and mobile apps, UI/UX and graphic design, Linux and Docker self-hosting, and AI automation experiments. I use the name ayon1xw here and aoyn1xw on GitHub.
+I’m Erdi, a student developer and graphic designer based in Germany. I build web, desktop, and mobile applications alongside UI/UX, graphic design, and visual identities. Most of my free time goes into Linux, Docker, cloud, and self-hosting setups, or experimenting with AI agents, automation, and local language models. I use the name ayon1xw here and aoyn1xw on GitHub.
 
 ## Contact and site information
 

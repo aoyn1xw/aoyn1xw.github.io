@@ -89,7 +89,16 @@ export type RepoSortMode = 'smart' | 'recent' | 'stars';
 
 export const GITHUB_CACHE_KEY = 'ayon1xw:github-repos:v1';
 export const GITHUB_CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes
-export const GITHUB_CLIENT_MAX_REPOS = 100;
+export const GITHUB_CLIENT_PER_PAGE = 100;
+export const GITHUB_CLIENT_MAX_PAGES = 3;
+
+const SNAPSHOT_REPOS: GitHubRawRepo[] = Array.isArray(snapshotData.repositories)
+  ? (snapshotData.repositories as GitHubRawRepo[])
+  : [];
+
+const VERIFIED_SNAPSHOT_NAMES = new Set<string>(
+  SNAPSHOT_REPOS.map(repo => (typeof repo?.name === 'string' ? repo.name.toLowerCase() : '')).filter(Boolean)
+);
 
 const LANGUAGE_COLORS: Record<string, string> = {
   'C#': '#178600',
@@ -125,6 +134,38 @@ export function formatRepoDate(iso: string | null | undefined): string {
   if (Number.isNaN(date.getTime())) return 'Active';
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   return `${months[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
+}
+
+/** Normalize a repository URL for strict deduplication. */
+function normalizeRepoUrl(url: string): string {
+  return url.trim().toLowerCase().replace(/\/+$/, '');
+}
+
+/** Validate that a repository URL points to a real GitHub repository path. */
+function isValidGitHubRepoUrl(url: string | undefined, username: string): boolean {
+  if (!url) return false;
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol !== 'https:' || parsed.hostname !== 'github.com') return false;
+    const segments = parsed.pathname.split('/').filter(Boolean);
+    return segments.length === 2 && segments[0].toLowerCase() === username.toLowerCase();
+  } catch {
+    return false;
+  }
+}
+
+/** Validate that an API response payload contains well-formed repository objects. */
+export function isValidGitHubPayload(payload: unknown): payload is GitHubRawRepo[] {
+  if (!Array.isArray(payload) || payload.length === 0) return false;
+  return payload.every(
+    item =>
+      item !== null &&
+      typeof item === 'object' &&
+      typeof (item as GitHubRawRepo).name === 'string' &&
+      (item as GitHubRawRepo).name.trim().length > 0 &&
+      typeof (item as GitHubRawRepo).html_url === 'string' &&
+      (item as GitHubRawRepo).html_url.startsWith('https://github.com/')
+  );
 }
 
 /** Infer a sensible category when a repository has no explicit curated category. */
@@ -176,7 +217,6 @@ function computeSmartScore(
   const pushedMs = raw.pushed_at ? Date.parse(raw.pushed_at) : 0;
   if (pushedMs > 0 && referenceTimeMs > pushedMs) {
     const ageDays = (referenceTimeMs - pushedMs) / (1000 * 60 * 60 * 24);
-    // Up to +80 points for very recent activity, decaying smoothly over a year
     score += Math.max(0, Math.round(80 * Math.exp(-ageDays / 180)));
   }
 
@@ -192,48 +232,61 @@ function computeSmartScore(
 }
 
 /**
- * Transform, filter, and merge raw GitHub repositories with curated portfolio
- * metadata. Enforces the configured repository limit (`config.maxRepositories`,
- * capped at `GITHUB_CLIENT_MAX_REPOS` = 100) and stays safe to run in Node
- * (SSR/build) and in the browser.
+ * Transform, filter, deduplicate, and merge raw GitHub repositories with
+ * curated portfolio metadata.
+ *
+ * - Filters forks and excluded repositories *before* applying any repository
+ *   count cap so valid repositories are never silently dropped by raw-array slicing.
+ * - Deduplicates by canonical name, aliases, and normalized repository URL.
+ * - Validates curated fallback entries against the verified build-time snapshot
+ *   so nonexistent repositories are never fabricated.
  */
 export function buildPortfolioRepos(
   rawRepos: GitHubRawRepo[] = [],
   config: GitHubPortfolioConfig = githubConfig
 ): PortfolioRepo[] {
-  const maxLimit = Math.min(
-    Math.max(1, config.maxRepositories || GITHUB_CLIENT_MAX_REPOS),
-    GITHUB_CLIENT_MAX_REPOS
-  );
-  const boundedInput = rawRepos.slice(0, maxLimit);
+  const maxLimit = Math.max(1, config.maxRepositories || GITHUB_CLIENT_PER_PAGE);
   const excludedSet = new Set(config.excludedRepos.map(name => name.toLowerCase()));
-  const matchedCuratedNames = new Set<string>();
+  const seenIds = new Set<string>();
+  const seenUrls = new Set<string>();
 
-  // Use a deterministic reference timestamp based on the newest pushed_at in the dataset
+  // Deterministic reference timestamp based on the newest pushed_at in the dataset
   // so SSR and client hydration calculate identical scores.
-  const maxPushedMs = boundedInput.reduce((max, r) => {
-    const t = r.pushed_at ? Date.parse(r.pushed_at) : 0;
+  const maxPushedMs = rawRepos.reduce((max, r) => {
+    const t = r?.pushed_at ? Date.parse(r.pushed_at) : 0;
     return t > max ? t : max;
   }, Date.UTC(2026, 10, 1));
 
   const results: PortfolioRepo[] = [];
 
-  for (const raw of boundedInput) {
-    if (!raw || !raw.name) continue;
-    const lowerName = raw.name.toLowerCase();
+  for (const raw of rawRepos) {
+    if (!raw || typeof raw.name !== 'string' || !raw.name.trim()) continue;
+    const rawName = raw.name.trim();
+    const lowerName = rawName.toLowerCase();
 
     if (excludedSet.has(lowerName)) continue;
 
-    const curated = findCuratedConfig(raw.name, config.curatedProjects);
+    const curated = findCuratedConfig(rawName, config.curatedProjects);
     if (curated && excludedSet.has(curated.repoName.toLowerCase())) continue;
 
     if (config.excludeForks && raw.fork && !curated?.allowFork) continue;
     if (config.excludeArchived && raw.archived && !curated?.featured) continue;
 
-    const canonicalName = curated?.repoName ?? raw.name;
+    const canonicalName = curated?.repoName ?? rawName;
     const canonicalLower = canonicalName.toLowerCase();
-    if (matchedCuratedNames.has(canonicalLower)) continue;
-    matchedCuratedNames.add(canonicalLower);
+    const repositoryUrl = curated?.repositoryUrl ?? raw.html_url;
+    const normalizedUrl = normalizeRepoUrl(repositoryUrl);
+
+    if (seenIds.has(canonicalLower) || seenIds.has(lowerName) || seenUrls.has(normalizedUrl)) {
+      continue;
+    }
+
+    seenIds.add(canonicalLower);
+    seenIds.add(lowerName);
+    for (const alias of curated?.aliases ?? []) {
+      seenIds.add(alias.toLowerCase());
+    }
+    seenUrls.add(normalizedUrl);
 
     const language = curated?.language || raw.language || 'Source';
     const rawTopics = Array.isArray(raw.topics) ? raw.topics : [];
@@ -276,7 +329,7 @@ export function buildPortfolioRepos(
       category,
       status,
       statusNote: curated?.statusNote,
-      repositoryUrl: curated?.repositoryUrl ?? raw.html_url,
+      repositoryUrl,
       homepageUrl,
       archived,
       fork: Boolean(raw.fork),
@@ -290,11 +343,33 @@ export function buildPortfolioRepos(
     });
   }
 
-  // Ensure any curated project is still present even if the GitHub API / snapshot
-  // is empty or unavailable.
+  // Fallback for curated projects when rawRepos does not include them (e.g.
+  // during offline fallback or partial payloads). Only include curated entries
+  // that are verified in the build-time snapshot or are explicitly featured
+  // with a valid GitHub repository URL.
   for (const curated of config.curatedProjects) {
     const canonicalLower = curated.repoName.toLowerCase();
-    if (excludedSet.has(canonicalLower) || matchedCuratedNames.has(canonicalLower)) continue;
+    if (excludedSet.has(canonicalLower) || seenIds.has(canonicalLower)) continue;
+
+    const repositoryUrl =
+      curated.repositoryUrl ?? `https://github.com/${config.username}/${curated.repoName}`;
+    const normalizedUrl = normalizeRepoUrl(repositoryUrl);
+    if (seenUrls.has(normalizedUrl)) continue;
+
+    const existsInSnapshot =
+      VERIFIED_SNAPSHOT_NAMES.has(canonicalLower) ||
+      Boolean(curated.aliases?.some(alias => VERIFIED_SNAPSHOT_NAMES.has(alias.toLowerCase())));
+    const isVerifiedFeatured =
+      Boolean(curated.flagship || curated.featured) &&
+      isValidGitHubRepoUrl(repositoryUrl, config.username);
+
+    if (!existsInSnapshot && !isVerifiedFeatured) continue;
+
+    seenIds.add(canonicalLower);
+    for (const alias of curated.aliases ?? []) {
+      seenIds.add(alias.toLowerCase());
+    }
+    seenUrls.add(normalizedUrl);
 
     const language = curated.language ?? 'Source';
     const topics = (curated.topics ?? []).map(t => t.toLowerCase());
@@ -317,7 +392,7 @@ export function buildPortfolioRepos(
       category,
       status: curated.status ?? 'Published',
       statusNote: curated.statusNote,
-      repositoryUrl: curated.repositoryUrl ?? `https://github.com/${config.username}/${curated.repoName}`,
+      repositoryUrl,
       homepageUrl: null,
       archived: curated.status === 'Archived',
       fork: false,
@@ -352,10 +427,28 @@ export function sortPortfolioRepos(repos: PortfolioRepo[], mode: RepoSortMode = 
   });
 }
 
+/**
+ * Merge live or cached raw repositories with the build-time snapshot so a
+ * partial API response never wipes out known snapshot repositories.
+ */
+function mergeWithSnapshot(incoming: GitHubRawRepo[]): GitHubRawRepo[] {
+  const byName = new Map<string, GitHubRawRepo>();
+  for (const item of incoming) {
+    if (item && typeof item.name === 'string' && item.name.trim()) {
+      byName.set(item.name.trim().toLowerCase(), item);
+    }
+  }
+  for (const snap of SNAPSHOT_REPOS) {
+    const key = snap.name.toLowerCase();
+    if (!byName.has(key)) {
+      byName.set(key, snap);
+    }
+  }
+  return Array.from(byName.values());
+}
+
 /** Initial repositories built from the build-time snapshot and curated config. */
-export const initialPortfolioRepos: PortfolioRepo[] = buildPortfolioRepos(
-  (snapshotData.repositories as GitHubRawRepo[]) ?? []
-);
+export const initialPortfolioRepos: PortfolioRepo[] = buildPortfolioRepos(SNAPSHOT_REPOS);
 
 /**
  * Reactive composable for the homepage Projects section.
@@ -386,18 +479,22 @@ export function useGitHubRepos() {
     'Web & Design'
   ]);
 
-  /** Non-flagship repositories shown in the GitHub repository index grid. */
-  const gridRepos = computed(() => repos.value.filter(repo => !repo.flagship));
+  /**
+   * Automatically discovered repositories shown under "More on GitHub" —
+   * excludes the flagship Kivo entry and the featured projects above so no
+   * project is duplicated on the page.
+   */
+  const discoveredRepos = computed(() =>
+    repos.value.filter(repo => !repo.flagship && !repo.featured)
+  );
 
   const filteredGridRepos = computed(() => {
     const pool =
       selectedCategory.value === 'All'
-        ? gridRepos.value
-        : gridRepos.value.filter(repo => repo.category === selectedCategory.value);
+        ? discoveredRepos.value
+        : discoveredRepos.value.filter(repo => repo.category === selectedCategory.value);
     return sortPortfolioRepos(pool, sortMode.value);
   });
-
-  const totalStars = computed(() => repos.value.reduce((sum, repo) => sum + repo.stars, 0));
 
   async function refreshFromGitHub(forceNetwork = false) {
     if (typeof window === 'undefined') return;
@@ -406,14 +503,13 @@ export function useGitHubRepos() {
       try {
         const cachedRaw = window.sessionStorage.getItem(GITHUB_CACHE_KEY);
         if (cachedRaw) {
-          const cached = JSON.parse(cachedRaw) as { timestamp: number; data: GitHubRawRepo[] };
+          const cached = JSON.parse(cachedRaw) as { timestamp: number; data: unknown };
           if (
             typeof cached.timestamp === 'number' &&
             Date.now() - cached.timestamp < GITHUB_CACHE_TTL_MS &&
-            Array.isArray(cached.data) &&
-            cached.data.length > 0
+            isValidGitHubPayload(cached.data)
           ) {
-            repos.value = buildPortfolioRepos(cached.data);
+            repos.value = buildPortfolioRepos(mergeWithSnapshot(cached.data));
             syncState.value = 'cache';
             return;
           }
@@ -423,9 +519,6 @@ export function useGitHubRepos() {
       }
     }
 
-    // In automated WebDriver test runs without a pre-seeded sessionStorage cache or
-    // explicit forceNetwork request, avoid unrequested external internet traffic unless
-    // window.__ALLOW_GITHUB_FETCH__ is set for network interception tests.
     if (
       navigator.webdriver &&
       !forceNetwork &&
@@ -435,32 +528,52 @@ export function useGitHubRepos() {
     }
 
     try {
-      const perPage = Math.min(githubConfig.maxRepositories || GITHUB_CLIENT_MAX_REPOS, GITHUB_CLIENT_MAX_REPOS);
-      const controller = new AbortController();
-      const timer = window.setTimeout(() => controller.abort(), 5000);
-      const response = await fetch(
-        `https://api.github.com/users/${encodeURIComponent(githubConfig.username)}/repos?per_page=${perPage}&sort=pushed`,
-        {
-          headers: { Accept: 'application/vnd.github+json' },
-          signal: controller.signal
+      const collected: GitHubRawRepo[] = [];
+      for (let page = 1; page <= GITHUB_CLIENT_MAX_PAGES; page++) {
+        const controller = new AbortController();
+        const timer = window.setTimeout(() => controller.abort(), 5000);
+        let response: Response;
+        try {
+          response = await fetch(
+            `https://api.github.com/users/${encodeURIComponent(githubConfig.username)}/repos?per_page=${GITHUB_CLIENT_PER_PAGE}&sort=pushed&page=${page}`,
+            {
+              headers: { Accept: 'application/vnd.github+json' },
+              signal: controller.signal
+            }
+          );
+        } finally {
+          window.clearTimeout(timer);
         }
-      );
-      window.clearTimeout(timer);
 
-      if (!response.ok) {
-        syncState.value = 'fallback';
-        return;
+        if (!response.ok) {
+          if (page === 1) {
+            syncState.value = 'fallback';
+            return;
+          }
+          break;
+        }
+
+        const pageData: unknown = await response.json();
+        if (!isValidGitHubPayload(pageData)) {
+          if (page === 1) {
+            syncState.value = 'fallback';
+            return;
+          }
+          break;
+        }
+
+        collected.push(...pageData);
+        if (pageData.length < GITHUB_CLIENT_PER_PAGE) break;
       }
 
-      const data = (await response.json()) as GitHubRawRepo[];
-      if (Array.isArray(data) && data.length > 0) {
-        const bounded = data.slice(0, perPage);
-        repos.value = buildPortfolioRepos(bounded);
+      if (collected.length > 0) {
+        const merged = mergeWithSnapshot(collected);
+        repos.value = buildPortfolioRepos(merged);
         syncState.value = 'live';
         try {
           window.sessionStorage.setItem(
             GITHUB_CACHE_KEY,
-            JSON.stringify({ timestamp: Date.now(), data: bounded })
+            JSON.stringify({ timestamp: Date.now(), data: collected })
           );
         } catch {
           // Ignore storage quota or privacy errors
@@ -481,13 +594,12 @@ export function useGitHubRepos() {
     repos,
     flagshipRepo,
     featuredSecondaryRepos,
-    gridRepos,
+    discoveredRepos,
     filteredGridRepos,
     categories,
     selectedCategory,
     sortMode,
     syncState,
-    totalStars,
     refreshFromGitHub,
     config: githubConfig
   };

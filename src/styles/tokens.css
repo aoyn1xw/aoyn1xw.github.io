@@ -2,9 +2,9 @@
    AUTHORITATIVE DESIGN TOKENS (tokens.css)
    Single source of truth for the entire site (Vue app + static commission pages)
 
-   Direction: black canvas, hairline structure, one electric-blue accent, soft
-   subtle rounded corners. Panels are separated by 1px rules and subtle surface
-   contrast so the page stays focused and the accent carries emphasis.
+   Direction: black canvas, hairline structure, one electric-blue accent.
+   Panels are separated by 1px rules rather than fills, so the page stays flat
+   and the accent carries all the emphasis.
    ============================================================================= */
 
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap');
@@ -22,14 +22,14 @@
 
   /* Text: near-white, never pure white, so long reading stays comfortable. */
   --color-fg: #ededed;
-  --color-muted: rgba(237, 237, 237, 0.66);
+  --color-muted: rgba(237, 237, 237, 0.62);
   /* Dim supports small meta text, so it still has to clear 4.5:1 on black. */
-  --color-dim: rgba(237, 237, 237, 0.54);
+  --color-dim: rgba(237, 237, 237, 0.52);
 
   /* Accent: electric blue, reserved for links and the wordmark's X. */
   --color-accent: #4d8eff;
   --color-accent-dim: #3a6fd6;
-  --color-accent-glow: rgba(77, 142, 255, 0.14);
+  --color-accent-glow: rgba(77, 142, 255, 0.18);
 
   /* Status colours, tuned for black. */
   --color-error: #e0574f;
@@ -64,7 +64,7 @@
 
   /* Reading measure and the frame it sits in. */
   --max-line-length: 62ch;
-  --content-width: 48rem;
+  --content-width: 42rem;
   --frame-width: 64rem;
 
   /* --- 3. Spacing --- */
@@ -81,10 +81,10 @@
   --page-gutter: 1.5rem;
 
   /* --- 4. Radius --- */
-  /* Soft, subtle rounded corners that preserve the sharp technical feel. */
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 10px;
+  /* Flat. Nothing on this site is rounded. */
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
   --radius-full: 9999px;
 
   /* --- 5. Depth --- */
@@ -99,8 +99,8 @@
   /* Fast and short. Anything slow reads as decoration on a page this plain. */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-  --duration-fast: 140ms;
-  --duration-medium: 220ms;
+  --duration-fast: 120ms;
+  --duration-medium: 200ms;
   --duration-slow: 320ms;
 
   /* ===========================================================================

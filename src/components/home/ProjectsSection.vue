@@ -3,15 +3,13 @@ import { useGitHubRepos, type RepoSortMode } from '../../data/github';
 import ProjectGallery from './ProjectGallery.vue';
 
 const {
-  repos,
   flagshipRepo,
   featuredSecondaryRepos,
-  gridRepos,
+  discoveredRepos,
   filteredGridRepos,
   categories,
   selectedCategory,
   sortMode,
-  totalStars,
   config
 } = useGitHubRepos();
 
@@ -24,29 +22,18 @@ const sortOptions: Array<{ value: RepoSortMode; label: string }> = [
 
 <template>
   <section id="projects" class="section" aria-labelledby="projects-title">
-    <div class="section-head">
-      <h2 id="projects-title" class="section-title">Projects</h2>
-      <span class="section-meta">Featured case studies &amp; public GitHub index</span>
-    </div>
+    <h2 id="projects-title" class="section-title">Projects</h2>
 
     <article class="project" aria-labelledby="kivo-title">
       <div class="project-head">
         <span class="project-number" aria-hidden="true">01</span>
         <h3 id="kivo-title" class="project-name">{{ flagshipRepo.title }}</h3>
-        <span v-if="flagshipRepo.category" class="project-category-badge">{{ flagshipRepo.category }}</span>
         <span class="project-flag">{{ flagshipRepo.status }}</span>
       </div>
       <p class="project-summary">{{ flagshipRepo.summary }}</p>
       <p v-if="flagshipRepo.context" class="project-context">{{ flagshipRepo.context }}</p>
       <div class="project-foot">
-        <span class="project-stack">
-          <span
-            class="repo-lang__dot"
-            :style="{ backgroundColor: flagshipRepo.languageColor }"
-            aria-hidden="true"
-          ></span>
-          {{ flagshipRepo.technologies.join(' · ') }}
-        </span>
+        <span class="project-stack">{{ flagshipRepo.technologies.join(' · ') }}</span>
         <a
           class="project-link"
           :href="flagshipRepo.repositoryUrl"
@@ -74,27 +61,11 @@ const sortOptions: Array<{ value: RepoSortMode; label: string }> = [
               {{ project.title }}<span class="ext" aria-hidden="true">↗</span>
             </a>
           </h4>
-          <div class="project-row-badges">
-            <span v-if="project.stars > 0" class="repo-star" :aria-label="`${project.stars} stars on GitHub`">
-              <span aria-hidden="true">★</span> {{ project.stars }}
-            </span>
-            <span class="project-category-badge">{{ project.category }}</span>
-          </div>
         </div>
         <p class="project-row-summary">{{ project.summary }}</p>
         <p v-if="project.context" class="project-row-context">{{ project.context }}</p>
-        <ul v-if="project.topics.length" class="repo-topics" aria-label="Repository topics">
-          <li v-for="topic in project.topics" :key="topic" class="repo-topic">{{ topic }}</li>
-        </ul>
         <div class="project-row-foot">
-          <span class="project-stack">
-            <span
-              class="repo-lang__dot"
-              :style="{ backgroundColor: project.languageColor }"
-              aria-hidden="true"
-            ></span>
-            {{ project.technologies.join(' · ') }}
-          </span>
+          <span class="project-stack">{{ project.technologies.join(' · ') }}</span>
           <span class="project-status">
             {{ project.status }}<template v-if="project.statusNote"> · {{ project.statusNote }}</template>
           </span>
@@ -105,15 +76,14 @@ const sortOptions: Array<{ value: RepoSortMode; label: string }> = [
     <div id="github-repositories" class="repo-section">
       <div class="repo-section-head">
         <div class="repo-section-title-group">
-          <h3 id="github-repos-title" class="project-list-title">GitHub repositories</h3>
+          <h3 id="github-repos-title" class="project-list-title">More on GitHub</h3>
           <span class="repo-count">
             <template v-if="selectedCategory === 'All'">
-              {{ gridRepos.length }} in index ({{ repos.length }} showcased total)
+              {{ discoveredRepos.length }} repositories
             </template>
             <template v-else>
-              Showing {{ filteredGridRepos.length }} of {{ gridRepos.length }} in index
+              {{ filteredGridRepos.length }} of {{ discoveredRepos.length }} repositories
             </template>
-            <template v-if="totalStars > 0"> · ★ {{ totalStars }}</template>
           </span>
         </div>
 
@@ -150,7 +120,7 @@ const sortOptions: Array<{ value: RepoSortMode; label: string }> = [
           v-for="repo in filteredGridRepos"
           :key="repo.id"
           class="repo-card"
-          :class="{ 'is-featured': repo.featured, 'is-archived': repo.archived }"
+          :class="{ 'is-archived': repo.archived }"
           :aria-labelledby="`repo-card-${repo.id}`"
         >
           <div class="repo-card__head">
@@ -163,8 +133,7 @@ const sortOptions: Array<{ value: RepoSortMode; label: string }> = [
               <span v-if="repo.stars > 0" class="repo-star" :aria-label="`${repo.stars} stars on GitHub`">
                 <span aria-hidden="true">★</span> {{ repo.stars }}
               </span>
-              <span v-if="repo.featured" class="repo-badge repo-badge--featured">Featured</span>
-              <span v-else-if="repo.archived" class="repo-badge repo-badge--archived">Archived</span>
+              <span v-if="repo.archived" class="repo-badge">Archived</span>
             </div>
           </div>
 
@@ -177,14 +146,7 @@ const sortOptions: Array<{ value: RepoSortMode; label: string }> = [
           </ul>
 
           <div class="repo-card__foot">
-            <span class="repo-lang">
-              <span
-                class="repo-lang__dot"
-                :style="{ backgroundColor: repo.languageColor }"
-                aria-hidden="true"
-              ></span>
-              {{ repo.language }}
-            </span>
+            <span class="repo-lang">{{ repo.language }}</span>
             <span class="repo-meta-right">
               <a
                 v-if="repo.homepageUrl"
@@ -208,7 +170,7 @@ const sortOptions: Array<{ value: RepoSortMode; label: string }> = [
           target="_blank"
           rel="noopener noreferrer"
         >
-          View all repositories on GitHub (@{{ config.username }}) <span class="ext" aria-hidden="true">↗</span>
+          All repositories on GitHub (@{{ config.username }}) <span class="ext" aria-hidden="true">↗</span>
         </a>
       </div>
     </div>
