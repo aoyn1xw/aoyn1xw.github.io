@@ -27,11 +27,12 @@ function resetMark() {
       @pointercancel="resetMark"
     ><span class="sr-only">ayon1xw developer portfolio: </span>AYON1<span class="accent">X</span>W</h1>
     <p class="lede">I make software when something annoys me.</p>
-    <p class="meta">Student developer in Germany.</p>
-    <ul class="tags">
-      <li>Desktop tools</li>
-      <li>Small automations</li>
-      <li>Local-first experiments</li>
+    <p class="meta">Erdi · Student developer &amp; graphic designer in Germany.</p>
+    <ul class="tags" aria-label="Interests and focus areas">
+      <li>Web, desktop &amp; mobile</li>
+      <li>UI/UX &amp; graphic design</li>
+      <li>Linux, Docker &amp; self-hosting</li>
+      <li>AI agents &amp; automation</li>
     </ul>
   </section>
 </template>

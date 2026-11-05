@@ -1,7 +1,8 @@
 import { createSSRApp } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import App from './App.vue';
-import { contactRoutes, secondaryProjects, shadowPlay } from './data/site';
+import { initialPortfolioRepos } from './data/github';
+import { contactRoutes, githubConfig, secondaryProjects, shadowPlay } from './data/site';
 
 // Render the same component that the browser hydrates: no duplicate crawler copy.
 export function render() {
@@ -23,13 +24,20 @@ export function renderMarkdown() {
     )
     .join('\n\n');
 
+  const githubIndex = initialPortfolioRepos
+    .map(repo => {
+      const stars = repo.stars > 0 ? ` · ★ ${repo.stars}` : '';
+      return `- [${repo.title}](${repo.repositoryUrl}) (${repo.language} · ${repo.category}${stars}): ${repo.summary}`;
+    })
+    .join('\n');
+
   const contact = contactRoutes
     .map(route => `- [${route.label} · ${route.detail}](${absolute(route.href)}): ${route.note}`)
     .join('\n');
 
   return `# ayon1xw Developer Portfolio
 
-> Erdi, a student developer in Germany building desktop tools, small automations, and local-first experiments. The portfolio name is ayon1xw; the GitHub username is aoyn1xw.
+> Erdi, a student developer and graphic designer in Germany building desktop and mobile tools, UI/UX designs, Linux and Docker containers, and AI automation experiments. The portfolio name is ayon1xw; the GitHub username is aoyn1xw.
 
 ## Why I build
 
@@ -39,13 +47,19 @@ I make software when something annoys me. Local-first apps, small automations, a
 
 ${featured}
 
-## Other projects
+## Featured projects
 
 ${others}
 
+## GitHub repositories (@${githubConfig.username})
+
+${githubIndex}
+
+- [View all repositories on GitHub](${githubConfig.repositoriesUrl})
+
 ## About me
 
-I’m Erdi, a student developer in Germany. I learn by building things I need, fixing little annoyances, and figuring out how they work. I use the name ayon1xw here and aoyn1xw on GitHub.
+I’m Erdi, a student developer and graphic designer based in Germany. I learn by building things I need, fixing little annoyances, and figuring out how they work — across desktop and mobile apps, UI/UX and graphic design, Linux and Docker self-hosting, and AI automation experiments. I use the name ayon1xw here and aoyn1xw on GitHub.
 
 ## Contact and site information
 

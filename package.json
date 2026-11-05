@@ -6,6 +6,7 @@
   "packageManager": "pnpm@11.0.9",
   "scripts": {
     "dev": "vite",
+    "sync:github": "node scripts/sync-github.mjs",
     "build": "vue-tsc -b && vite build && node scripts/prerender.mjs",
     "typecheck": "vue-tsc -b",
     "preview": "vite preview",

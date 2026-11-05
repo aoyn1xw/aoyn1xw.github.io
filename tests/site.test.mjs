@@ -230,3 +230,49 @@ test('gallery keyboard controls select both screenshots with reduced motion', as
     await page.close();
   }
 });
+
+test('GitHub repository showcase renders curated and public repos, excludes forks/meta repos, and supports filtering', async () => {
+  const page = await browser.newPage();
+  await page.goto(origin + '/');
+  await page.locator('.palette-trigger').waitFor({ state: 'attached' });
+
+  const totalCards = await page.locator('.repo-card').count();
+  assert.ok(totalCards >= 6, `Expected at least 6 public repos in grid, got ${totalCards}`);
+
+  // Excluded meta repos and forks must not appear
+  const titles = await page.locator('.repo-card__title').allTextContents();
+  assert.ok(!titles.some(t => /^\.github/i.test(t.trim())));
+  assert.ok(!titles.some(t => /^aoyn1xw$/i.test(t.trim())));
+  assert.ok(!titles.some(t => /OpenJarvis|spoti\.pw|free-llm/i.test(t)));
+
+  // Every card must have a non-empty summary and language label
+  const summaries = await page.locator('.repo-card__summary').allTextContents();
+  for (const summary of summaries) {
+    assert.ok(summary.trim().length >= 15);
+  }
+  const languages = await page.locator('.repo-card .repo-lang').allTextContents();
+  for (const lang of languages) {
+    assert.ok(lang.trim().length > 0);
+  }
+
+  // Category filter narrows the grid and 'All' restores it
+  await page.getByRole('button', { name: 'AI & Automation' }).click();
+  const aiCount = await page.locator('.repo-card').count();
+  assert.ok(aiCount >= 1 && aiCount < totalCards);
+
+  await page.getByRole('button', { name: 'All' }).click();
+  assert.equal(await page.locator('.repo-card').count(), totalCards);
+
+  // Sort by Stars places starred repositories first
+  await page.getByRole('button', { name: 'Stars' }).click();
+  const firstCardStars = await page.locator('.repo-card').first().locator('.repo-star').textContent();
+  assert.match(firstCardStars, /★\s*\d+/);
+
+  // Link to view all repositories on GitHub is present
+  assert.equal(
+    await page.locator('a.repo-all-link[href="https://github.com/aoyn1xw?tab=repositories"]').count(),
+    1
+  );
+
+  await page.close();
+});
