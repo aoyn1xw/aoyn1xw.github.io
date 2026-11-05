@@ -6,7 +6,7 @@ I’m Erdi, a student developer in Germany. I use the name ayon1xw on this portf
 
 ## What I build
 
-My work includes desktop tools, small automations, and local-first experiments. ShadowPlay helps me browse finished game clips from my Windows PC and download the original files to my phone over the local network, using a Flutter client. Other projects include a devcontainer that builds and signs iOS apps on Linux without a Mac, a Node.js server that signs an IPA with my own certificate and provisioning profile, and an Untis timetable watcher that sends change notifications to Telegram.
+My work includes desktop tools, small automations, and local-first experiments. Kivo helps me browse finished game clips from my Windows PC and download the original files to my phone over the local network, using a Flutter client. Other projects include a devcontainer that builds and signs iOS apps on Linux without a Mac, a Node.js server that signs an IPA with my own certificate and provisioning profile, and an Untis timetable watcher that sends change notifications to Telegram.
 
 ## What I work with
 
@@ -19,7 +19,7 @@ The public repositories are the place to inspect code, read each project’s set
 ## Useful links
 
 - [GitHub repositories](https://github.com/aoyn1xw)
-- [ShadowPlay source](https://github.com/aoyn1xw/ShadowPlay)
+- [Kivo source](https://github.com/aoyn1xw/Kivo)
 - [Contact](https://aoyn1xw.github.io/contact/)
 - [Commissions](https://aoyn1xw.github.io/commissions.html)
 - [Commission terms](https://aoyn1xw.github.io/commission-terms.html)

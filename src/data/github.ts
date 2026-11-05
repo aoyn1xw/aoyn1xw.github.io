@@ -87,8 +87,9 @@ export interface PortfolioRepo {
 
 export type RepoSortMode = 'smart' | 'recent' | 'stars';
 
-const CACHE_KEY = 'ayon1xw:github-repos:v1';
-const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes
+export const GITHUB_CACHE_KEY = 'ayon1xw:github-repos:v1';
+export const GITHUB_CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes
+export const GITHUB_CLIENT_MAX_REPOS = 100;
 
 const LANGUAGE_COLORS: Record<string, string> = {
   'C#': '#178600',
@@ -192,25 +193,32 @@ function computeSmartScore(
 
 /**
  * Transform, filter, and merge raw GitHub repositories with curated portfolio
- * metadata. Safe to run in Node (SSR/build) and in the browser.
+ * metadata. Enforces the configured repository limit (`config.maxRepositories`,
+ * capped at `GITHUB_CLIENT_MAX_REPOS` = 100) and stays safe to run in Node
+ * (SSR/build) and in the browser.
  */
 export function buildPortfolioRepos(
   rawRepos: GitHubRawRepo[] = [],
   config: GitHubPortfolioConfig = githubConfig
 ): PortfolioRepo[] {
+  const maxLimit = Math.min(
+    Math.max(1, config.maxRepositories || GITHUB_CLIENT_MAX_REPOS),
+    GITHUB_CLIENT_MAX_REPOS
+  );
+  const boundedInput = rawRepos.slice(0, maxLimit);
   const excludedSet = new Set(config.excludedRepos.map(name => name.toLowerCase()));
   const matchedCuratedNames = new Set<string>();
 
   // Use a deterministic reference timestamp based on the newest pushed_at in the dataset
   // so SSR and client hydration calculate identical scores.
-  const maxPushedMs = rawRepos.reduce((max, r) => {
+  const maxPushedMs = boundedInput.reduce((max, r) => {
     const t = r.pushed_at ? Date.parse(r.pushed_at) : 0;
     return t > max ? t : max;
   }, Date.UTC(2026, 10, 1));
 
   const results: PortfolioRepo[] = [];
 
-  for (const raw of rawRepos) {
+  for (const raw of boundedInput) {
     if (!raw || !raw.name) continue;
     const lowerName = raw.name.toLowerCase();
 
@@ -323,7 +331,7 @@ export function buildPortfolioRepos(
     });
   }
 
-  return sortPortfolioRepos(results, 'smart');
+  return sortPortfolioRepos(results, 'smart').slice(0, maxLimit);
 }
 
 /** Sort portfolio repositories by the selected mode. */
@@ -352,13 +360,13 @@ export const initialPortfolioRepos: PortfolioRepo[] = buildPortfolioRepos(
 /**
  * Reactive composable for the homepage Projects section.
  * Starts with prerendered snapshot data (preventing hydration mismatch or CLS)
- * and performs a rate-limit-aware cached refresh on the client when appropriate.
+ * and performs a rate-limit-aware cached refresh on the client.
  */
 export function useGitHubRepos() {
   const repos = ref<PortfolioRepo[]>(initialPortfolioRepos);
   const selectedCategory = ref<ProjectCategory | 'All'>('All');
   const sortMode = ref<RepoSortMode>('smart');
-  const syncState = ref<'snapshot' | 'live' | 'fallback'>('snapshot');
+  const syncState = ref<'snapshot' | 'cache' | 'live' | 'fallback'>('snapshot');
 
   const flagshipRepo = computed(
     () => repos.value.find(repo => repo.flagship) ?? initialPortfolioRepos.find(repo => repo.flagship)!
@@ -378,42 +386,60 @@ export function useGitHubRepos() {
     'Web & Design'
   ]);
 
+  /** Non-flagship repositories shown in the GitHub repository index grid. */
+  const gridRepos = computed(() => repos.value.filter(repo => !repo.flagship));
+
   const filteredGridRepos = computed(() => {
-    const nonFlagship = repos.value.filter(repo => !repo.flagship);
     const pool =
       selectedCategory.value === 'All'
-        ? nonFlagship
-        : nonFlagship.filter(repo => repo.category === selectedCategory.value);
+        ? gridRepos.value
+        : gridRepos.value.filter(repo => repo.category === selectedCategory.value);
     return sortPortfolioRepos(pool, sortMode.value);
   });
 
   const totalStars = computed(() => repos.value.reduce((sum, repo) => sum + repo.stars, 0));
 
-  async function refreshFromGitHub() {
+  async function refreshFromGitHub(forceNetwork = false) {
     if (typeof window === 'undefined') return;
-    // Skip live background network polling in automated WebDriver test runs
-    // so tests remain deterministic and offline-safe.
-    if (navigator.webdriver) return;
 
-    try {
-      const cachedRaw = window.sessionStorage.getItem(CACHE_KEY);
-      if (cachedRaw) {
-        const cached = JSON.parse(cachedRaw) as { timestamp: number; data: GitHubRawRepo[] };
-        if (Date.now() - cached.timestamp < CACHE_TTL_MS && Array.isArray(cached.data)) {
-          repos.value = buildPortfolioRepos(cached.data);
-          syncState.value = 'live';
-          return;
+    if (!forceNetwork) {
+      try {
+        const cachedRaw = window.sessionStorage.getItem(GITHUB_CACHE_KEY);
+        if (cachedRaw) {
+          const cached = JSON.parse(cachedRaw) as { timestamp: number; data: GitHubRawRepo[] };
+          if (
+            typeof cached.timestamp === 'number' &&
+            Date.now() - cached.timestamp < GITHUB_CACHE_TTL_MS &&
+            Array.isArray(cached.data) &&
+            cached.data.length > 0
+          ) {
+            repos.value = buildPortfolioRepos(cached.data);
+            syncState.value = 'cache';
+            return;
+          }
         }
+      } catch {
+        // Ignore sessionStorage read errors
       }
-    } catch {
-      // Ignore sessionStorage errors (e.g. strict privacy mode)
+    }
+
+    // In automated WebDriver test runs without a pre-seeded sessionStorage cache or
+    // explicit forceNetwork request, avoid unrequested external internet traffic unless
+    // window.__ALLOW_GITHUB_FETCH__ is set for network interception tests.
+    if (
+      navigator.webdriver &&
+      !forceNetwork &&
+      !(window as unknown as { __ALLOW_GITHUB_FETCH__?: boolean }).__ALLOW_GITHUB_FETCH__
+    ) {
+      return;
     }
 
     try {
+      const perPage = Math.min(githubConfig.maxRepositories || GITHUB_CLIENT_MAX_REPOS, GITHUB_CLIENT_MAX_REPOS);
       const controller = new AbortController();
       const timer = window.setTimeout(() => controller.abort(), 5000);
       const response = await fetch(
-        `https://api.github.com/users/${encodeURIComponent(githubConfig.username)}/repos?per_page=100&sort=pushed`,
+        `https://api.github.com/users/${encodeURIComponent(githubConfig.username)}/repos?per_page=${perPage}&sort=pushed`,
         {
           headers: { Accept: 'application/vnd.github+json' },
           signal: controller.signal
@@ -428,16 +454,19 @@ export function useGitHubRepos() {
 
       const data = (await response.json()) as GitHubRawRepo[];
       if (Array.isArray(data) && data.length > 0) {
-        repos.value = buildPortfolioRepos(data);
+        const bounded = data.slice(0, perPage);
+        repos.value = buildPortfolioRepos(bounded);
         syncState.value = 'live';
         try {
           window.sessionStorage.setItem(
-            CACHE_KEY,
-            JSON.stringify({ timestamp: Date.now(), data })
+            GITHUB_CACHE_KEY,
+            JSON.stringify({ timestamp: Date.now(), data: bounded })
           );
         } catch {
           // Ignore storage quota or privacy errors
         }
+      } else {
+        syncState.value = 'fallback';
       }
     } catch {
       syncState.value = 'fallback';
@@ -452,12 +481,14 @@ export function useGitHubRepos() {
     repos,
     flagshipRepo,
     featuredSecondaryRepos,
+    gridRepos,
     filteredGridRepos,
     categories,
     selectedCategory,
     sortMode,
     syncState,
     totalStars,
+    refreshFromGitHub,
     config: githubConfig
   };
 }

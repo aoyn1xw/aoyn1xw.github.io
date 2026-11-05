@@ -3,8 +3,10 @@ import { useGitHubRepos, type RepoSortMode } from '../../data/github';
 import ProjectGallery from './ProjectGallery.vue';
 
 const {
+  repos,
   flagshipRepo,
   featuredSecondaryRepos,
+  gridRepos,
   filteredGridRepos,
   categories,
   selectedCategory,
@@ -27,10 +29,10 @@ const sortOptions: Array<{ value: RepoSortMode; label: string }> = [
       <span class="section-meta">Featured case studies &amp; public GitHub index</span>
     </div>
 
-    <article class="project" aria-labelledby="shadowplay-title">
+    <article class="project" aria-labelledby="kivo-title">
       <div class="project-head">
         <span class="project-number" aria-hidden="true">01</span>
-        <h3 id="shadowplay-title" class="project-name">{{ flagshipRepo.title }}</h3>
+        <h3 id="kivo-title" class="project-name">{{ flagshipRepo.title }}</h3>
         <span v-if="flagshipRepo.category" class="project-category-badge">{{ flagshipRepo.category }}</span>
         <span class="project-flag">{{ flagshipRepo.status }}</span>
       </div>
@@ -105,7 +107,12 @@ const sortOptions: Array<{ value: RepoSortMode; label: string }> = [
         <div class="repo-section-title-group">
           <h3 id="github-repos-title" class="project-list-title">GitHub repositories</h3>
           <span class="repo-count">
-            {{ filteredGridRepos.length }} public
+            <template v-if="selectedCategory === 'All'">
+              {{ gridRepos.length }} in index ({{ repos.length }} showcased total)
+            </template>
+            <template v-else>
+              Showing {{ filteredGridRepos.length }} of {{ gridRepos.length }} in index
+            </template>
             <template v-if="totalStars > 0"> · ★ {{ totalStars }}</template>
           </span>
         </div>

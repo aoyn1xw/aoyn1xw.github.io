@@ -39,7 +39,7 @@ Use the pnpm version declared in `package.json` and preserve `pnpm-lock.yaml`.
 - Start the site: `corepack pnpm dev` (configured port: 3000).
 - Sync GitHub repository snapshot: `corepack pnpm sync:github`.
 - Check types: `corepack pnpm typecheck`.
-- Build for production: `corepack pnpm build` (runs `vue-tsc -b`, `vite build`, and `scripts/prerender.mjs`).
+- Build for production: `corepack pnpm build` (runs `scripts/sync-github.mjs`, `vue-tsc -b`, `vite build`, and `scripts/prerender.mjs`).
 - Install Playwright browser once before site tests: `corepack pnpm exec playwright install chromium` (or set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`).
 - Run all tests after building: `corepack pnpm test` (runs both Worker and Playwright site tests against `dist/`).
 - Build and run site tests: `corepack pnpm test:site`.

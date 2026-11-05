@@ -2,7 +2,7 @@ import { createSSRApp } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import App from './App.vue';
 import { initialPortfolioRepos } from './data/github';
-import { contactRoutes, githubConfig, secondaryProjects, shadowPlay } from './data/site';
+import { contactRoutes, githubConfig, kivo, secondaryProjects } from './data/site';
 
 // Render the same component that the browser hydrates: no duplicate crawler copy.
 export function render() {
@@ -15,7 +15,7 @@ export function renderMarkdown() {
   // following a link from another site still lands on the right page.
   const absolute = (href: string) => (href.startsWith('/') ? `${site}${href}` : href);
 
-  const featured = `I built ShadowPlay to get PC clips onto my phone. ${shadowPlay.summary}\n\n${shadowPlay.context}\n\n${shadowPlay.technologies.join(' · ')} — ${shadowPlay.status}: ${shadowPlay.statusNote}.\n\n- [ShadowPlay repository](${shadowPlay.repository})`;
+  const featured = `I built Kivo to get PC clips onto my phone. ${kivo.summary}\n\n${kivo.context}\n\n${kivo.technologies.join(' · ')} — ${kivo.status}: ${kivo.statusNote}.\n\n- [Kivo repository](${kivo.repository})`;
 
   const others = secondaryProjects
     .map(
@@ -43,7 +43,7 @@ export function renderMarkdown() {
 
 I make software when something annoys me. Local-first apps, small automations, and experiments I want to understand. It usually starts with something annoying—or a question I can’t leave alone.
 
-## ShadowPlay
+## Kivo
 
 ${featured}
 

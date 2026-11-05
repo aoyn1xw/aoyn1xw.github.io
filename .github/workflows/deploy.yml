@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+  schedule:
+    - cron: '0 6 * * 1'
   workflow_dispatch:
 
 permissions:
@@ -35,6 +37,8 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build with Vite
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm run build
 
       - name: Install browser for site verification

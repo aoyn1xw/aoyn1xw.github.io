@@ -1,11 +1,13 @@
 import assert from 'node:assert/strict';
-import { readFile, stat } from 'node:fs/promises';
-import { createServer } from 'node:http';
-import { resolve, sep } from 'node:path';
-import { after, before, test } from 'node:test';
-import { chromium } from 'playwright';
 import { execFile } from 'node:child_process';
+import { mkdtemp, readFile, rm, stat, writeFile } from 'node:fs/promises';
+import { createServer } from 'node:http';
+import { tmpdir } from 'node:os';
+import { join, resolve, sep } from 'node:path';
+import { after, before, test } from 'node:test';
 import { promisify } from 'node:util';
+import { chromium } from 'playwright';
+import { syncGitHubSnapshot } from '../scripts/sync-github.mjs';
 
 const root = resolve('dist');
 let browser;
@@ -55,7 +57,8 @@ test('raw homepage contains the real portfolio, identity, and sequential heading
   assert.equal(await page.locator('.palette-trigger').count(), 0);
   assert.match(await page.locator('h1').textContent(), /ayon1xw developer portfolio/i);
   assert.match(await page.title(), /ayon1xw.*developer portfolio/i);
-  assert.equal(await page.locator('a[href="https://github.com/aoyn1xw/ShadowPlay"]').count(), 1);
+  assert.equal(await page.locator('#kivo-title').textContent(), 'Kivo');
+  assert.equal(await page.locator('a[href="https://github.com/aoyn1xw/Kivo"]').count(), 1);
   assert.equal(await page.locator('.project-row').count(), 3);
   const levels = await page.locator('h1,h2,h3,h4,h5,h6').evaluateAll(nodes => nodes.map(n => Number(n.tagName[1])));
   for (let i = 1; i < levels.length; i++) assert.ok(levels[i] <= levels[i - 1] + 1);
@@ -85,7 +88,7 @@ test('llms.txt follows the published file-list format and gives specific when-to
   const text = (await readFile(resolve(root, 'llms.txt'), 'utf8')).replace(/\r\n/g, '\n');
   assert.match(text, /^# ayon1xw\n\n> /);
   assert.match(text, /## When to use this/);
-  assert.match(text, /ShadowPlay/);
+  assert.match(text, /Kivo/);
   assert.match(text, /manually|human/i);
   for (const section of text.split(/^## .+$/m).slice(1)) {
     for (const line of section.trim().split('\n').filter(Boolean)) {
@@ -201,9 +204,13 @@ test('header and keyboard shortcuts open the same palette and navigate to homepa
     await dialog.waitFor({ state: 'hidden' });
     assert.equal(await page.locator('#contact').evaluate(element => element === document.activeElement), true);
 
+    // Verify legacy 'shadowplay' alias resolves to the flagship Kivo command
     await page.keyboard.press('Control+k');
     await dialog.waitFor({ state: 'visible' });
     assert.equal(await input.inputValue(), '');
+    await input.fill('shadowplay');
+    assert.equal(await dialog.locator('.palette__name').first().textContent(), 'kivo');
+    await input.fill('');
     await input.press('ArrowDown');
     assert.equal(await dialog.locator('.palette__row').nth(1).getAttribute('aria-selected'), 'true');
     await input.press('ArrowUp');
@@ -221,7 +228,7 @@ test('gallery keyboard controls select both screenshots with reduced motion', as
     await page.goto(origin + '/');
     // The trigger confirms hydration has installed the page's event handlers.
     await page.locator('.palette-trigger').waitFor({ state: 'attached' });
-    const gallery = page.getByLabel('ShadowPlay app screenshots; scroll to see both screens');
+    const gallery = page.getByLabel('Kivo app screenshots; scroll to see both screens');
     await gallery.focus();
     await gallery.press('ArrowRight');
     await page.waitForFunction(() => document.querySelector('[aria-label="Show clips screen"]').getAttribute('aria-pressed') === 'true');
@@ -231,13 +238,17 @@ test('gallery keyboard controls select both screenshots with reduced motion', as
   }
 });
 
-test('GitHub repository showcase renders curated and public repos, excludes forks/meta repos, and supports filtering', async () => {
+test('GitHub repository showcase renders curated and public repos, clarifies counts, and supports filtering', async () => {
   const page = await browser.newPage();
   await page.goto(origin + '/');
   await page.locator('.palette-trigger').waitFor({ state: 'attached' });
 
   const totalCards = await page.locator('.repo-card').count();
   assert.ok(totalCards >= 6, `Expected at least 6 public repos in grid, got ${totalCards}`);
+
+  // Verify clarified repository count label when viewing all categories
+  const allCountText = await page.locator('.repo-count').textContent();
+  assert.match(allCountText, new RegExp(`${totalCards}\\s+in index\\s+\\(${totalCards + 1}\\s+showcased total\\)`));
 
   // Excluded meta repos and forks must not appear
   const titles = await page.locator('.repo-card__title').allTextContents();
@@ -255,10 +266,12 @@ test('GitHub repository showcase renders curated and public repos, excludes fork
     assert.ok(lang.trim().length > 0);
   }
 
-  // Category filter narrows the grid and 'All' restores it
+  // Category filter narrows the grid, clarifies filtered count, and 'All' restores it
   await page.getByRole('button', { name: 'AI & Automation' }).click();
   const aiCount = await page.locator('.repo-card').count();
   assert.ok(aiCount >= 1 && aiCount < totalCards);
+  const filteredCountText = await page.locator('.repo-count').textContent();
+  assert.match(filteredCountText, new RegExp(`Showing\\s+${aiCount}\\s+of\\s+${totalCards}\\s+in index`));
 
   await page.getByRole('button', { name: 'All' }).click();
   assert.equal(await page.locator('.repo-card').count(), totalCards);
@@ -275,4 +288,160 @@ test('GitHub repository showcase renders curated and public repos, excludes fork
   );
 
   await page.close();
+});
+
+test('syncGitHubSnapshot paginates across pages and falls back safely to existing snapshot on failure', async () => {
+  const tempDir = await mkdtemp(join(tmpdir(), 'portfolio-sync-test-'));
+  const snapshotPath = join(tempDir, 'github-snapshot.json');
+
+  try {
+    const pages = {
+      1: [
+        { name: 'repo-beta', html_url: 'https://github.com/aoyn1xw/repo-beta', description: 'Beta tool', language: 'TypeScript', stargazers_count: 4 },
+        { name: 'repo-alpha', html_url: 'https://github.com/aoyn1xw/repo-alpha', description: 'Alpha tool', language: 'Go', stargazers_count: 9 }
+      ],
+      2: [
+        { name: 'repo-gamma', html_url: 'https://github.com/aoyn1xw/repo-gamma', description: null, language: null, stargazers_count: 1 }
+      ]
+    };
+
+    const requestedUrls = [];
+    const successResult = await syncGitHubSnapshot({
+      username: 'aoyn1xw',
+      snapshotPath,
+      perPage: 2,
+      maxPages: 4,
+      fetchImpl: async url => {
+        requestedUrls.push(url);
+        const pageNum = Number(new URL(url).searchParams.get('page') || '1');
+        return {
+          ok: true,
+          status: 200,
+          json: async () => pages[pageNum] ?? []
+        };
+      }
+    });
+
+    assert.equal(successResult.updated, true);
+    assert.equal(successResult.fallback, false);
+    assert.equal(successResult.count, 3);
+    assert.equal(requestedUrls.length, 2, 'Should request page 1 (full) and page 2 (partial) then stop');
+
+    const written = JSON.parse(await readFile(snapshotPath, 'utf8'));
+    assert.deepEqual(
+      written.repositories.map(r => r.name),
+      ['repo-alpha', 'repo-beta', 'repo-gamma']
+    );
+
+    // Simulate an API failure (e.g. HTTP 403 rate limit) and verify safe fallback
+    const fallbackResult = await syncGitHubSnapshot({
+      username: 'aoyn1xw',
+      snapshotPath,
+      fetchImpl: async () => ({
+        ok: false,
+        status: 403,
+        json: async () => ({ message: 'API rate limit exceeded' })
+      })
+    });
+
+    assert.equal(fallbackResult.updated, false);
+    assert.equal(fallbackResult.fallback, true);
+    assert.equal(fallbackResult.count, 3);
+
+    const preserved = JSON.parse(await readFile(snapshotPath, 'utf8'));
+    assert.equal(preserved.repositories.length, 3);
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+});
+
+test('client GitHub integration uses fresh sessionStorage cache, refreshes on stale cache, and falls back on API error', async () => {
+  const context = await browser.newContext();
+  const page = await context.newPage();
+
+  let apiRequests = 0;
+  let mockStatus = 200;
+  let mockPayload = [
+    {
+      name: 'live-api-experiment',
+      html_url: 'https://github.com/aoyn1xw/live-api-experiment',
+      description: 'Fetched dynamically from the mocked GitHub API',
+      language: 'TypeScript',
+      stargazers_count: 42,
+      topics: ['automation', 'experiment'],
+      fork: false,
+      archived: false,
+      pushed_at: '2026-11-05T12:00:00Z'
+    }
+  ];
+
+  await page.route('https://api.github.com/users/aoyn1xw/repos*', async route => {
+    apiRequests++;
+    await route.fulfill({
+      status: mockStatus,
+      contentType: 'application/json',
+      body: JSON.stringify(mockStatus === 200 ? mockPayload : { message: 'Service Unavailable' })
+    });
+  });
+
+  // 1. Fresh sessionStorage cache should be used without making any API request
+  await page.addInitScript(() => {
+    window.__ALLOW_GITHUB_FETCH__ = true;
+  });
+  await page.goto(origin + '/');
+  await page.evaluate(() => {
+    window.sessionStorage.setItem(
+      'ayon1xw:github-repos:v1',
+      JSON.stringify({
+        timestamp: Date.now(),
+        data: [
+          {
+            name: 'cached-local-tool',
+            html_url: 'https://github.com/aoyn1xw/cached-local-tool',
+            description: 'Loaded from sessionStorage cache without network fetch',
+            language: 'Rust',
+            stargazers_count: 19,
+            topics: ['cache-test'],
+            fork: false,
+            archived: false,
+            pushed_at: '2026-11-05T10:00:00Z'
+          }
+        ]
+      })
+    );
+  });
+
+  apiRequests = 0;
+  await page.reload();
+  await page.locator('.repo-card', { hasText: 'Cached Local Tool' }).waitFor({ state: 'visible' });
+  assert.equal(apiRequests, 0, 'Fresh sessionStorage cache must prevent redundant GitHub API requests');
+
+  // 2. Expired cache triggers live API request, renders new repo, and updates sessionStorage
+  await page.evaluate(() => {
+    window.sessionStorage.setItem(
+      'ayon1xw:github-repos:v1',
+      JSON.stringify({ timestamp: 0, data: [] })
+    );
+  });
+  await page.reload();
+  await page.locator('.repo-card', { hasText: 'Live Api Experiment' }).waitFor({ state: 'visible' });
+  assert.equal(apiRequests, 1, 'Expired cache should trigger exactly one GitHub API request');
+
+  const storedCache = await page.evaluate(() =>
+    JSON.parse(window.sessionStorage.getItem('ayon1xw:github-repos:v1') || 'null')
+  );
+  assert.ok(storedCache && Array.isArray(storedCache.data) && storedCache.data[0].name === 'live-api-experiment');
+
+  // 3. When GitHub API fails (503) and cache is cleared, page falls back gracefully to snapshot
+  mockStatus = 503;
+  await page.evaluate(() => window.sessionStorage.clear());
+  const errors = [];
+  page.on('pageerror', err => errors.push(err.message));
+  await page.reload();
+  await page.locator('.palette-trigger').waitFor({ state: 'attached' });
+  assert.equal(apiRequests, 2);
+  assert.ok((await page.locator('.repo-card').count()) >= 6, 'Snapshot fallback should stay rendered on API 503');
+  assert.deepEqual(errors, []);
+
+  await context.close();
 });

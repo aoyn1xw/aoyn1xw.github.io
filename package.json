@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "sync:github": "node scripts/sync-github.mjs",
-    "build": "vue-tsc -b && vite build && node scripts/prerender.mjs",
+    "build": "node scripts/sync-github.mjs && vue-tsc -b && vite build && node scripts/prerender.mjs",
     "typecheck": "vue-tsc -b",
     "preview": "vite preview",
     "test": "node --test worker/test/worker.test.mjs tests/site.test.mjs",

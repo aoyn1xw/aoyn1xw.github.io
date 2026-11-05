@@ -83,6 +83,12 @@ export interface GitHubPortfolioConfig {
   profileUrl: string;
   /** Direct link to the full public repositories tab. */
   repositoriesUrl: string;
+  /**
+   * Maximum repositories fetched per client-side API request (GitHub REST API
+   * maximum per page is 100). Build-time sync (`scripts/sync-github.mjs`)
+   * supports multi-page pagination when needed.
+   */
+  maxRepositories: number;
   /** Exclude forked repositories by default. */
   excludeForks: boolean;
   /** Exclude archived repositories by default. */
@@ -113,8 +119,8 @@ export interface ContactRoute {
   note: string;
 }
 
-export const shadowPlay: Project = {
-  title: 'ShadowPlay',
+export const kivo: Project = {
+  title: 'Kivo',
   summary:
     'Browse finished game clips from my PC and download the original files to my phone over the local network.',
   context:
@@ -122,14 +128,17 @@ export const shadowPlay: Project = {
   technologies: ['.NET 8', 'C#', 'WPF', 'ASP.NET Core', 'Flutter', 'Dart'],
   status: 'Active MVP',
   statusNote: 'Windows tray app and Flutter client',
-  repository: 'https://github.com/aoyn1xw/ShadowPlay',
+  repository: 'https://github.com/aoyn1xw/Kivo',
   category: 'Desktop & Mobile',
   language: 'C#',
   image: {
     src: '/assets/projects/shadowplay-home-online.png',
-    alt: 'ShadowPlay mobile home screen connected to a gaming PC'
+    alt: 'Kivo mobile home screen connected to a gaming PC'
   }
 };
+
+/** Legacy alias retained for backward compatibility with older references. */
+export const shadowPlay: Project = kivo;
 
 export const secondaryProjects: Project[] = [
   {
@@ -179,27 +188,28 @@ export const githubConfig: GitHubPortfolioConfig = {
   username: 'aoyn1xw',
   profileUrl: 'https://github.com/aoyn1xw',
   repositoriesUrl: 'https://github.com/aoyn1xw?tab=repositories',
+  maxRepositories: 100,
   excludeForks: true,
   excludeArchived: false,
   excludedRepos: ['.github', 'aoyn1xw'],
   curatedProjects: [
     {
-      repoName: 'ShadowPlay',
-      aliases: ['Kivo'],
-      title: shadowPlay.title,
-      summary: shadowPlay.summary,
-      context: shadowPlay.context,
+      repoName: 'Kivo',
+      aliases: ['ShadowPlay'],
+      title: kivo.title,
+      summary: kivo.summary,
+      context: kivo.context,
       category: 'Desktop & Mobile',
       language: 'C#',
-      technologies: shadowPlay.technologies,
+      technologies: kivo.technologies,
       topics: ['dotnet', 'flutter', 'local-first', 'windows'],
-      status: shadowPlay.status,
-      statusNote: shadowPlay.statusNote,
+      status: kivo.status,
+      statusNote: kivo.statusNote,
       flagship: true,
       featured: true,
       featuredOrder: 1,
-      image: shadowPlay.image,
-      repositoryUrl: shadowPlay.repository
+      image: kivo.image,
+      repositoryUrl: kivo.repository
     },
     {
       repoName: 'swift-devcontainer',
