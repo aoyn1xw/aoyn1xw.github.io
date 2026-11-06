@@ -44,17 +44,17 @@ function trackShot() {
     ref="shots"
     class="shots"
     tabindex="0"
-    aria-label="ShadowPlay app screenshots; scroll to see both screens"
+    aria-label="Kivo app screenshots; scroll to see both screens"
     @scroll="trackShot"
     @keydown.right.prevent="showShot(1)"
     @keydown.left.prevent="showShot(0)"
   >
     <figure>
-      <img src="/assets/projects/shadowplay-home-online.png" alt="ShadowPlay mobile home screen connected to a gaming PC" width="912" height="2048" loading="lazy" />
+      <img src="/assets/projects/shadowplay-home-online.png" alt="Kivo mobile home screen connected to a gaming PC" width="912" height="2048" loading="lazy" />
       <figcaption><span>01</span> Home, online</figcaption>
     </figure>
     <figure>
-      <img src="/assets/projects/shadowplay-clips.png" alt="ShadowPlay mobile clips browser" width="912" height="2048" loading="lazy" />
+      <img src="/assets/projects/shadowplay-clips.png" alt="Kivo mobile clips browser" width="912" height="2048" loading="lazy" />
       <figcaption><span>02</span> Clip index</figcaption>
     </figure>
   </div>

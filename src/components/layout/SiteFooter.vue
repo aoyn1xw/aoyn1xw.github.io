@@ -9,5 +9,6 @@
       <a href="/commission-terms.html">Terms</a>
     </nav>
     <span class="colophon">Personal projects · 2026</span>
+    <p class="footer-note">Made with curiosity and questionable amounts of debugging.</p>
   </footer>
 </template>

@@ -26,12 +26,14 @@ function resetMark() {
       @pointerleave="resetMark"
       @pointercancel="resetMark"
     ><span class="sr-only">ayon1xw developer portfolio: </span>AYON1<span class="accent">X</span>W</h1>
-    <p class="lede">I make software when something annoys me.</p>
-    <p class="meta">Student developer in Germany.</p>
+    <p class="lede">I build things because I can.</p>
+    <p class="sublede">Sometimes they're useful. Sometimes they're experiments. Usually both.</p>
+    <p class="meta">Student developer and graphic designer based in Germany.</p>
     <ul class="tags">
-      <li>Desktop tools</li>
-      <li>Small automations</li>
-      <li>Local-first experiments</li>
+      <li>Web, desktop &amp; mobile</li>
+      <li>UI/UX &amp; graphic design</li>
+      <li>Linux, Docker &amp; self-hosting</li>
+      <li>AI agents &amp; automation</li>
     </ul>
   </section>
 </template>

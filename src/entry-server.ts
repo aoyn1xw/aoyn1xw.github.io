@@ -1,7 +1,8 @@
 import { createSSRApp } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import App from './App.vue';
-import { contactRoutes, secondaryProjects, shadowPlay } from './data/site';
+import { initialPortfolioRepos } from './data/github';
+import { contactRoutes, githubConfig, kivo, secondaryProjects } from './data/site';
 
 // Render the same component that the browser hydrates: no duplicate crawler copy.
 export function render() {
@@ -14,7 +15,7 @@ export function renderMarkdown() {
   // following a link from another site still lands on the right page.
   const absolute = (href: string) => (href.startsWith('/') ? `${site}${href}` : href);
 
-  const featured = `I built ShadowPlay to get PC clips onto my phone. ${shadowPlay.summary}\n\n${shadowPlay.context}\n\n${shadowPlay.technologies.join(' · ')} — ${shadowPlay.status}: ${shadowPlay.statusNote}.\n\n- [ShadowPlay repository](${shadowPlay.repository})`;
+  const featured = `I built Kivo to get PC clips onto my phone. ${kivo.summary}\n\n${kivo.context}\n\n${kivo.technologies.join(' · ')} — ${kivo.status}: ${kivo.statusNote}.\n\n- [Kivo repository](${kivo.repository})`;
 
   const others = secondaryProjects
     .map(
@@ -23,29 +24,43 @@ export function renderMarkdown() {
     )
     .join('\n\n');
 
+  const discoveredRepos = initialPortfolioRepos.filter(repo => !repo.flagship && !repo.featured);
+  const githubIndex = discoveredRepos
+    .map(repo => {
+      const stars = repo.stars > 0 ? ` · ★ ${repo.stars}` : '';
+      return `- [${repo.title}](${repo.repositoryUrl}) (${repo.language} · ${repo.category}${stars}): ${repo.summary}`;
+    })
+    .join('\n');
+
   const contact = contactRoutes
     .map(route => `- [${route.label} · ${route.detail}](${absolute(route.href)}): ${route.note}`)
     .join('\n');
 
   return `# ayon1xw Developer Portfolio
 
-> Erdi, a student developer in Germany building desktop tools, small automations, and local-first experiments. The portfolio name is ayon1xw; the GitHub username is aoyn1xw.
+> Erdi, a student developer and graphic designer based in Germany. The portfolio name is ayon1xw; the GitHub username is aoyn1xw.
 
 ## Why I build
 
-I make software when something annoys me. Local-first apps, small automations, and experiments I want to understand. It usually starts with something annoying—or a question I can’t leave alone.
+I build things because I can. Sometimes they're useful. Sometimes they're experiments. Usually both.
 
-## ShadowPlay
+## Kivo
 
 ${featured}
 
-## Other projects
+## Featured projects
 
 ${others}
 
+## More on GitHub (@${githubConfig.username})
+
+${githubIndex}
+
+- [All repositories on GitHub](${githubConfig.repositoriesUrl})
+
 ## About me
 
-I’m Erdi, a student developer in Germany. I learn by building things I need, fixing little annoyances, and figuring out how they work. I use the name ayon1xw here and aoyn1xw on GitHub.
+I’m Erdi, a student developer and graphic designer based in Germany. I build web, desktop, and mobile applications alongside UI/UX, graphic design, and visual identities. Most of my free time goes into Linux, Docker, cloud, and self-hosting setups, or experimenting with AI agents, automation, and local language models. I use the name ayon1xw here and aoyn1xw on GitHub.
 
 ## Contact and site information
 

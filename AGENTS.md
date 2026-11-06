@@ -10,9 +10,11 @@ Personal portfolio and commission website for ayon1xw. The homepage uses Vue 3 a
 - `src/components/layout/`: site header and footer.
 - `src/components/home/`: homepage sections and screenshot gallery; section-specific interactions live in their components.
 - `src/shell/`: command palette (`CommandPalette.vue`), command registry (`commands.ts`), and keyboard navigation runtime (`useShell.ts`).
-- `src/data/site.ts`: project and contact copy with repository links.
+- `src/data/site.ts`: project copy, curated featured project overrides, repository exclusion list (`githubConfig`), and contact routes.
+- `src/data/github.ts` and `src/data/github-snapshot.json`: GitHub REST API repository merger, intelligent sorting/filtering pipeline, client-side cached refresh, and build-time repository snapshot.
+- `scripts/sync-github.mjs`: build-time helper (`corepack pnpm sync:github`) that refreshes `src/data/github-snapshot.json` from `https://api.github.com/users/aoyn1xw/repos` with graceful offline fallback.
 - `src/main.ts`: homepage client entry point (hydrates prerendered markup in production or mounts in development).
-- `src/entry-server.ts` and `scripts/prerender.mjs`: SSR entry point and post-build script that prerender `dist/index.html` and generate `dist/index.md` from `src/data/site.ts`.
+- `src/entry-server.ts` and `scripts/prerender.mjs`: SSR entry point and post-build script that prerender `dist/index.html` and generate `dist/index.md` from `src/data/site.ts` and `src/data/github.ts`.
 - `src/styles/tokens.css`: shared design tokens.
 - `src/styles/main.css`, `src/styles/document.css`, and `src/styles/commission.css`: homepage, long-form document (`about/`, `contact/`, `privacy/`, `404.html`), and commission page styles.
 - `src/commissions/config.js`: commission availability, submission endpoint, and fallback contact.
@@ -22,7 +24,7 @@ Personal portfolio and commission website for ayon1xw. The homepage uses Vue 3 a
 - `public/`: static files copied unchanged into the build, including `llms.txt`, `robots.txt`, `sitemap.xml`, Markdown alternatives (`about/index.md`, `contact/index.md`, `privacy/index.md`, `404.md`), ownership verification (`google1458743846eb87e9.html`, `.well-known/discord`), and social preview assets.
 - `assets/`: PNG favicon (`cursor/cursor.png`, used as `rel="icon"` and `rel="apple-touch-icon"` across all entry points) and project screenshots processed by Vite.
 - `.codex/`, `.zed/`: editor-specific configuration.
-- `tests/site.test.mjs`: Playwright and Node regression tests for the production build (`dist/`), routes, `llms.txt`, sitemap, Markdown copy parity, hydration, command palette, and keyboard navigation.
+- `tests/site.test.mjs`: Playwright and Node regression tests for the production build (`dist/`), routes, `llms.txt`, sitemap, Markdown copy parity, hydration, command palette, keyboard navigation, and GitHub repository showcase.
 - `scripts/verify-public.mjs`: live origin verification script (`corepack pnpm verify:public`). Note that static GitHub Pages hosting cannot pass dynamic `Accept: text/markdown` negotiation or `/.well-known/mcp` discovery.
 - `worker/src/index.js`: commission submission backend.
 - `worker/test/worker.test.mjs`: backend tests with mocked Telegram responses.
@@ -35,8 +37,9 @@ Use the pnpm version declared in `package.json` and preserve `pnpm-lock.yaml`.
 
 - Install dependencies: `corepack pnpm install --frozen-lockfile`.
 - Start the site: `corepack pnpm dev` (configured port: 3000).
+- Sync GitHub repository snapshot: `corepack pnpm sync:github`.
 - Check types: `corepack pnpm typecheck`.
-- Build for production: `corepack pnpm build` (runs `vue-tsc -b`, `vite build`, and `scripts/prerender.mjs`).
+- Build for production: `corepack pnpm build` (runs `scripts/sync-github.mjs`, `vue-tsc -b`, `vite build`, and `scripts/prerender.mjs`).
 - Install Playwright browser once before site tests: `corepack pnpm exec playwright install chromium` (or set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`).
 - Run all tests after building: `corepack pnpm test` (runs both Worker and Playwright site tests against `dist/`).
 - Build and run site tests: `corepack pnpm test:site`.

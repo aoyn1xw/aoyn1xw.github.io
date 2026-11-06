@@ -23,7 +23,7 @@ a { color: var(--color-accent); text-decoration: none; }
 a:hover { text-decoration: underline; text-underline-offset: 3px; }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 a, button { -webkit-tap-highlight-color: transparent; }
-p, h1, h2, h3, figure, ul, ol, dl { margin: 0; }
+p, h1, h2, h3, h4, figure, ul, ol, dl { margin: 0; }
 ul, ol { padding: 0; list-style: none; }
 
 :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
@@ -139,6 +139,13 @@ kbd {
   max-width: 54ch;
   font-size: var(--text-md);
   color: var(--color-fg);
+}
+
+.sublede {
+  margin-top: 8px;
+  max-width: 54ch;
+  font-size: var(--text-sm);
+  color: var(--color-muted);
 }
 
 .meta {
@@ -305,6 +312,200 @@ kbd {
 }
 .shot-toggle button[aria-pressed='true'] { border-color: var(--color-accent); color: var(--color-accent); }
 
+/* --------------------------------------------------- github repo showcase --- */
+
+.repo-section {
+  margin-top: 40px;
+  border-top: var(--rule) solid var(--color-border);
+}
+
+.repo-section-head {
+  padding-top: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.repo-section-title-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.repo-section-head .project-list-title {
+  padding-top: 0;
+}
+
+.repo-count {
+  font: 400 var(--text-xs)/1.5 var(--font-technical);
+  color: var(--color-dim);
+}
+
+.repo-sort {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.repo-sort-label {
+  font: 400 var(--text-xs)/1.5 var(--font-technical);
+  color: var(--color-dim);
+}
+
+.repo-sort-btn {
+  padding: 3px 8px;
+  border: var(--rule) solid var(--color-border-subtle);
+  font: 400 var(--text-xs)/1.2 var(--font-technical);
+  color: var(--color-dim);
+  transition: border-color var(--duration-fast), color var(--duration-fast);
+}
+.repo-sort-btn:hover {
+  border-color: var(--color-border-strong);
+  color: var(--color-fg);
+}
+.repo-sort-btn[aria-pressed='true'] {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.repo-filters {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.repo-filter-pill {
+  padding: 4px 9px;
+  border: var(--rule) solid var(--color-border-subtle);
+  font: 400 var(--text-xs)/1.3 var(--font-technical);
+  color: var(--color-dim);
+  transition: border-color var(--duration-fast), color var(--duration-fast);
+}
+.repo-filter-pill:hover {
+  border-color: var(--color-border-strong);
+  color: var(--color-fg);
+}
+.repo-filter-pill[aria-pressed='true'] {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.repo-grid {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.repo-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+  border: var(--rule) solid var(--color-border-subtle);
+  transition: border-color var(--duration-fast);
+}
+.repo-card:hover {
+  border-color: var(--color-border-strong);
+}
+
+.repo-card__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.repo-card__title {
+  font: 700 var(--text-base)/1.3 var(--font-display);
+  letter-spacing: -0.02em;
+}
+.repo-card__title a { color: var(--color-fg); transition: color var(--duration-fast); }
+.repo-card__title a:hover { color: var(--color-accent); text-decoration: none; }
+.repo-card__title .ext { transition: transform var(--duration-fast), color var(--duration-fast); }
+.repo-card__title a:hover .ext { color: var(--color-accent); transform: translate(2px, -2px); }
+
+.repo-card__badges {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.repo-star {
+  font: 400 var(--text-xs)/1.3 var(--font-technical);
+  color: var(--color-dim);
+}
+
+.repo-badge {
+  font: 400 var(--text-xs)/1.3 var(--font-technical);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-dim);
+}
+
+.repo-card__summary {
+  margin-top: 8px;
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.repo-topics {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.repo-topic {
+  padding: 1px 6px;
+  border: var(--rule) solid var(--color-border-subtle);
+  font: 400 var(--text-xs)/1.35 var(--font-technical);
+  color: var(--color-dim);
+}
+
+.repo-card__foot {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: var(--rule) solid var(--color-border-subtle);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  font: 400 var(--text-xs)/1.4 var(--font-technical);
+  color: var(--color-dim);
+}
+
+.repo-lang {
+  color: var(--color-dim);
+}
+
+.repo-meta-right {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.repo-demo-link {
+  color: var(--color-accent);
+}
+
+.repo-updated {
+  color: var(--color-dim);
+}
+
+.repo-section-foot {
+  margin-top: 18px;
+}
+
+.repo-all-link {
+  font-size: var(--text-sm);
+}
+
 /* ---------------------------------------------------------------- contact --- */
 
 .contact-list {
@@ -363,6 +564,11 @@ kbd {
 }
 .site-footer nav { display: flex; flex-wrap: wrap; gap: 16px; }
 .site-footer .colophon { color: var(--color-dim); font-size: var(--text-xs); }
+.site-footer .footer-note {
+  width: 100%;
+  color: var(--color-dim);
+  font-size: var(--text-xs);
+}
 
 /* --------------------------------------------------------------- palette --- */
 
@@ -437,8 +643,9 @@ kbd {
   .palette-trigger { display: none; }
   .hero { padding: 48px 0 0; }
   .section { padding: 36px 0; }
-  .project-list { margin-top: 32px; }
+  .project-list, .repo-section { margin-top: 32px; }
   .project-head, .project-row-head { gap: 10px; }
+  .repo-grid { grid-template-columns: 1fr; }
   .shots { overflow-x: auto; scrollbar-width: none; }
   .shots::-webkit-scrollbar { display: none; }
   /* Wider than desktop so the pair genuinely overflows and can be scrolled. */

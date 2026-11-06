@@ -36,10 +36,10 @@ export const SHELL_COMMANDS: ShellCommand[] = [
     action: { kind: 'scroll', target: 'projects', message: '→ projects' }
   },
   {
-    name: 'shadowplay',
-    aliases: ['featured'],
-    summary: 'Go to ShadowPlay',
-    action: { kind: 'scroll', target: 'projects', message: '→ ShadowPlay' }
+    name: 'kivo',
+    aliases: ['featured', 'shadowplay'],
+    summary: 'Go to Kivo',
+    action: { kind: 'scroll', target: 'projects', message: '→ Kivo' }
   },
   {
     name: 'about',
@@ -105,7 +105,7 @@ export const SHELL_COMMANDS: ShellCommand[] = [
     action: {
       kind: 'status',
       message:
-        'projects · shadowplay · about · contact · github · telegram · socials · commissions · terms · top'
+        'projects · kivo · about · contact · github · telegram · socials · commissions · terms · top'
     }
   }
 ];
