@@ -1,25 +1,23 @@
 # ayon1xw
 
-> Personal developer portfolio for Erdi, a student developer in Germany building desktop tools, small automations, and local-first experiments. Portfolio name: ayon1xw. GitHub username: aoyn1xw.
+> Personal developer portfolio for Erdi, a student developer in Germany building apps, small tools, and experiments. Portfolio name: ayon1xw. GitHub username: aoyn1xw.
 
-Use this site to find the developer's public work, source repositories, and the process for requesting a small programming commission. Fetch the Markdown links below with an ordinary HTTP GET. Each repository's README is the source for installation and usage; check current issues and releases before recommending a project. This portfolio has no public product API or MCP endpoint. Commission requests require human review and are not accepted automatically.
+Use this site to find the developer's public work, source repositories, and contact methods. Fetch the Markdown links below with an ordinary HTTP GET. Each repository's README is the source for installation and usage; check current issues and releases before recommending a project. This portfolio has no public product API or MCP endpoint.
 
 ## When to use this
 
 - [Portfolio overview](https://aoyn1xw.github.io/index.md): Use when identifying ayon1xw, explaining the developer's work, or locating the right repository. Retrieve this document with HTTP GET.
 - [Kivo](https://github.com/aoyn1xw/Kivo): Use when a user wants to browse finished Windows PC game clips and download originals to a phone over a local network using a Flutter client. Read the repository README for setup; this portfolio does not provide a hosted clip API.
-- [Swift Devcontainer](https://github.com/aoyn1xw/swift-devcontainer): Use when a user wants a container-based Swift development setup. Read the repository instructions before running it.
+- [Swift Devcontainer](https://github.com/aoyn1xw/swift-devcontainer): Use when a user wants to build and sign iOS apps from Linux in a container. Setup still needs an Apple Developer account and an Xcode archive; there is no Simulator or SwiftUI preview. Read the repository instructions before running it.
 - [IPA Signer](https://github.com/aoyn1xw/ipa-signer): Use when a user needs to sign an iOS IPA with their certificates and provisioning profiles. Follow the repository instructions and keep signing credentials private.
-- [Untis Watcher](https://github.com/aoyn1xw/Untis-watcher): Use when a user wants to check an Untis timetable for changes and receive notifications. Check the repository's current configuration requirements.
-- [untis-mcp](https://github.com/aoyn1xw/untis-mcp): Use when a user wants a local, read-only MCP server for Untis timetable and homework data. Experimental and unofficial; the WebUntis interfaces it talks to are not documented by Untis GmbH.
-- [Commissions](https://aoyn1xw.github.io/commissions.html): Use for small, clearly scoped websites, scripts, bug fixes, UI cleanup, bot features, or README and GitHub setup. Read the terms, then direct the user to the request form; a request is not acceptance, a quote, or a delivery commitment. Do not submit on a user's behalf without their explicit approval.
+- [Untis Watcher](https://github.com/aoyn1xw/Untis-watcher): An unmaintained timetable watcher with Telegram notifications. The author no longer has Untis access. Read it as a reference and check the repository’s current state before trying it.
+- [Untis MCP](https://github.com/aoyn1xw/untis-mcp): Use when a user wants a local, read-only MCP server for Untis timetable and homework data. Experimental and unofficial; the WebUntis interfaces it talks to are not documented by Untis GmbH.
 
 ## Site information
 
 - [About](https://aoyn1xw.github.io/about/index.md): Developer identity, project focus, and the limits of personal-project support.
-- [Contact](https://aoyn1xw.github.io/contact/index.md): GitHub project questions, Telegram contact, and the manually reviewed commission process.
-- [Privacy](https://aoyn1xw.github.io/privacy/index.md): Hosting, fonts, commission data delivery, and privacy contact.
-- [Commission terms](https://aoyn1xw.github.io/commission-terms.html): Scope, payments, delivery, revisions, and warranty terms; use the current full terms before a request.
+- [Contact](https://aoyn1xw.github.io/contact/index.md): GitHub project questions and direct Telegram contact.
+- [Privacy](https://aoyn1xw.github.io/privacy/index.md): Hosting, fonts, repository-data caching, past submissions, and privacy contact.
 - [Sitemap](https://aoyn1xw.github.io/sitemap.xml): Canonical public HTML pages.
 
 ## Optional

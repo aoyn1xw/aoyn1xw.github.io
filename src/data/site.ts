@@ -119,12 +119,30 @@ export interface ContactRoute {
   note: string;
 }
 
+export const homepageCopy = {
+  lede: 'I build things because I can.',
+  sublede: "Sometimes they're useful. Sometimes they're experiments. Usually both.",
+  meta: 'Student developer and graphic designer based in Germany.',
+  skills: [
+    'Web, desktop & mobile apps',
+    'Interfaces & graphic design',
+    'Linux, Docker & self-hosting',
+    'AI & automation experiments'
+  ],
+  about: 'I’m Erdi. I like building tools I can use myself, from getting game clips onto my phone to working on iOS apps from Linux.'
+};
+
+export const heroActions = [
+  { label: 'View projects', href: '#projects' },
+  { label: 'Get in touch', href: '#contact' }
+];
+
 export const kivo: Project = {
   title: 'Kivo',
   summary:
-    'Browse finished game clips from my PC and download the original files to my phone over the local network.',
+    'Get the original game clips from my PC onto my phone, without a cloud upload.',
   context:
-    'The NVIDIA App writes .mp4 files into a recordings folder I choose. A small tray app watches that folder, waits until a clip is completely written, and serves it on the local network. The phone pairs over a QR code and pulls the original files — nothing is uploaded, re-encoded, or moved.',
+    'A Windows tray app watches my NVIDIA recordings folder and shares only completed .mp4 files. The Flutter client pairs by QR code and downloads the originals over the local network. Kivo only reads the recordings; it doesn’t upload, re-encode, or move them.',
   technologies: ['.NET 8', 'C#', 'WPF', 'ASP.NET Core', 'Flutter', 'Dart'],
   status: 'Active MVP',
   statusNote: 'Windows tray app and Flutter client',
@@ -143,12 +161,12 @@ export const shadowPlay: Project = kivo;
 export const secondaryProjects: Project[] = [
   {
     title: 'Swift Devcontainer',
-    summary: 'Build and sign iOS apps on Linux — no Mac, no Xcode.',
+    summary: 'Build and sign iOS apps from Linux.',
     context:
-      'I do not own a Mac, so I built the machine I needed: a container with Swift, xtool to cross-compile for iOS, zsign to sign, and Theos for tweaks. It runs from a Codespace, from VS Code, or as a Docker Compose stack with code-server inside.',
+      'I don’t own a Mac, so I put together a Linux container with Swift, xtool for iOS builds, and zsign for signing. It runs in Codespaces, VS Code, or Docker Compose with code-server. Theos setup for tweaks is optional. The xtool setup still needs an Apple Developer account and an Xcode archive; there’s no Simulator or SwiftUI preview.',
     technologies: ['Swift', 'xtool', 'zsign', 'Theos', 'Docker', 'Dev Containers'],
     status: 'Published',
-    statusNote: 'Docker Hub image, one-click Codespace',
+    statusNote: 'Docker Hub image and Codespaces setup',
     repository: 'https://github.com/aoyn1xw/swift-devcontainer',
     category: 'DevTools & Containers',
     language: 'Shell'
@@ -156,9 +174,9 @@ export const secondaryProjects: Project[] = [
   {
     title: 'IPA Signer',
     summary:
-      'Sign an IPA with your own certificate and provisioning profile, from a browser or the API.',
+      'Sign iOS app files from a browser or script, using your own certificate and provisioning profile.',
     context:
-      'Signing usually means a Mac and Xcode. This is a small Node.js server instead: upload the IPA, a .p12 and a .mobileprovision, and it hands back an OTA install link. zsign runs in a worker thread so the server stays responsive, and the Docker image ships zsign and cyan already inside.',
+      'I built this to put IPA signing behind a web form and API. The Node.js server takes an .ipa file, a .p12 certificate, and a .mobileprovision profile, then returns an over-the-air install link. It runs zsign in a worker thread, and the Docker image includes zsign and cyan. Read the repository’s setup and security notes before using it with signing credentials.',
     technologies: ['Node.js', 'Express', 'zsign', 'Docker'],
     status: 'Published',
     statusNote: 'Docker image on GitHub Container Registry',
@@ -168,7 +186,7 @@ export const secondaryProjects: Project[] = [
   },
   {
     title: 'Untis Watcher',
-    summary: 'Watch my Untis timetable and get a Telegram message when a lesson changes.',
+    summary: 'A Telegram bot I built to catch timetable changes without checking Untis myself.',
     context:
       'I did not want to open the timetable app to find out that a room had changed. It polls WebUntis, compares the week against the last snapshot it stored, and only messages me when something actually differs. Credentials are scrubbed out of the logs.',
     technologies: ['Python', 'WebUntis API', 'Telegram Bot API', 'GitHub Models'],
@@ -288,9 +306,9 @@ export const githubConfig: GitHubPortfolioConfig = {
     },
     {
       repoName: 'aoyn1xw.github.io',
-      title: 'Portfolio & Commissions',
+      title: 'Personal Portfolio',
       summary:
-        'Minimal, static-prerendered personal portfolio and Telegram-backed commission site built with Vue 3 and Vite.',
+        'Personal developer portfolio built with Vue 3, TypeScript, and Vite, with build-time HTML and Markdown.',
       category: 'Web & Design',
       language: 'TypeScript',
       technologies: ['Vue 3', 'TypeScript', 'Vite', 'Cloudflare Workers'],
@@ -317,21 +335,14 @@ export const contactRoutes: ContactRoute[] = [
     detail: '@ayon1xw',
     href: 'https://t.me/ayon1xw',
     external: true,
-    note: 'Direct messages — the fastest way to reach me.'
+    note: 'Send me a message directly.'
   },
   {
     label: 'GitHub',
     detail: '@aoyn1xw',
     href: 'https://github.com/aoyn1xw',
     external: true,
-    note: 'Questions about the code. Use the repository and its issues for the project you mean.'
-  },
-  {
-    label: 'Commissions',
-    detail: 'small, scoped work',
-    href: '/commissions.html',
-    external: false,
-    note: 'Read the terms first. Requests are reviewed by hand before anything is agreed.'
+    note: 'Questions or bugs? Start with the relevant repository and its issues.'
   },
   {
     label: 'Socials',
@@ -345,6 +356,6 @@ export const contactRoutes: ContactRoute[] = [
     detail: 'all routes',
     href: '/contact/',
     external: false,
-    note: 'Every route in one place, including how the request form handles data.'
+    note: 'More detail on where to ask and what to include in your message.'
   }
 ];

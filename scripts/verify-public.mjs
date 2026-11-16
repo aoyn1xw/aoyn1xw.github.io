@@ -9,9 +9,15 @@ const origin = new URL(process.argv[2] || 'https://aoyn1xw.github.io/');
 if (!['http:', 'https:'].includes(origin.protocol)) throw new Error('Use an HTTP or HTTPS origin');
 const text = html => html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
   .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-const contentPages = ['/', '/about/', '/contact/', '/privacy/', '/commissions.html', '/commission-terms.html'];
+const contentPages = ['/', '/about/', '/contact/', '/privacy/'];
 const checks = contentPages.map(path => ({ path, accept: 'text/html', verify: response =>
   response.status === 200 && response.type.startsWith('text/html') && text(response.body).length >= 500 }));
+for (const path of ['/commissions.html', '/commission-terms.html']) {
+  checks.push({ path, accept: 'text/html', verify: response => response.status === 200
+    && /This page has been retired/.test(response.body)
+    && /name="robots" content="noindex, follow"/.test(response.body)
+    && !/<form\b|request\.js|PAYMENT MODEL/i.test(response.body) });
+}
 for (const path of ['/index.md', '/about/index.md', '/contact/index.md', '/privacy/index.md', '/404.md', '/llms.txt', '/robots.txt', '/sitemap.xml', '/.well-known/discord', '/google1458743846eb87e9.html']) {
   checks.push({ path, accept: '*/*', verify: response => response.status === 200 && response.body.trim().length > 0 });
 }

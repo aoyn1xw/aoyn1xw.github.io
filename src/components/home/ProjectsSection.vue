@@ -1,23 +1,8 @@
 <script setup lang="ts">
-import { useGitHubRepos, type RepoSortMode } from '../../data/github';
+import { useGitHubRepos } from '../../data/github';
 import ProjectGallery from './ProjectGallery.vue';
 
-const {
-  flagshipRepo,
-  featuredSecondaryRepos,
-  discoveredRepos,
-  filteredGridRepos,
-  categories,
-  selectedCategory,
-  sortMode,
-  config
-} = useGitHubRepos();
-
-const sortOptions: Array<{ value: RepoSortMode; label: string }> = [
-  { value: 'smart', label: 'Curated' },
-  { value: 'recent', label: 'Recent' },
-  { value: 'stars', label: 'Stars' }
-];
+const { flagshipRepo, featuredSecondaryRepos, config } = useGitHubRepos();
 </script>
 
 <template>
@@ -31,9 +16,8 @@ const sortOptions: Array<{ value: RepoSortMode; label: string }> = [
         <span class="project-flag">{{ flagshipRepo.status }}</span>
       </div>
       <p class="project-summary">{{ flagshipRepo.summary }}</p>
-      <p v-if="flagshipRepo.context" class="project-context">{{ flagshipRepo.context }}</p>
       <div class="project-foot">
-        <span class="project-stack">{{ flagshipRepo.technologies.join(' · ') }}</span>
+        <span class="project-status">{{ flagshipRepo.statusNote }}</span>
         <a
           class="project-link"
           :href="flagshipRepo.repositoryUrl"
@@ -44,6 +28,11 @@ const sortOptions: Array<{ value: RepoSortMode; label: string }> = [
         </a>
       </div>
       <ProjectGallery />
+      <details class="project-technical">
+        <summary>Technical details<span class="sr-only"> for {{ flagshipRepo.title }}</span></summary>
+        <p v-if="flagshipRepo.context" class="project-context">{{ flagshipRepo.context }}</p>
+        <p class="project-stack">{{ flagshipRepo.technologies.join(' · ') }}</p>
+      </details>
     </article>
 
     <div class="project-list">
@@ -63,116 +52,26 @@ const sortOptions: Array<{ value: RepoSortMode; label: string }> = [
           </h4>
         </div>
         <p class="project-row-summary">{{ project.summary }}</p>
-        <p v-if="project.context" class="project-row-context">{{ project.context }}</p>
         <div class="project-row-foot">
-          <span class="project-stack">{{ project.technologies.join(' · ') }}</span>
           <span class="project-status">
             {{ project.status }}<template v-if="project.statusNote"> · {{ project.statusNote }}</template>
           </span>
+          <a class="project-link" :href="project.repositoryUrl" target="_blank" rel="noopener noreferrer">
+            Source<span class="sr-only"> for {{ project.title }}</span> <span aria-hidden="true">↗</span>
+          </a>
         </div>
+        <details class="project-technical">
+          <summary>Technical details<span class="sr-only"> for {{ project.title }}</span></summary>
+          <p v-if="project.context" class="project-row-context">{{ project.context }}</p>
+          <p class="project-stack">{{ project.technologies.join(' · ') }}</p>
+        </details>
       </article>
     </div>
 
-    <div id="github-repositories" class="repo-section">
-      <div class="repo-section-head">
-        <div class="repo-section-title-group">
-          <h3 id="github-repos-title" class="project-list-title">More on GitHub</h3>
-          <span class="repo-count">
-            <template v-if="selectedCategory === 'All'">
-              {{ discoveredRepos.length }} repositories
-            </template>
-            <template v-else>
-              {{ filteredGridRepos.length }} of {{ discoveredRepos.length }} repositories
-            </template>
-          </span>
-        </div>
-
-        <div class="repo-sort" role="group" aria-label="Sort repositories">
-          <span class="repo-sort-label">Sort:</span>
-          <button
-            v-for="option in sortOptions"
-            :key="option.value"
-            type="button"
-            class="repo-sort-btn"
-            :aria-pressed="sortMode === option.value"
-            @click="sortMode = option.value"
-          >
-            {{ option.label }}
-          </button>
-        </div>
-      </div>
-
-      <div class="repo-filters" role="group" aria-label="Filter repositories by category">
-        <button
-          v-for="category in categories"
-          :key="category"
-          type="button"
-          class="repo-filter-pill"
-          :aria-pressed="selectedCategory === category"
-          @click="selectedCategory = category"
-        >
-          {{ category }}
-        </button>
-      </div>
-
-      <div class="repo-grid" aria-live="polite">
-        <article
-          v-for="repo in filteredGridRepos"
-          :key="repo.id"
-          class="repo-card"
-          :class="{ 'is-archived': repo.archived }"
-          :aria-labelledby="`repo-card-${repo.id}`"
-        >
-          <div class="repo-card__head">
-            <h4 :id="`repo-card-${repo.id}`" class="repo-card__title">
-              <a :href="repo.repositoryUrl" target="_blank" rel="noopener noreferrer">
-                {{ repo.title }}<span class="ext" aria-hidden="true">↗</span>
-              </a>
-            </h4>
-            <div class="repo-card__badges">
-              <span v-if="repo.stars > 0" class="repo-star" :aria-label="`${repo.stars} stars on GitHub`">
-                <span aria-hidden="true">★</span> {{ repo.stars }}
-              </span>
-              <span v-if="repo.archived" class="repo-badge">Archived</span>
-            </div>
-          </div>
-
-          <p class="repo-card__summary">{{ repo.summary }}</p>
-
-          <ul v-if="repo.topics.length" class="repo-topics" aria-label="Repository topics">
-            <li v-for="topic in repo.topics.slice(0, 4)" :key="topic" class="repo-topic">
-              {{ topic }}
-            </li>
-          </ul>
-
-          <div class="repo-card__foot">
-            <span class="repo-lang">{{ repo.language }}</span>
-            <span class="repo-meta-right">
-              <a
-                v-if="repo.homepageUrl"
-                class="repo-demo-link"
-                :href="repo.homepageUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Live <span aria-hidden="true">↗</span>
-              </a>
-              <span class="repo-updated">{{ repo.updatedLabel }}</span>
-            </span>
-          </div>
-        </article>
-      </div>
-
-      <div class="repo-section-foot">
-        <a
-          class="repo-all-link"
-          :href="config.repositoriesUrl"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          All repositories on GitHub (@{{ config.username }}) <span class="ext" aria-hidden="true">↗</span>
-        </a>
-      </div>
-    </div>
+    <p id="github-repositories" class="project-repositories-link">
+      <a :href="config.repositoriesUrl" target="_blank" rel="noopener noreferrer">
+        All repositories on GitHub <span aria-hidden="true">↗</span>
+      </a>
+    </p>
   </section>
 </template>

@@ -78,19 +78,8 @@ export const SHELL_COMMANDS: ShellCommand[] = [
   {
     name: 'playstation',
     aliases: ['psn', 'trophies'],
-    summary: 'see my playstation trophies lol',
+    summary: 'See my PlayStation trophies',
     action: { kind: 'external', href: 'https://psnprofiles.com/ayon1xw', message: '→ psnprofiles.com/ayon1xw' }
-  },
-  {
-    name: 'commissions',
-    aliases: ['hire'],
-    summary: 'Open the commissions page',
-    action: { kind: 'navigate', href: '/commissions.html', message: '→ /commissions.html' }
-  },
-  {
-    name: 'terms',
-    summary: 'Open the commission terms',
-    action: { kind: 'navigate', href: '/commission-terms.html', message: '→ /commission-terms.html' }
   },
   {
     name: 'top',
@@ -105,7 +94,7 @@ export const SHELL_COMMANDS: ShellCommand[] = [
     action: {
       kind: 'status',
       message:
-        'projects · kivo · about · contact · github · telegram · socials · commissions · terms · top'
+        'projects · kivo · about · contact · github · telegram · socials · top'
     }
   }
 ];

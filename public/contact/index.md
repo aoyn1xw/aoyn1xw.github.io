@@ -2,23 +2,21 @@
 
 ## Questions about the code
 
-For questions about something I made, start with my GitHub profile and the repository linked from the portfolio. Read the repository’s README and check existing issues before opening a new one, where issues are enabled. Include the project name, what you expected to happen, the steps to reproduce a problem, and relevant version information. Keep passwords, private keys, personal information, and confidential source code out of public issues.
+For a question or bug report, start with the relevant repository. Its README and existing issues may already have an answer. If you open an issue, include what you expected, what happened, steps to reproduce it, and the version you’re using. Keep passwords, private keys, personal information, and confidential source code out of public issues.
 
-## Small programming requests
+## Say hello
 
-For a small development commission, read the commissions page and commission terms before using the request form. The form asks for a Telegram username, a project description, and optional deadline and reference links. Requests are manually reviewed. Sending a request is not acceptance of the work, confirmation of a delivery date, or agreement to a price; scope, timing, and price are discussed before a commission is accepted.
+You can message me on Telegram at @ayon1xw. Say what caught your interest or which project you’re asking about, and include enough context for me to follow along. For a bug report, GitHub is usually the better place: other people using the project can find the discussion too. Please don’t send passwords, private keys, or other sensitive information.
 
-## Other contact routes
+## Other profiles and privacy
 
-Telegram @ayon1xw is the direct route and the fastest way to reach me. It is also the fallback if the commission form cannot send your request. My links profile lists the other public profiles. Choose the route that fits your question and send only the information needed to understand it. For a question about information you submitted, contact me on Telegram and identify the request without posting its contents publicly. The privacy page explains how the website and request form handle data.
+My links profile lists my other public profiles. For a question about information you previously sent me, identify the message or request privately on Telegram rather than posting its contents publicly. The privacy page explains how the website handles data and how to ask about past submissions.
 
 ## Useful links
 
 - [GitHub](https://github.com/aoyn1xw)
 - [Telegram @ayon1xw](https://t.me/ayon1xw)
 - [Public profiles](https://guns.lol/ayon1xw)
-- [Commission request form](https://aoyn1xw.github.io/commissions.html#request)
-- [Commission terms](https://aoyn1xw.github.io/commission-terms.html)
 - [Privacy](https://aoyn1xw.github.io/privacy/)
 
 - [Portfolio homepage](https://aoyn1xw.github.io/)

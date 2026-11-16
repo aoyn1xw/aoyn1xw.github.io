@@ -76,6 +76,14 @@ test('raw homepage contains the real portfolio, identity, updated tagline, and s
   assert.equal(await page.locator('#kivo-title').textContent(), 'Kivo');
   assert.equal(await page.locator('a[href="https://github.com/aoyn1xw/Kivo"]').count(), 1);
   assert.equal(await page.locator('.project-row').count(), 3);
+  for (const copy of await page.locator('.project-summary, .project-row-summary, .project-context, .project-row-context, .tags li').allTextContents()) {
+    assert.ok(markdown.includes(copy.trim()), 'Project and skill copy matches the Markdown alternative');
+  }
+  const aboutCopy = (await page.locator('#about .prose p').textContent()).replace(/\s+/g, ' ').trim();
+  assert.ok(markdown.includes(aboutCopy), 'The personal About copy matches the Markdown alternative');
+  const swift = page.locator('.project-row', { hasText: 'Swift Devcontainer' });
+  assert.match(await swift.locator('.project-row-context').textContent(), /Apple Developer account and an Xcode archive/);
+  assert.match(await page.locator('.project-row', { hasText: 'Untis Watcher' }).textContent(), /Unmaintained/);
   const levels = await page.locator('h1,h2,h3,h4,h5,h6').evaluateAll(nodes => nodes.map(n => Number(n.tagName[1])));
   for (let i = 1; i < levels.length; i++) assert.ok(levels[i] <= levels[i - 1] + 1);
   assert.equal(await page.locator('link[rel="canonical"]').getAttribute('href'), 'https://aoyn1xw.github.io/');
@@ -105,7 +113,8 @@ test('llms.txt follows the published file-list format and gives specific when-to
   assert.match(text, /^# ayon1xw\n\n> /);
   assert.match(text, /## When to use this/);
   assert.match(text, /Kivo/);
-  assert.match(text, /manually|human/i);
+  assert.match(text, /contact methods/i);
+  assert.doesNotMatch(text, /commission|\/commission-terms/i);
   for (const section of text.split(/^## .+$/m).slice(1)) {
     for (const line of section.trim().split('\n').filter(Boolean)) {
       assert.match(line, /^- \[[^\]]+\]\(https:\/\/[^)]+\)(?:: .+)?$/);
@@ -129,14 +138,15 @@ test('every public content endpoint and machine-readable file is served and inte
   }
   const sitemap = await (await fetch(origin + '/sitemap.xml')).text();
   await page.setContent(sitemap, { waitUntil: 'domcontentloaded' });
-  for (const path of ['/', '/about/', '/contact/', '/privacy/', '/commissions.html', '/commission-terms.html']) {
+  for (const path of ['/', '/about/', '/contact/', '/privacy/']) {
     assert.ok(sitemap.includes(`https://aoyn1xw.github.io${path}`), path);
   }
   assert.ok(sitemap.includes('xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"'));
   assert.deepEqual(await page.evaluate(source => {
     const document = new DOMParser().parseFromString(source, 'application/xml');
     return { valid: !document.querySelector('parsererror'), count: document.getElementsByTagNameNS('http://www.sitemaps.org/schemas/sitemap/0.9', 'url').length };
-  }, sitemap), { valid: true, count: 6 });
+  }, sitemap), { valid: true, count: 4 });
+  assert.doesNotMatch(sitemap, /commission/i);
   const robots = await (await fetch(origin + '/robots.txt')).text();
   assert.match(robots, /^Sitemap: https:\/\/aoyn1xw\.github\.io\/sitemap\.xml$/m);
   const guide = await (await fetch(origin + '/llms.txt')).text();
@@ -220,6 +230,24 @@ test('header and keyboard shortcuts open the same palette and navigate to homepa
     await dialog.waitFor({ state: 'hidden' });
     assert.equal(await page.locator('#contact').evaluate(element => element === document.activeElement), true);
 
+    for (const [command, target] of [['projects', 'projects'], ['about', 'about'], ['top', 'identity']]) {
+      await page.keyboard.press('Control+k');
+      await input.waitFor({ state: 'visible' });
+      await input.fill(command);
+      await input.press('Enter');
+      await dialog.waitFor({ state: 'hidden' });
+      assert.equal(await page.locator(`#${target}`).evaluate(element => element === document.activeElement), true);
+    }
+
+    await page.keyboard.press('Control+k');
+    await dialog.waitFor({ state: 'visible' });
+    const names = await dialog.locator('.palette__name').allTextContents();
+    assert.ok(!names.includes('commissions') && !names.includes('terms'));
+    await input.fill('hire');
+    assert.equal(await dialog.locator('.palette__row').count(), 0);
+    await input.press('Escape');
+    await dialog.waitFor({ state: 'hidden' });
+
     // Verify legacy 'shadowplay' alias resolves to the flagship Kivo command
     await page.keyboard.press('Control+k');
     await dialog.waitFor({ state: 'visible' });
@@ -254,67 +282,102 @@ test('gallery keyboard controls select both screenshots with reduced motion', as
   }
 });
 
-test('More on GitHub section deduplicates featured projects, excludes forks/meta repos, clarifies counts, and supports filtering', async () => {
-  const page = await browser.newPage();
-  await page.goto(origin + '/');
-  await page.locator('.palette-trigger').waitFor({ state: 'attached' });
-
-  assert.equal(await page.locator('#github-repos-title').textContent(), 'More on GitHub');
-
-  const totalCards = await page.locator('.repo-card').count();
-  assert.equal(totalCards, 5, `Expected 5 non-featured discovered repos in grid, got ${totalCards}`);
-
-  // Verify repository count label when viewing all categories
-  const allCountText = (await page.locator('.repo-count').textContent()).trim();
-  assert.equal(allCountText, `${totalCards} repositories`);
-
-  const titles = (await page.locator('.repo-card__title').allTextContents()).map(t =>
-    t.replace('↗', '').trim()
-  );
-
-  // Flagship and Featured projects must not be duplicated in "More on GitHub"
-  assert.ok(!titles.includes('Kivo'));
-  assert.ok(!titles.includes('Swift Devcontainer'));
-  assert.ok(!titles.includes('IPA Signer'));
-  assert.ok(!titles.includes('Untis Watcher'));
-
-  // Excluded meta repos and forks must not appear
-  assert.ok(!titles.some(t => /^\.github/i.test(t)));
-  assert.ok(!titles.some(t => /^aoyn1xw$/i.test(t)));
-  assert.ok(!titles.some(t => /OpenJarvis|spoti\.pw|free-llm/i.test(t)));
-
-  // Archived repository (SSH Portfolio) is present and clearly labeled
-  const archivedCard = page.locator('.repo-card', { hasText: 'SSH Portfolio' });
-  assert.equal(await archivedCard.count(), 1);
-  assert.equal(await archivedCard.locator('.repo-badge').textContent(), 'Archived');
-
-  // Every card must have a non-empty summary and language label
-  const summaries = await page.locator('.repo-card__summary').allTextContents();
-  for (const summary of summaries) {
-    assert.ok(summary.trim().length >= 15);
+test('hero actions and complete project details work without JavaScript and with a keyboard', async () => {
+  const noScript = await browser.newPage({ javaScriptEnabled: false });
+  await noScript.goto(origin + '/');
+  assert.equal(await noScript.getByRole('link', { name: 'View projects' }).getAttribute('href'), '#projects');
+  assert.equal(await noScript.getByRole('link', { name: 'Get in touch' }).getAttribute('href'), '#contact');
+  assert.equal(await noScript.locator('.project-technical').count(), 4);
+  for (const details of await noScript.locator('.project-technical').all()) {
+    assert.ok((await details.textContent()).length > 150, 'Complete descriptions remain in the HTML');
+    await details.locator('summary').focus();
+    await noScript.keyboard.press('Enter');
+    assert.equal(await details.getAttribute('open'), '');
+    assert.ok(await details.locator('.project-stack').isVisible());
   }
-  const languages = await page.locator('.repo-card .repo-lang').allTextContents();
-  for (const lang of languages) {
-    assert.ok(lang.trim().length > 0);
+  await noScript.close();
+
+  for (const width of [320, 390, 768, 1440]) {
+    const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
+    await page.goto(origin + '/');
+    await page.getByRole('link', { name: 'View projects' }).click();
+    assert.equal(new URL(page.url()).hash, '#projects');
+    for (const summary of await page.locator('.project-technical summary').all()) {
+      await summary.focus();
+      await summary.press('Enter');
+    }
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `Homepage at ${width}px`);
+    const screenshotLinks = page.locator('.shots figure a');
+    assert.equal(await screenshotLinks.count(), 2);
+    for (const link of await screenshotLinks.all()) {
+      const image = link.locator('img');
+      assert.equal(await link.getAttribute('href'), await image.getAttribute('src'));
+      assert.equal((await fetch(origin + await link.getAttribute('href'))).status, 200);
+    }
+    await page.getByRole('link', { name: 'Get in touch' }).click();
+    assert.equal(new URL(page.url()).hash, '#contact');
+    assert.ok(await page.locator('#contact').isVisible());
+    await page.close();
   }
+});
 
-  // Category filter narrows the grid, updates the counter, and 'All' restores it
-  await page.getByRole('button', { name: 'AI & Automation' }).click();
-  const aiCount = await page.locator('.repo-card').count();
-  assert.equal(aiCount, 1);
-  const filteredCountText = (await page.locator('.repo-count').textContent()).trim();
-  assert.equal(filteredCountText, `${aiCount} of ${totalCards} repositories`);
-
-  await page.getByRole('button', { name: 'All' }).click();
-  assert.equal(await page.locator('.repo-card').count(), totalCards);
-
-  // Link to view all repositories on GitHub is present
-  assert.equal(
-    await page.locator('a.repo-all-link[href="https://github.com/aoyn1xw?tab=repositories"]').count(),
-    1
-  );
-
+test('retired public routes have no offering, form, payment content, or indexed discovery links', async () => {
+  const page = await browser.newPage({ javaScriptEnabled: false });
+  for (const path of ['/commissions.html', '/commission-terms.html']) {
+    assert.equal((await page.goto(origin + path)).status(), 200);
+    assert.match(await page.locator('h1').innerText(), /retired/);
+    assert.equal(await page.locator('meta[name="robots"]').getAttribute('content'), 'noindex, follow');
+    assert.equal(await page.locator('form, input, textarea, .term-card, .terms-panel').count(), 0);
+    assert.doesNotMatch(await page.locator('body').innerText(), /PayPal|50%|EUR|Open for commissions/);
+    assert.equal(await page.locator('script[src*="request"]').count(), 0);
+    assert.ok(await page.locator('a[href="https://t.me/ayon1xw"]').count());
+    assert.ok(await page.locator('a[href="https://github.com/aoyn1xw"]').count());
+  }
+  for (const path of ['/', '/about/', '/contact/', '/privacy/', '/404.html']) {
+    await page.goto(origin + path);
+    assert.equal(await page.locator('a[href*="commissions.html"], a[href*="commission-terms.html"], form').count(), 0, path);
+    for (const content of await page.locator('meta[content]').all()) {
+      assert.doesNotMatch(await content.getAttribute('content'), /commissions|commission request/i);
+    }
+  }
+  const markdown = await readFile(resolve(root, 'index.md'), 'utf8');
+  assert.doesNotMatch(markdown, /commission/i);
+  assert.ok(markdown.includes('[Get in touch](https://aoyn1xw.github.io/#contact)'));
+  // Historical source stays available for a separate archival decision.
+  assert.match(await readFile('commissions.html', 'utf8'), /id="commission-form"/);
+  assert.match(await readFile('commission-terms.html', 'utf8'), /id="term-17"/);
+  await assert.rejects(stat(resolve(root, 'og-commissions.png')), { code: 'ENOENT' });
   await page.close();
+});
+
+test('featured projects lead directly to one GitHub index link, About, and Contact without a repository browser', async () => {
+  for (const javaScriptEnabled of [false, true]) {
+    const page = await browser.newPage({ javaScriptEnabled });
+    await page.goto(origin + '/');
+    assert.equal(await page.locator('#kivo-title').textContent(), 'Kivo');
+    assert.deepEqual((await page.locator('.project-title').allTextContents()).map(title => title.replace('↗', '').trim()), [
+      'Swift Devcontainer', 'IPA Signer', 'Untis Watcher'
+    ]);
+    assert.equal(await page.locator('.project-link').count(), 4);
+    assert.equal(await page.locator('.project-technical').count(), 4);
+    assert.equal(await page.locator('.shots img').count(), 2);
+    assert.equal(await page.locator('.repo-card, .repo-sort, .repo-filters, #github-repos-title').count(), 0);
+    assert.equal(await page.getByRole('group', { name: 'Sort repositories' }).count(), 0);
+    assert.equal(await page.getByRole('group', { name: 'Filter repositories by category' }).count(), 0);
+    const link = page.getByRole('link', { name: 'All repositories on GitHub', exact: true });
+    assert.equal(await link.count(), 1);
+    assert.equal(await link.getAttribute('href'), 'https://github.com/aoyn1xw?tab=repositories');
+    assert.equal((await link.textContent()).trim(), 'All repositories on GitHub ↗');
+    assert.equal(await page.locator('#github-repositories a').count(), 1, 'Legacy repository anchor reaches the replacement link');
+    assert.equal(await page.locator('#projects + #about').count(), 1);
+    assert.ok((await page.locator('#about').innerText()).includes('I’m Erdi'));
+    assert.ok((await page.locator('#contact').innerText()).includes('Telegram'));
+    await page.close();
+  }
+  const markdown = await readFile(resolve(root, 'index.md'), 'utf8');
+  assert.ok(!markdown.includes('## More on GitHub'));
+  assert.ok(!markdown.includes('Untis MCP'));
+  assert.ok(markdown.includes('[All repositories on GitHub](https://github.com/aoyn1xw?tab=repositories)'));
 });
 
 test('syncGitHubSnapshot paginates across pages and falls back safely to existing snapshot on failure', async () => {
@@ -382,26 +445,19 @@ test('syncGitHubSnapshot paginates across pages and falls back safely to existin
   }
 });
 
-test('client GitHub integration uses fresh sessionStorage cache, merges live responses without losing snapshot repos, and falls back on API error', async () => {
+test('featured projects survive cached, partial live, and failed GitHub refreshes without restoring the browser', async () => {
   const context = await browser.newContext();
   const page = await context.newPage();
-
   let apiRequests = 0;
   let mockStatus = 200;
-  let mockPayload = [
-    {
-      name: 'live-api-experiment',
-      html_url: 'https://github.com/aoyn1xw/live-api-experiment',
-      description: 'Fetched dynamically from the mocked GitHub API',
-      language: 'TypeScript',
-      stargazers_count: 42,
-      topics: ['automation', 'experiment'],
-      fork: false,
-      archived: false,
-      pushed_at: '2026-11-05T12:00:00Z'
-    }
-  ];
-
+  const mockPayload = [{
+    name: 'live-api-experiment',
+    html_url: 'https://github.com/aoyn1xw/live-api-experiment',
+    description: 'Fetched dynamically from the mocked GitHub API',
+    language: 'TypeScript'
+  }];
+  const errors = [];
+  page.on('pageerror', err => errors.push(err.message));
   await page.route('https://api.github.com/users/aoyn1xw/repos*', async route => {
     apiRequests++;
     await route.fulfill({
@@ -410,73 +466,41 @@ test('client GitHub integration uses fresh sessionStorage cache, merges live res
       body: JSON.stringify(mockStatus === 200 ? mockPayload : { message: 'Service Unavailable' })
     });
   });
-
-  // 1. Fresh sessionStorage cache should be used without making any API request
-  await page.addInitScript(() => {
-    window.__ALLOW_GITHUB_FETCH__ = true;
-  });
+  await page.addInitScript(() => { window.__ALLOW_GITHUB_FETCH__ = true; });
   await page.goto(origin + '/');
-  await page.evaluate(() => {
-    window.sessionStorage.setItem(
-      'ayon1xw:github-repos:v1',
-      JSON.stringify({
-        timestamp: Date.now(),
-        data: [
-          {
-            name: 'cached-local-tool',
-            html_url: 'https://github.com/aoyn1xw/cached-local-tool',
-            description: 'Loaded from sessionStorage cache without network fetch',
-            language: 'Rust',
-            stargazers_count: 19,
-            topics: ['cache-test'],
-            fork: false,
-            archived: false,
-            pushed_at: '2026-11-05T10:00:00Z'
-          }
-        ]
-      })
-    );
-  });
+  await page.waitForFunction(() => window.sessionStorage.getItem('ayon1xw:github-repos:v1'));
 
+  // A fresh cache must avoid redundant requests while preserving all featured content.
   apiRequests = 0;
   await page.reload();
-  await page.locator('.repo-card', { hasText: 'Cached Local Tool' }).waitFor({ state: 'visible' });
-  assert.equal(apiRequests, 0, 'Fresh sessionStorage cache must prevent redundant GitHub API requests');
-  // Partial cache payload is merged with the build-time snapshot so known repos are never wiped out
-  assert.equal(await page.locator('.repo-card', { hasText: 'Untis MCP' }).count(), 1);
+  await page.locator('.palette-trigger').waitFor({ state: 'attached' });
+  assert.equal(apiRequests, 0);
+  assert.equal(await page.locator('.project, .project-row').count(), 4);
+  assert.equal(await page.locator('.repo-card').count(), 0);
 
-  // 2. Expired cache triggers live API request, merges new repo with snapshot, and updates sessionStorage
-  await page.evaluate(() => {
-    window.sessionStorage.setItem(
-      'ayon1xw:github-repos:v1',
-      JSON.stringify({ timestamp: 0, data: [] })
-    );
-  });
+  // An expired cache refreshes and stores a partial live result; featured fallbacks remain.
+  await page.evaluate(() => window.sessionStorage.setItem(
+    'ayon1xw:github-repos:v1', JSON.stringify({ timestamp: 0, data: [] })
+  ));
   await page.reload();
-  await page.locator('.repo-card', { hasText: 'Live Api Experiment' }).waitFor({ state: 'visible' });
-  assert.equal(apiRequests, 1, 'Expired cache should trigger one GitHub API request');
-  assert.equal(await page.locator('.repo-card', { hasText: 'Untis MCP' }).count(), 1);
+  await page.waitForFunction(() => JSON.parse(window.sessionStorage.getItem('ayon1xw:github-repos:v1')).timestamp > 0);
+  assert.equal(apiRequests, 1);
+  assert.equal(await page.locator('.project, .project-row').count(), 4);
+  const stored = await page.evaluate(() => JSON.parse(window.sessionStorage.getItem('ayon1xw:github-repos:v1')));
+  assert.equal(stored.data[0].name, 'live-api-experiment');
+  assert.equal(await page.locator('.repo-card').count(), 0);
 
-  // Verify star sorting places the newly fetched 42-star repo first
-  await page.getByRole('button', { name: 'Stars' }).click();
-  const firstCardStars = await page.locator('.repo-card').first().locator('.repo-star').textContent();
-  assert.match(firstCardStars, /★\s*42/);
-
-  const storedCache = await page.evaluate(() =>
-    JSON.parse(window.sessionStorage.getItem('ayon1xw:github-repos:v1') || 'null')
-  );
-  assert.ok(storedCache && Array.isArray(storedCache.data) && storedCache.data[0].name === 'live-api-experiment');
-
-  // 3. When GitHub API fails (503) and cache is cleared, page falls back gracefully to snapshot
+  // API failure must leave the full prerendered featured work and navigation intact.
   mockStatus = 503;
   await page.evaluate(() => window.sessionStorage.clear());
-  const errors = [];
-  page.on('pageerror', err => errors.push(err.message));
-  await page.reload();
-  await page.locator('.palette-trigger').waitFor({ state: 'attached' });
+  await Promise.all([
+    page.waitForResponse(response => response.url().includes('api.github.com') && response.status() === 503),
+    page.reload()
+  ]);
   assert.equal(apiRequests, 2);
-  assert.equal(await page.locator('.repo-card').count(), 5, 'Snapshot fallback should stay rendered on API 503');
+  assert.equal(await page.locator('.project, .project-row').count(), 4);
+  assert.equal(await page.locator('.project-technical').count(), 4);
+  assert.equal(await page.locator('.repo-card').count(), 0);
   assert.deepEqual(errors, []);
-
   await context.close();
 });

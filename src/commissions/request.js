@@ -81,7 +81,7 @@ function validators() {
         },
         preferred_deadline() {
             if (getFieldValue('preferred_deadline').trim().length > 100) {
-                return 'Keep the deadline under 100 characters.';
+                return 'Use 100 characters or fewer for the preferred deadline.';
             }
             return '';
         },
@@ -95,10 +95,10 @@ function validators() {
                 return `“${invalid.length > 60 ? invalid.slice(0, 60) + '…' : invalid}” is not a valid URL. Each line must be an http:// or https:// address.`;
             }
             if (links.some(link => link.length > MAX_REFERENCE_LINK_LENGTH)) {
-                return 'Keep each reference link under 500 characters.';
+                return 'Use 500 characters or fewer for each reference link.';
             }
             if (links.reduce((total, link) => total + link.length, 0) > MAX_REFERENCE_LINKS_TOTAL_LENGTH) {
-                return 'Keep the combined reference links under 700 characters.';
+                return 'Use 700 characters or fewer across all reference links.';
             }
             return '';
         },
@@ -236,7 +236,7 @@ async function handleSubmit(event) {
     }
 
     if (!validateAllFields()) {
-        setStatusMessage('Please fix the highlighted fields and try again.', { variant: 'error' });
+        setStatusMessage('Check the fields with error messages, then try again.', { variant: 'error' });
         const firstInvalid = form.querySelector('[aria-invalid="true"]');
         if (firstInvalid) {
             firstInvalid.focus();
@@ -295,7 +295,7 @@ function applyClosedStatus() {
             lockForm();
         }
         if (submitButton) {
-            submitButton.setAttribute('title', 'Commissions are currently closed');
+            submitButton.setAttribute('title', 'Commission requests are currently closed');
         }
     } else if (closedNotice) {
         closedNotice.remove();
