@@ -34,9 +34,10 @@
     <header class="commission-header">
         <a class="commission-mark" href="/index.html" aria-label="ayon1xw portfolio home">
             <span>AYON1XW</span>
-            <span>COMMISSION INTAKE</span>
+            <span>COMMISSIONS</span>
         </a>
         <nav aria-label="Commission navigation">
+            <a href="#scope">Scope</a>
             <a href="#process">Process</a>
             <a href="#request">Request</a>
             <a href="/commission-terms.html">Terms</a>
@@ -51,22 +52,24 @@
             </p>
 
             <div class="hero-title-wrap reveal">
-                <p class="technical-kicker">Small programming commissions</p>
-                <h1 id="commission-title"><span>Selected</span><span>Commissions</span></h1>
+                <p class="technical-kicker">Clearly scoped work</p>
+                <h1 id="commission-title"><span>Small programming</span><span>commissions.</span></h1>
             </div>
 
             <div class="hero-copy reveal">
-                <p>I take on a limited number of small, clearly scoped programming projects. Send what you need; I’ll check the fit before discussing scope and price.</p>
+                <p>I take on small programming projects with a clear scope. Tell me what you want to make or fix, and I’ll check whether it’s a good fit before we discuss scope and price.</p>
                 <p class="hero-caveat">A request is not an acceptance.</p>
             </div>
 
-            <div class="hero-meta hero-meta--left reveal">
-                <span>RESPONSE</span>
-                <strong>USUALLY &lt; 24H</strong>
-            </div>
-            <div class="hero-meta hero-meta--right reveal">
-                <span>PAYMENT</span>
-                <strong>EUR / PAYPAL</strong>
+            <div class="hero-facts">
+                <div class="hero-meta reveal">
+                    <span>RESPONSE</span>
+                    <strong>USUALLY &lt; 24H</strong>
+                </div>
+                <div class="hero-meta reveal">
+                    <span>PAYMENT</span>
+                    <strong>EUR / PAYPAL</strong>
+                </div>
             </div>
 
             <a class="hero-request-link reveal" href="#request">
@@ -75,9 +78,90 @@
             </a>
         </section>
 
-        <section class="commission-scene scope-scene" aria-labelledby="scope-title">
+        <section class="commission-scene request-scene" id="request" aria-labelledby="request-title">
+            <div class="request-intro reveal">
+                <h2 id="request-title">Send the brief.</h2>
+                <p>Tell me what you want to make or fix, what you already have, and any constraints. I’ll reply privately on Telegram if the request looks like a fit.</p>
+                <div class="request-overview">
+                    <p>Small websites, scripts, bug fixes, UI cleanup, and focused automation. <a href="#scope">Check what fits ↓</a></p>
+                    <p>Request → scope &amp; EUR quote → build, preview &amp; handoff. Payment is via PayPal. <a href="#process">Process and payment details ↓</a></p>
+                    <p>Two revision rounds by default; the quote sets the allowance. Seven days of support cover reproducible bugs within the agreed scope. Read the <a href="/commission-terms.html">full terms</a> before sending.</p>
+                </div>
+                <dl class="request-meta">
+                    <div><dt>CHANNEL</dt><dd>TELEGRAM</dd></div>
+                    <div><dt>STORAGE</dt><dd>NO SITE DATABASE</dd></div>
+                    <div><dt>STATUS</dt><dd data-commission-status-label>Open for commissions</dd></div>
+                </dl>
+            </div>
+
+            <div class="request-form-wrap reveal">
+                <div class="form-closed-message" data-commission-closed hidden></div>
+
+                <form id="commission-form" novalidate>
+                    <div class="hp-field" aria-hidden="true">
+                        <label for="website">Website</label>
+                        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+                    </div>
+
+                    <div class="form-field" data-field-number="01">
+                        <label for="telegram_username">Telegram username <span class="required-indicator" aria-hidden="true">*</span><span class="visually-hidden">(required)</span></label>
+                        <input type="text" id="telegram_username" name="telegram_username" inputmode="text" autocomplete="off" spellcheck="false" maxlength="33" placeholder="@username" required aria-required="true" aria-describedby="hint-username error-telegram_username">
+                        <p class="field-hint" id="hint-username">With or without the @. This is where I’ll reply.</p>
+                        <p class="field-error" id="error-telegram_username" aria-live="polite"></p>
+                    </div>
+
+                    <div class="form-field" data-field-number="02">
+                        <label for="project_description">Project description <span class="required-indicator" aria-hidden="true">*</span><span class="visually-hidden">(required)</span></label>
+                        <textarea id="project_description" name="project_description" rows="8" required aria-required="true" minlength="50" maxlength="3000" aria-describedby="hint-description counter-description error-project_description"></textarea>
+                        <p class="field-hint" id="hint-description">What should it do, who is it for, and what already exists? Include any constraints. At least 50 characters.</p>
+                        <p class="char-counter" id="counter-description">0 / 3000 characters</p>
+                        <p class="field-error" id="error-project_description" aria-live="polite"></p>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field" data-field-number="03">
+                            <label for="preferred_deadline">Preferred deadline <span class="optional-indicator">optional</span></label>
+                            <input type="text" id="preferred_deadline" name="preferred_deadline" maxlength="100" autocomplete="off" placeholder="No rush" aria-describedby="hint-deadline error-preferred_deadline">
+                            <p class="field-hint" id="hint-deadline">A date or rough timeframe is fine. This is a preference, not a guaranteed delivery date.</p>
+                            <p class="field-error" id="error-preferred_deadline" aria-live="polite"></p>
+                        </div>
+
+                        <div class="form-field" data-field-number="04">
+                            <label for="reference_links">Reference links <span class="optional-indicator">optional</span></label>
+                            <textarea id="reference_links" name="reference_links" rows="4" aria-describedby="hint-links error-reference_links"></textarea>
+                            <p class="field-hint" id="hint-links">One full http:// or https:// link per line, up to five. You can send files later on Telegram.</p>
+                            <p class="field-error" id="error-reference_links" aria-live="polite"></p>
+                        </div>
+                    </div>
+
+                    <fieldset class="form-acknowledgements">
+                        <legend>Before you send</legend>
+                        <div class="checkbox-field">
+                            <input type="checkbox" id="accepted_terms" name="accepted_terms" required aria-required="true" aria-describedby="error-accepted_terms">
+                            <label for="accepted_terms">I have read the <a href="/commission-terms.html" target="_blank" rel="noopener noreferrer">Commission Terms</a>.<span class="required-indicator" aria-hidden="true">*</span><span class="visually-hidden">(required)</span></label>
+                        </div>
+                        <p class="field-error" id="error-accepted_terms" aria-live="polite"></p>
+                        <div class="checkbox-field">
+                            <input type="checkbox" id="understands_request" name="understands_request" required aria-required="true" aria-describedby="error-understands_request">
+                            <label for="understands_request">I understand this is only a request and is not automatically accepted.<span class="required-indicator" aria-hidden="true">*</span><span class="visually-hidden">(required)</span></label>
+                        </div>
+                        <p class="field-error" id="error-understands_request" aria-live="polite"></p>
+                    </fieldset>
+
+                    <div class="form-actions">
+                        <button type="submit" id="submit-button" disabled><span>Submit commission request</span><span aria-hidden="true">→</span></button>
+                    </div>
+
+                    <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
+                </form>
+
+                <p class="privacy-note">Your submission is sent privately to my Telegram chat and is not intentionally stored in a website database.</p>
+            </div>
+        </section>
+
+        <section id="scope" class="commission-scene scope-scene" aria-labelledby="scope-title">
             <header class="scene-heading reveal">
-                <h2 id="scope-title">Know the<br>boundary.</h2>
+                <h2 id="scope-title">What I can help with.</h2>
             </header>
 
             <div class="scope-column scope-column--accept reveal" id="accepts">
@@ -115,13 +199,13 @@
                 </ul>
             </div>
 
-            <p class="scope-note reveal">SMALL DOES NOT MEAN VAGUE.<br>THE BOUNDARY IS THE BRIEF.</p>
+            <p class="scope-note reveal">A CLEAR BRIEF HELPS.<br>TELL ME WHAT YOU NEED.</p>
         </section>
 
         <section class="commission-scene process-scene" id="process" aria-labelledby="process-title">
             <header class="process-heading reveal">
                 <h2 id="process-title">Request to<br>handoff.</h2>
-                <p>Eight checkpoints. Every accepted job gets a clear scope, an individual EUR quote, and an agreed delivery path before work begins.</p>
+                <p>Here’s how a request becomes a finished project. Before work begins, we agree on the scope, a quote in EUR, and how I’ll deliver it.</p>
             </header>
 
             <ol class="process-track">
@@ -201,81 +285,7 @@
             </div>
         </section>
 
-        <section class="commission-scene request-scene" id="request" aria-labelledby="request-title">
-            <div class="request-intro reveal">
-                <h2 id="request-title">Send the<br>brief.</h2>
-                <p>Describe the outcome, constraints, and what already exists. I’ll reply privately on Telegram if the request is a possible fit.</p>
-                <dl class="request-meta">
-                    <div><dt>CHANNEL</dt><dd>TELEGRAM</dd></div>
-                    <div><dt>STORAGE</dt><dd>NO SITE DATABASE</dd></div>
-                    <div><dt>STATUS</dt><dd data-commission-status-label>Open for commissions</dd></div>
-                </dl>
-            </div>
 
-            <div class="request-form-wrap reveal">
-                <div class="form-closed-message" data-commission-closed hidden></div>
-
-                <form id="commission-form" novalidate>
-                    <div class="hp-field" aria-hidden="true">
-                        <label for="website">Website</label>
-                        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
-                    </div>
-
-                    <div class="form-field" data-field-number="01">
-                        <label for="telegram_username">Telegram username <span class="required-indicator" aria-hidden="true">*</span><span class="visually-hidden">(required)</span></label>
-                        <input type="text" id="telegram_username" name="telegram_username" inputmode="text" autocomplete="off" spellcheck="false" maxlength="33" placeholder="@username" required aria-required="true" aria-describedby="hint-username error-telegram_username">
-                        <p class="field-hint" id="hint-username">With or without the @. This is where I’ll reply.</p>
-                        <p class="field-error" id="error-telegram_username" aria-live="polite"></p>
-                    </div>
-
-                    <div class="form-field" data-field-number="02">
-                        <label for="project_description">Project description <span class="required-indicator" aria-hidden="true">*</span><span class="visually-hidden">(required)</span></label>
-                        <textarea id="project_description" name="project_description" rows="8" required aria-required="true" minlength="50" maxlength="3000" aria-describedby="hint-description counter-description error-project_description"></textarea>
-                        <p class="field-hint" id="hint-description">What should be built, what it’s for, and anything already decided. At least 50 characters.</p>
-                        <p class="char-counter" id="counter-description">0 / 3000 characters</p>
-                        <p class="field-error" id="error-project_description" aria-live="polite"></p>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-field" data-field-number="03">
-                            <label for="preferred_deadline">Preferred deadline <span class="optional-indicator">optional</span></label>
-                            <input type="text" id="preferred_deadline" name="preferred_deadline" maxlength="100" autocomplete="off" placeholder="No rush" aria-describedby="hint-deadline error-preferred_deadline">
-                            <p class="field-hint" id="hint-deadline">Free text. This is preferred, not guaranteed.</p>
-                            <p class="field-error" id="error-preferred_deadline" aria-live="polite"></p>
-                        </div>
-
-                        <div class="form-field" data-field-number="04">
-                            <label for="reference_links">Reference links <span class="optional-indicator">optional</span></label>
-                            <textarea id="reference_links" name="reference_links" rows="4" aria-describedby="hint-links error-reference_links"></textarea>
-                            <p class="field-hint" id="hint-links">One URL per line, up to five. Files can follow on Telegram.</p>
-                            <p class="field-error" id="error-reference_links" aria-live="polite"></p>
-                        </div>
-                    </div>
-
-                    <fieldset class="form-acknowledgements">
-                        <legend>Confirm before transmission</legend>
-                        <div class="checkbox-field">
-                            <input type="checkbox" id="accepted_terms" name="accepted_terms" required aria-required="true" aria-describedby="error-accepted_terms">
-                            <label for="accepted_terms">I have read the <a href="/commission-terms.html" target="_blank" rel="noopener noreferrer">Commission Terms</a>.<span class="required-indicator" aria-hidden="true">*</span><span class="visually-hidden">(required)</span></label>
-                        </div>
-                        <p class="field-error" id="error-accepted_terms" aria-live="polite"></p>
-                        <div class="checkbox-field">
-                            <input type="checkbox" id="understands_request" name="understands_request" required aria-required="true" aria-describedby="error-understands_request">
-                            <label for="understands_request">I understand this is only a request and is not automatically accepted.<span class="required-indicator" aria-hidden="true">*</span><span class="visually-hidden">(required)</span></label>
-                        </div>
-                        <p class="field-error" id="error-understands_request" aria-live="polite"></p>
-                    </fieldset>
-
-                    <div class="form-actions">
-                        <button type="submit" id="submit-button" disabled><span>Submit commission request</span><span aria-hidden="true">→</span></button>
-                    </div>
-
-                    <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
-                </form>
-
-                <p class="privacy-note">Your submission is sent privately to my Telegram chat and is not intentionally stored in a website database.</p>
-            </div>
-        </section>
     </main>
 
     <footer class="commission-footer">

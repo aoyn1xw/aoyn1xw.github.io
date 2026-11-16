@@ -1,4 +1,4 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, writeFile, rm } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { build } from 'vite';
@@ -20,3 +20,5 @@ const placeholder = '<div id="app"></div>';
 if (!html.includes(placeholder)) throw new Error('Homepage render placeholder is missing');
 await writeFile(file, html.replace(placeholder, `<div id="app">${await render()}</div>`));
 await writeFile(resolve('dist/index.md'), renderMarkdown());
+// Keep the historical social image in source for review, out of the public build.
+await rm(resolve('dist/og-commissions.png'), { force: true });

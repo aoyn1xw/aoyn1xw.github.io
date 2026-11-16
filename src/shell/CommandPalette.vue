@@ -49,7 +49,7 @@ function onKeydown(event: KeyboardEvent) {
           type="text"
           autocomplete="off"
           spellcheck="false"
-          placeholder="Go to…"
+          placeholder="Find a command…"
           @keydown="onKeydown"
         />
       </div>
@@ -67,7 +67,7 @@ function onKeydown(event: KeyboardEvent) {
             <span class="palette__summary">{{ command.summary }}</span>
           </button>
         </li>
-        <li v-if="!shell.results.value.length" class="palette__empty">No match</li>
+        <li v-if="!shell.results.value.length" class="palette__empty">No matching commands.</li>
       </ul>
       <p class="palette__footer">
         <kbd>↑</kbd><kbd>↓</kbd> move · <kbd>↵</kbd> go · <kbd>esc</kbd> close

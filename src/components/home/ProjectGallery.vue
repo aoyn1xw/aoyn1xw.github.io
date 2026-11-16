@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import homeScreenshot from '../../../assets/projects/shadowplay-home-online.png';
+import clipsScreenshot from '../../../assets/projects/shadowplay-clips.png';
 
 const shots = ref<HTMLElement>();
 const shotIndex = ref(0);
@@ -50,11 +52,15 @@ function trackShot() {
     @keydown.left.prevent="showShot(0)"
   >
     <figure>
-      <img src="/assets/projects/shadowplay-home-online.png" alt="Kivo mobile home screen connected to a gaming PC" width="912" height="2048" loading="lazy" />
+      <a :href="homeScreenshot" target="_blank" rel="noopener noreferrer" aria-label="Open Kivo home screenshot at full size (new tab)">
+        <img :src="homeScreenshot" alt="Kivo mobile home screen connected to a gaming PC" width="912" height="2048" loading="lazy" />
+      </a>
       <figcaption><span>01</span> Home, online</figcaption>
     </figure>
     <figure>
-      <img src="/assets/projects/shadowplay-clips.png" alt="Kivo mobile clips browser" width="912" height="2048" loading="lazy" />
+      <a :href="clipsScreenshot" target="_blank" rel="noopener noreferrer" aria-label="Open Kivo clips screenshot at full size (new tab)">
+        <img :src="clipsScreenshot" alt="Kivo mobile clips browser" width="912" height="2048" loading="lazy" />
+      </a>
       <figcaption><span>02</span> Clip index</figcaption>
     </figure>
   </div>

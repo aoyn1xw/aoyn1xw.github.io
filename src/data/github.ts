@@ -85,8 +85,6 @@ export interface PortfolioRepo {
   image?: ProjectImage;
 }
 
-export type RepoSortMode = 'smart' | 'recent' | 'stars';
-
 export const GITHUB_CACHE_KEY = 'ayon1xw:github-repos:v1';
 export const GITHUB_CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutes
 export const GITHUB_CLIENT_PER_PAGE = 100;
@@ -406,25 +404,12 @@ export function buildPortfolioRepos(
     });
   }
 
-  return sortPortfolioRepos(results, 'smart').slice(0, maxLimit);
+  return sortPortfolioRepos(results).slice(0, maxLimit);
 }
 
-/** Sort portfolio repositories by the selected mode. */
-export function sortPortfolioRepos(repos: PortfolioRepo[], mode: RepoSortMode = 'smart'): PortfolioRepo[] {
-  return [...repos].sort((a, b) => {
-    if (mode === 'recent') {
-      const timeA = a.pushedAt ? Date.parse(a.pushedAt) : 0;
-      const timeB = b.pushedAt ? Date.parse(b.pushedAt) : 0;
-      if (timeB !== timeA) return timeB - timeA;
-    } else if (mode === 'stars') {
-      if (b.stars !== a.stars) return b.stars - a.stars;
-      const timeA = a.pushedAt ? Date.parse(a.pushedAt) : 0;
-      const timeB = b.pushedAt ? Date.parse(b.pushedAt) : 0;
-      if (timeB !== timeA) return timeB - timeA;
-    }
-    if (b.score !== a.score) return b.score - a.score;
-    return a.title.localeCompare(b.title);
-  });
+/** Rank merged repositories deterministically before applying the configured cap. */
+function sortPortfolioRepos(repos: PortfolioRepo[]): PortfolioRepo[] {
+  return [...repos].sort((a, b) => b.score - a.score || a.title.localeCompare(b.title));
 }
 
 /**
@@ -457,8 +442,6 @@ export const initialPortfolioRepos: PortfolioRepo[] = buildPortfolioRepos(SNAPSH
  */
 export function useGitHubRepos() {
   const repos = ref<PortfolioRepo[]>(initialPortfolioRepos);
-  const selectedCategory = ref<ProjectCategory | 'All'>('All');
-  const sortMode = ref<RepoSortMode>('smart');
   const syncState = ref<'snapshot' | 'cache' | 'live' | 'fallback'>('snapshot');
 
   const flagshipRepo = computed(
@@ -470,31 +453,6 @@ export function useGitHubRepos() {
       .filter(repo => repo.featured && !repo.flagship)
       .sort((a, b) => a.featuredOrder - b.featuredOrder)
   );
-
-  const categories = computed<Array<ProjectCategory | 'All'>>(() => [
-    'All',
-    'Desktop & Mobile',
-    'DevTools & Containers',
-    'AI & Automation',
-    'Web & Design'
-  ]);
-
-  /**
-   * Automatically discovered repositories shown under "More on GitHub" —
-   * excludes the flagship Kivo entry and the featured projects above so no
-   * project is duplicated on the page.
-   */
-  const discoveredRepos = computed(() =>
-    repos.value.filter(repo => !repo.flagship && !repo.featured)
-  );
-
-  const filteredGridRepos = computed(() => {
-    const pool =
-      selectedCategory.value === 'All'
-        ? discoveredRepos.value
-        : discoveredRepos.value.filter(repo => repo.category === selectedCategory.value);
-    return sortPortfolioRepos(pool, sortMode.value);
-  });
 
   async function refreshFromGitHub(forceNetwork = false) {
     if (typeof window === 'undefined') return;
@@ -594,11 +552,6 @@ export function useGitHubRepos() {
     repos,
     flagshipRepo,
     featuredSecondaryRepos,
-    discoveredRepos,
-    filteredGridRepos,
-    categories,
-    selectedCategory,
-    sortMode,
     syncState,
     refreshFromGitHub,
     config: githubConfig

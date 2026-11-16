@@ -18,7 +18,7 @@ const emit = defineEmits<{ openPalette: [] }>();
         class="palette-trigger"
         @click="emit('openPalette')"
       >
-        <kbd>{{ shortcutKey }}</kbd> Go to
+        <kbd>{{ shortcutKey }}</kbd> Commands
       </button>
     </div>
   </header>

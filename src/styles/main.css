@@ -108,7 +108,7 @@ kbd {
 
 /* --------------------------------------------------------------- wordmark --- */
 
-.hero { padding: 72px 0 0; }
+.hero { padding: 64px 0 40px; }
 
 /* The mark: tight, heavy, with the X carrying the accent. It sets the
    identity without becoming a hero. */
@@ -158,6 +158,17 @@ kbd {
 .tags li { display: inline; }
 .tags li + li::before { content: ' · '; color: var(--color-dim); }
 
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.hero-actions a {
+  display: inline-flex; align-items: center; justify-content: space-between; gap: 18px;
+  min-height: 44px; padding: 10px 14px;
+  border: var(--rule) solid var(--color-border-strong);
+  color: var(--color-fg); font-size: var(--text-sm);
+}
+.hero-actions a:first-child { border-color: var(--color-accent); }
+.hero-actions a span { color: var(--color-accent); }
+.hero-actions a:hover { border-color: var(--color-accent); text-decoration: none; }
+
 /* --------------------------------------------------------------- sections --- */
 
 .section { padding: 44px 0; border-top: var(--rule) solid var(--color-border); }
@@ -183,7 +194,7 @@ kbd {
 .project-number { font: 400 var(--text-xs)/1 var(--font-technical); color: var(--color-dim); }
 
 .project-name {
-  font: 700 var(--text-lg)/1.25 var(--font-display);
+  font: 700 var(--text-xl)/1.25 var(--font-display);
   letter-spacing: -0.02em;
   color: var(--color-fg);
 }
@@ -226,6 +237,18 @@ kbd {
 
 .project-link { font-size: var(--text-sm); }
 
+/* Native disclosures preserve the complete descriptions in the prerendered
+   page, and remain usable with a keyboard or without JavaScript. */
+.project-technical { margin-top: 20px; border-top: var(--rule) solid var(--color-border-subtle); }
+.project-technical summary {
+  width: fit-content; min-height: 44px; padding: 12px 0;
+  color: var(--color-muted); font-size: var(--text-sm); cursor: pointer;
+}
+.project-technical summary::marker { color: var(--color-accent); }
+.project-technical summary:hover { color: var(--color-fg); }
+.project-technical p + p { margin-top: 16px; }
+.project-technical[open] { padding-bottom: 8px; }
+
 /* The three supporting projects sit under a rule of their own, so the
    featured entry stays a separate thing. */
 .project-list {
@@ -255,7 +278,7 @@ kbd {
 
 /* Only the name is a link: the rest of the card is text to read. */
 .project-title {
-  font: 700 var(--text-md)/1.3 var(--font-display);
+  font: 700 var(--text-lg)/1.3 var(--font-display);
   letter-spacing: -0.02em;
 }
 .project-title a { color: var(--color-fg); transition: color var(--duration-fast); }
@@ -286,12 +309,17 @@ kbd {
   gap: 6px 18px;
 }
 
-.project-status { margin-left: auto; font: 400 var(--text-xs)/1.5 var(--font-technical); color: var(--color-dim); }
+.project-status { font: 400 var(--text-xs)/1.65 var(--font-technical); color: var(--color-dim); }
 
 /* Screenshots sit under the flagship entry as plain images — no window chrome.
    Wide enough that the phone screens stay readable. */
-.shots { margin-top: 22px; display: flex; gap: 16px; }
-.shots figure { width: 210px; min-width: 0; }
+.shots {
+  position: relative; margin-top: 24px; padding: 20px;
+  display: flex; justify-content: center; gap: 24px;
+  border: var(--rule) solid var(--color-border-subtle);
+  background: var(--color-surface);
+}
+.shots figure { width: 230px; min-width: 0; }
 .shots img {
   display: block;
   width: 100%;
@@ -300,211 +328,21 @@ kbd {
   transition: border-color var(--duration-fast);
 }
 .shots figure:hover img { border-color: var(--color-border-strong); }
-.shots figcaption { margin-top: 8px; font-size: var(--text-xs); color: var(--color-dim); }
+.shots figcaption { margin-top: 12px; font-size: var(--text-xs); color: var(--color-muted); }
 .shots figcaption span { color: var(--color-dim); margin-right: 6px; }
 
 .shot-toggle { display: none; margin-top: 18px; gap: 10px; align-items: center; }
 .shot-toggle button {
   border: var(--rule) solid var(--color-border);
-  padding: 6px 10px;
+  min-width: 44px; min-height: 44px; padding: 10px;
   font: 400 var(--text-xs)/1 var(--font-technical);
   color: var(--color-dim);
 }
 .shot-toggle button[aria-pressed='true'] { border-color: var(--color-accent); color: var(--color-accent); }
 
-/* --------------------------------------------------- github repo showcase --- */
-
-.repo-section {
-  margin-top: 40px;
-  border-top: var(--rule) solid var(--color-border);
-}
-
-.repo-section-head {
-  padding-top: 22px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.repo-section-title-group {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 12px;
-}
-
-.repo-section-head .project-list-title {
-  padding-top: 0;
-}
-
-.repo-count {
-  font: 400 var(--text-xs)/1.5 var(--font-technical);
-  color: var(--color-dim);
-}
-
-.repo-sort {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
-}
-
-.repo-sort-label {
-  font: 400 var(--text-xs)/1.5 var(--font-technical);
-  color: var(--color-dim);
-}
-
-.repo-sort-btn {
-  padding: 3px 8px;
-  border: var(--rule) solid var(--color-border-subtle);
-  font: 400 var(--text-xs)/1.2 var(--font-technical);
-  color: var(--color-dim);
-  transition: border-color var(--duration-fast), color var(--duration-fast);
-}
-.repo-sort-btn:hover {
-  border-color: var(--color-border-strong);
-  color: var(--color-fg);
-}
-.repo-sort-btn[aria-pressed='true'] {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
-}
-
-.repo-filters {
-  margin-top: 14px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.repo-filter-pill {
-  padding: 4px 9px;
-  border: var(--rule) solid var(--color-border-subtle);
-  font: 400 var(--text-xs)/1.3 var(--font-technical);
-  color: var(--color-dim);
-  transition: border-color var(--duration-fast), color var(--duration-fast);
-}
-.repo-filter-pill:hover {
-  border-color: var(--color-border-strong);
-  color: var(--color-fg);
-}
-.repo-filter-pill[aria-pressed='true'] {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
-}
-
-.repo-grid {
-  margin-top: 18px;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.repo-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 16px;
-  border: var(--rule) solid var(--color-border-subtle);
-  transition: border-color var(--duration-fast);
-}
-.repo-card:hover {
-  border-color: var(--color-border-strong);
-}
-
-.repo-card__head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.repo-card__title {
-  font: 700 var(--text-base)/1.3 var(--font-display);
-  letter-spacing: -0.02em;
-}
-.repo-card__title a { color: var(--color-fg); transition: color var(--duration-fast); }
-.repo-card__title a:hover { color: var(--color-accent); text-decoration: none; }
-.repo-card__title .ext { transition: transform var(--duration-fast), color var(--duration-fast); }
-.repo-card__title a:hover .ext { color: var(--color-accent); transform: translate(2px, -2px); }
-
-.repo-card__badges {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.repo-star {
-  font: 400 var(--text-xs)/1.3 var(--font-technical);
-  color: var(--color-dim);
-}
-
-.repo-badge {
-  font: 400 var(--text-xs)/1.3 var(--font-technical);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-dim);
-}
-
-.repo-card__summary {
-  margin-top: 8px;
-  font-size: var(--text-sm);
-  color: var(--color-muted);
-}
-
-.repo-topics {
-  margin-top: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.repo-topic {
-  padding: 1px 6px;
-  border: var(--rule) solid var(--color-border-subtle);
-  font: 400 var(--text-xs)/1.35 var(--font-technical);
-  color: var(--color-dim);
-}
-
-.repo-card__foot {
-  margin-top: 14px;
-  padding-top: 10px;
-  border-top: var(--rule) solid var(--color-border-subtle);
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
-  font: 400 var(--text-xs)/1.4 var(--font-technical);
-  color: var(--color-dim);
-}
-
-.repo-lang {
-  color: var(--color-dim);
-}
-
-.repo-meta-right {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 10px;
-}
-
-.repo-demo-link {
-  color: var(--color-accent);
-}
-
-.repo-updated {
-  color: var(--color-dim);
-}
-
-.repo-section-foot {
-  margin-top: 18px;
-}
-
-.repo-all-link {
-  font-size: var(--text-sm);
-}
+/* Keep the full repository index one quiet step beyond the featured work. */
+.project-repositories-link { margin-top: 24px; font-size: var(--text-sm); }
+.project-context, .project-row-context, .project-stack { overflow-wrap: anywhere; }
 
 /* ---------------------------------------------------------------- contact --- */
 
@@ -641,17 +479,22 @@ kbd {
   /* Touch devices have no use for the shortcut hint; the Ctrl/⌘K shortcut
      itself keeps working. */
   .palette-trigger { display: none; }
-  .hero { padding: 48px 0 0; }
+  .hero { padding: 44px 0 32px; }
+  .hero-actions { gap: 8px; }
+  .hero-actions a { gap: 10px; padding-inline: 10px; }
   .section { padding: 36px 0; }
-  .project-list, .repo-section { margin-top: 32px; }
+  .project-list { margin-top: 32px; }
   .project-head, .project-row-head { gap: 10px; }
-  .repo-grid { grid-template-columns: 1fr; }
-  .shots { overflow-x: auto; scrollbar-width: none; }
-  .shots::-webkit-scrollbar { display: none; }
-  /* Wider than desktop so the pair genuinely overflows and can be scrolled. */
-  .shots figure { width: 190px; flex: 0 0 190px; }
+  .shots { overflow-x: auto; justify-content: flex-start; padding: 16px; gap: 16px; scroll-snap-type: x proximity; scroll-padding-inline: 16px; }
+  .shots figure { width: 230px; flex: 0 0 230px; scroll-snap-align: start; }
   .shot-toggle { display: flex; }
+  .project-row-foot { align-items: flex-start; }
+  .project-row-foot .project-status { flex: 1 1 210px; }
   .site-footer { flex-direction: column; align-items: flex-start; }
+}
+
+@media (max-width: 380px) {
+  .hero-actions a { width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
